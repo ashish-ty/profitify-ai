@@ -13,16 +13,20 @@ export function ExpenseForm({ month, onMonthChange }: ExpenseFormProps) {
   const [currentExpenseId, setCurrentExpenseId] = useState<string | null>(null);
   const currentYear = new Date().getFullYear();
 
+  const specialties = ['cardiology', 'oncology', 'neurology', 'gynaecology'];
+
   const defaultFormData = {
-    pharmacy: 0,
+    medical_surgical: 0,
     material_non_medical: 0,
-    doctor_share: 0,
-    salary_wages: 0,
-    power_fuel: 0,
-    admin_financial: 0,
-    repair_maintenance: 0,
     sales_marketing: 0,
-    depreciation: 0
+    admin_expenses: 0,
+    financial_expenses: 0,
+    salary: { medical: 0, non_medical: 0, support: 0 },
+    power_fuel: { electricity: 0, oxygen: 0, others: 0 },
+    repair_maintenance: { biomedical: 0, it_electrical: 0, others: 0 },
+    pharmacy: { cardiology: 0, oncology: 0, neurology: 0, gynaecology: 0 },
+    doctor_share: { cardiology: 0, oncology: 0, neurology: 0, gynaecology: 0 },
+    outsource_services: { cardiology: 0, oncology: 0, neurology: 0, gynaecology: 0 },
   };
 
   const [formData, setFormData] = useState(defaultFormData);
@@ -48,15 +52,17 @@ export function ExpenseForm({ month, onMonthChange }: ExpenseFormProps) {
       if (currentMonthData) {
         setCurrentExpenseId(currentMonthData.id); // Store the ID for updates
         setFormData({
-          pharmacy: currentMonthData.pharmacy,
+          medical_surgical: currentMonthData.medical_surgical,
           material_non_medical: currentMonthData.material_non_medical,
-          doctor_share: currentMonthData.doctor_share,
-          salary_wages: currentMonthData.salary_wages,
-          power_fuel: currentMonthData.power_fuel,
-          admin_financial: currentMonthData.admin_financial,
-          repair_maintenance: currentMonthData.repair_maintenance,
           sales_marketing: currentMonthData.sales_marketing,
-          depreciation: currentMonthData.depreciation
+          admin_expenses: currentMonthData.admin_expenses,
+          financial_expenses: currentMonthData.financial_expenses,
+          salary: { ...currentMonthData.salary },
+          power_fuel: { ...currentMonthData.power_fuel },
+          repair_maintenance: { ...currentMonthData.repair_maintenance },
+          pharmacy: { ...currentMonthData.pharmacy },
+          doctor_share: { ...currentMonthData.doctor_share },
+          outsource_services: { ...currentMonthData.outsource_services },
         });
       } else {
         setCurrentExpenseId(null); // Reset ID when no data exists
@@ -65,10 +71,21 @@ export function ExpenseForm({ month, onMonthChange }: ExpenseFormProps) {
     }
   }, [expenseData, month, currentYear]);
 
-  const handleChange = (field: string, value: string) => {
-    // Allow empty string for better UX when clearing the input
-    const numValue = value === '' ? '' : Number(value);
-    setFormData(prev => ({ ...prev, [field]: numValue }));
+  const handleChange = (field: string, value: string | number, group?: string) => {
+    if (group) {
+      setFormData(prev => ({
+        ...prev,
+        [group]: {
+          ...prev[group],
+          [field]: value === '' ? 0 : Number(value),
+        },
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value === '' ? 0 : Number(value),
+      }));
+    }
   };
 
   const handleSave = async () => {
@@ -103,15 +120,11 @@ export function ExpenseForm({ month, onMonthChange }: ExpenseFormProps) {
   };
 
   const expenseFields = [
-    { key: 'pharmacy', label: 'Pharmacy, Medical & Surgical' },
+    { key: 'medical_surgical', label: 'Medical & Surgical' },
     { key: 'material_non_medical', label: 'Material - Non Medical' },
-    { key: 'doctor_share', label: 'Doctor Share & Outsource Services' },
-    { key: 'salary_wages', label: 'Salary & Wages' },
-    { key: 'power_fuel', label: 'Power & Fuel' },
-    { key: 'admin_financial', label: 'Admin & Financial Expenses' },
-    { key: 'repair_maintenance', label: 'Repair and Maintenance' },
     { key: 'sales_marketing', label: 'Sales & Marketing' },
-    { key: 'depreciation', label: 'Depreciation & Amortization' }
+    { key: 'admin_expenses', label: 'Administrative Expenses' },
+    { key: 'financial_expenses', label: 'Financial Expenses' },
   ];
 
   const totalExpenses = Object.values(formData).reduce((sum, value) => {
@@ -123,21 +136,122 @@ export function ExpenseForm({ month, onMonthChange }: ExpenseFormProps) {
   return (
     <form className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Single value fields */}
         {expenseFields.map(({ key, label }) => (
           <div key={key}>
-            <label className="block text-sm font-medium text-accent-700 mb-2">
+            <label
+              htmlFor={`expense-${key}`}
+              className="block text-sm font-medium text-accent-700 mb-2"
+            >
               {label} ($)
             </label>
             <input
+              id={`expense-${key}`}
               type="number"
-              value={formData[key as keyof typeof formData] === 0 ? '' : formData[key as keyof typeof formData]}
-              onChange={(e) => handleChange(key, e.target.value)}
+              value={formData[key] === 0 ? '' : formData[key]}
+              onChange={e => handleChange(key, e.target.value)}
               className="w-full px-3 py-2 border border-accent-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               placeholder={`Enter ${label.toLowerCase()} amount`}
               disabled={isLoading || isSaving}
               min="0"
               step="0.01"
             />
+          </div>
+        ))}
+
+        {/* Grouped fields */}
+        {[
+          {
+            group: 'salary',
+            label: 'Salary',
+            fields: [
+              { key: 'medical', label: 'Medical' },
+              { key: 'non_medical', label: 'Non-Medical' },
+              { key: 'support', label: 'Support' },
+            ],
+          },
+          {
+            group: 'power_fuel',
+            label: 'Power & Fuel',
+            fields: [
+              { key: 'electricity', label: 'Electricity' },
+              { key: 'oxygen', label: 'Oxygen' },
+              { key: 'others', label: 'Others' },
+            ],
+          },
+          {
+            group: 'repair_maintenance',
+            label: 'Repair & Maintenance',
+            fields: [
+              { key: 'biomedical', label: 'Biomedical' },
+              { key: 'it_electrical', label: 'IT & Electrical' },
+              { key: 'others', label: 'Others' },
+            ],
+          },
+        ].map(({ group, label, fields }) => (
+          <div key={group} className="col-span-1 md:col-span-2">
+            <label className="block text-sm font-medium text-accent-700 mb-2">
+              {label}
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              {fields.map(({ key, label: subLabel }) => (
+                <div key={key}>
+                  <label
+                    htmlFor={`${group}-${key}`}
+                    className="block text-xs font-medium text-accent-600 mb-1"
+                  >
+                    {subLabel}
+                  </label>
+                  <input
+                    id={`${group}-${key}`}
+                    type="number"
+                    value={formData[group][key] === 0 ? '' : formData[group][key]}
+                    onChange={e => handleChange(key, e.target.value, group)}
+                    className="w-full px-3 py-2 border border-accent-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder={subLabel}
+                    disabled={isLoading || isSaving}
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {/* Per-specialty fields */}
+        {[
+          { group: 'pharmacy', label: 'Pharmacy' },
+          { group: 'doctor_share', label: 'Doctor Share' },
+          { group: 'outsource_services', label: 'Outsource Services' },
+        ].map(({ group, label }) => (
+          <div key={group} className="col-span-1 md:col-span-2">
+            <label className="block text-sm font-medium text-accent-700 mb-2">
+              {label} (per specialty)
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+              {specialties.map(specialty => (
+                <div key={specialty}>
+                  <label
+                    htmlFor={`${group}-${specialty}`}
+                    className="block text-xs font-medium text-accent-600 mb-1"
+                  >
+                    {specialty.charAt(0).toUpperCase() + specialty.slice(1)}
+                  </label>
+                  <input
+                    id={`${group}-${specialty}`}
+                    type="number"
+                    value={formData[group][specialty] === 0 ? '' : formData[group][specialty]}
+                    onChange={e => handleChange(specialty, e.target.value, group)}
+                    className="w-full px-3 py-2 border border-accent-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder={specialty.charAt(0).toUpperCase() + specialty.slice(1)}
+                    disabled={isLoading || isSaving}
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
@@ -149,7 +263,7 @@ export function ExpenseForm({ month, onMonthChange }: ExpenseFormProps) {
             <div key={key} className="flex justify-between items-center text-sm">
               <span className="text-accent-600">{label.split(' ')[0]}:</span>
               <span className="font-semibold text-red-900">
-                ${(formData[key as keyof typeof formData] || 0).toLocaleString()}
+                ${(formData[key] || 0).toLocaleString()}
               </span>
             </div>
           ))}

@@ -14,6 +14,8 @@ interface SpecialtyRevenueData {
     bedDaysNonICU?: number;
     grossAmount: number;
     discount: number;
+    ot_time_hrs?: number;
+    day_care_procedures?: number;
   };
   credit: {
     numberOfPatients: number;
@@ -21,6 +23,8 @@ interface SpecialtyRevenueData {
     bedDaysNonICU?: number;
     grossAmount: number;
     discount: number;
+    ot_time_hrs?: number;
+    day_care_procedures?: number;
   };
 }
 
@@ -47,20 +51,30 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
           numberOfPatients: '',
           grossAmount: '',
           discount: '',
-          ...(includesBedDays && { 
-            bedDaysICU: '',
-            bedDaysNonICU: ''
-          })
+          ...(includesBedDays
+            ? {
+                bedDaysICU: '',
+                bedDaysNonICU: '',
+                ot_time_hrs: '',
+              }
+            : {
+                day_care_procedures: '',
+              }),
         },
         credit: {
           numberOfPatients: '',
           grossAmount: '',
           discount: '',
-          ...(includesBedDays && { 
-            bedDaysICU: '',
-            bedDaysNonICU: ''
-          })
-        }
+          ...(includesBedDays
+            ? {
+                bedDaysICU: '',
+                bedDaysNonICU: '',
+                ot_time_hrs: '',
+              }
+            : {
+                day_care_procedures: '',
+              }),
+        },
       };
     });
     return data;
@@ -111,8 +125,12 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
               discount: record.discount || '',
               ...(record.patient_type === 'IPD' && {
                 bedDaysICU: record.bed_days_icu || '',
-                bedDaysNonICU: record.bed_days_non_icu || ''
-              })
+                bedDaysNonICU: record.bed_days_non_icu || '',
+                ot_time_hrs: record.ot_time_hrs || '',
+              }),
+              ...(record.patient_type === 'OPD' && {
+                day_care_procedures: record.day_care_procedures || '',
+              }),
             };
           }
         });
@@ -221,25 +239,14 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
             number_of_patients: opdSpecialtyData.cash.numberOfPatients,
             gross_amount: opdSpecialtyData.cash.grossAmount,
             discount: opdSpecialtyData.cash.discount,
+            day_care_procedures: opdSpecialtyData.cash.day_care_procedures || 0,
           };
 
           if (currentRevenueIds[key]) {
-            // Update existing record
-            const updateData = {
-              number_of_patients: opdSpecialtyData.cash.numberOfPatients,
-              gross_amount: opdSpecialtyData.cash.grossAmount,
-              discount: opdSpecialtyData.cash.discount,
-              ...(opdSpecialtyData.cash.bedDaysICU && {
-                bed_days_icu: opdSpecialtyData.cash.bedDaysICU,
-                bed_days_non_icu: opdSpecialtyData.cash.bedDaysNonICU,
-              })
-            };
-            
             updatePromises.push(
-              apiService.updateRevenueData(currentRevenueIds[key], updateData)
+              apiService.updateRevenueData(currentRevenueIds[key], entry)
             );
           } else {
-            // Create new record
             revenueEntries.push(entry);
           }
         }
@@ -256,6 +263,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
             number_of_patients: opdSpecialtyData.credit.numberOfPatients,
             gross_amount: opdSpecialtyData.credit.grossAmount,
             discount: opdSpecialtyData.credit.discount,
+            day_care_procedures: opdSpecialtyData.credit.day_care_procedures || 0,
           };
 
           if (currentRevenueIds[key]) {
@@ -286,6 +294,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
             bed_days_non_icu: ipdSpecialtyData.cash.bedDaysNonICU || 0,
             gross_amount: ipdSpecialtyData.cash.grossAmount,
             discount: ipdSpecialtyData.cash.discount,
+            ot_time_hrs: ipdSpecialtyData.cash.ot_time_hrs || 0,
           };
 
           if (currentRevenueIds[key]) {
@@ -311,6 +320,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
             bed_days_non_icu: ipdSpecialtyData.credit.bedDaysNonICU || 0,
             gross_amount: ipdSpecialtyData.credit.grossAmount,
             discount: ipdSpecialtyData.credit.discount,
+            ot_time_hrs: ipdSpecialtyData.credit.ot_time_hrs || 0,
           };
 
           if (currentRevenueIds[key]) {
@@ -512,7 +522,39 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
                           step="1"
                         />
                       </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-green-800 mb-1">
+                          OT Time (hrs)
+                        </label>
+                        <input
+                          type="number"
+                          value={currentData[activeCategory]?.cash.ot_time_hrs === 0 ? '' : currentData[activeCategory]?.cash.ot_time_hrs || ''}
+                          onChange={(e) => handleChange(activePatientType, activeCategory, 'cash', 'ot_time_hrs', e.target.value)}
+                          className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                          placeholder="Enter OT time in hours"
+                          min="0"
+                          step="0.1"
+                        />
+                      </div>
                     </>
+                  )}
+
+                  {activePatientType === 'OPD' && (
+                    <div>
+                      <label className="block text-sm font-medium text-green-800 mb-1">
+                        Day Care Procedures
+                      </label>
+                      <input
+                        type="number"
+                        value={currentData[activeCategory]?.cash.day_care_procedures === 0 ? '' : currentData[activeCategory]?.cash.day_care_procedures || ''}
+                        onChange={(e) => handleChange(activePatientType, activeCategory, 'cash', 'day_care_procedures', e.target.value)}
+                        className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                        placeholder="Enter number of day care procedures"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
                   )}
 
                   <div>
@@ -610,7 +652,38 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
                           step="1"
                         />
                       </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-blue-800 mb-1">
+                          OT Time (hrs)
+                        </label>
+                        <input
+                          type="number"
+                          value={currentData[activeCategory]?.credit.ot_time_hrs === 0 ? '' : currentData[activeCategory]?.credit.ot_time_hrs || ''}
+                          onChange={(e) => handleChange(activePatientType, activeCategory, 'credit', 'ot_time_hrs', e.target.value)}
+                          className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          placeholder="Enter OT time in hours"
+                          min="0"
+                          step="0.1"
+                        />
+                      </div>
                     </>
+                  )}
+                  {activePatientType === 'OPD' && (
+                    <div>
+                      <label className="block text-sm font-medium text-blue-800 mb-1">
+                        Day Care Procedures
+                      </label>
+                      <input
+                        type="number"
+                        value={currentData[activeCategory]?.credit.day_care_procedures === 0 ? '' : currentData[activeCategory]?.credit.day_care_procedures || ''}
+                        onChange={(e) => handleChange(activePatientType, activeCategory, 'credit', 'day_care_procedures', e.target.value)}
+                        className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        placeholder="Enter number of day care procedures"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
                   )}
 
                   <div>

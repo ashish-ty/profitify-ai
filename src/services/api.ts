@@ -121,6 +121,8 @@ class ApiService {
     bed_days_non_icu?: number;
     gross_amount: number;
     discount: number;
+    ot_time_hrs?: number;
+    day_care_procedures?: number;
   }) {
     const response = await fetch(`${this.baseURL}/api/revenue/`, {
       method: 'POST',
@@ -300,6 +302,7 @@ class ApiService {
   }
 
   async updateRevenueData(id: string, revenueData: any) {
+    console.log(revenueData)
     const response = await fetch(`${this.baseURL}/api/revenue/${id}`, {
       method: 'PUT',
       headers: this.getHeaders(),

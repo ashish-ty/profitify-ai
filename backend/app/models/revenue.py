@@ -14,6 +14,8 @@ class RevenueDataBase(BaseModel):
     bed_days_non_icu: Optional[int] = 0
     gross_amount: Decimal
     discount: Decimal
+    ot_time_hrs: Optional[float] = 0
+    day_care_procedures: Optional[int] = 0
 
 class RevenueDataCreate(RevenueDataBase):
     pass
@@ -24,6 +26,8 @@ class RevenueDataUpdate(BaseModel):
     bed_days_non_icu: Optional[int] = None
     gross_amount: Optional[Decimal] = None
     discount: Optional[Decimal] = None
+    ot_time_hrs: Optional[float] = None
+    day_care_procedures: Optional[int] = None
 
 class RevenueDataResponse(RevenueDataBase):
     id: str
@@ -31,6 +35,8 @@ class RevenueDataResponse(RevenueDataBase):
     net_amount: Decimal
     created_at: datetime
     updated_at: Optional[datetime] = None
+    ot_time_hrs: Optional[float] = None
+    day_care_procedures: Optional[int] = None
 
 class RevenueSummary(BaseModel):
     total_patients: int

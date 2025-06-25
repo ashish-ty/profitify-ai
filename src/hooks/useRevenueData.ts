@@ -16,6 +16,8 @@ export interface RevenueData {
   net_amount: number;
   created_at: string;
   updated_at?: string;
+  ot_time_hrs?: number;
+  day_care_procedures?: number;
 }
 
 export interface RevenueSummary {

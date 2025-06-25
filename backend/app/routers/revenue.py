@@ -32,8 +32,12 @@ async def create_revenue_data(
             "bed_days_non_icu": revenue_data.bed_days_non_icu,
             "gross_amount": float(revenue_data.gross_amount),
             "discount": float(revenue_data.discount),
-            "net_amount": float(net_amount)
+            "net_amount": float(net_amount),
+            "ot_time_hrs": revenue_data.ot_time_hrs,
+            "day_care_procedures": revenue_data.day_care_procedures,
         }
+        
+        print(revenue_record)
         
         result = supabase.table("revenue_data").insert(revenue_record).execute()
         
@@ -77,7 +81,7 @@ async def get_revenue_data(
             query = query.eq("specialty", specialty)
         
         result = query.order("year", desc=True).order("month", desc=True).execute()
-        
+        # print(result)
         return [RevenueDataResponse(**record) for record in result.data]
         
     except Exception as e:
@@ -165,12 +169,11 @@ async def update_revenue_data(
     supabase = get_supabase_client()
     
     try:
+        print(revenue_update)
         # Check if revenue data exists and belongs to user
         existing = supabase.table("revenue_data").select("*").eq(
             "id", revenue_id
         ).eq("user_id", current_user["id"]).execute()
-        
-        print(existing.data)
         
         if not existing.data:
             raise HTTPException(
@@ -181,6 +184,8 @@ async def update_revenue_data(
         # Update only provided fields
         update_data = {k: int(v) for k, v in revenue_update.dict().items() if v is not None}
         
+        print(update_data)
+        
         # Recalculate net amount if gross_amount or discount changed
         if "gross_amount" in update_data or "discount" in update_data:
             current_record = existing.data[0]
@@ -189,8 +194,7 @@ async def update_revenue_data(
             update_data["net_amount"] = new_gross - new_discount
         
         update_data["updated_at"] = "now()"
-        
-        print(update_data)
+    
         
         result = supabase.table("revenue_data").update(update_data).eq(
             "id", revenue_id
