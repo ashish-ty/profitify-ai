@@ -1,22 +1,50 @@
 import React, { useState } from 'react';
-import { X, Mail, Lock } from 'lucide-react';
+import { X, Mail, Lock, AlertCircle } from 'lucide-react';
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogin: (email: string, password: string) => void;
+  onLogin: (email: string, password: string) => Promise<any>;
   onSwitchToSignup: () => void;
 }
 
 export function LoginModal({ isOpen, onClose, onLogin, onSwitchToSignup }: LoginModalProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin(email, password);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await onLogin(email, password);
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setEmail('demo@hospital.com');
+    setPassword('demo123');
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await onLogin('demo@hospital.com', 'demo123');
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -29,6 +57,28 @@ export function LoginModal({ isOpen, onClose, onLogin, onSwitchToSignup }: Login
             className="text-accent-400 hover:text-accent-600 transition-colors"
           >
             <X className="h-6 w-6" />
+          </button>
+        </div>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center">
+            <AlertCircle className="h-4 w-4 text-red-600 mr-2" />
+            <span className="text-red-700 text-sm">{error}</span>
+          </div>
+        )}
+
+        {/* Demo Notice */}
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 className="font-medium text-blue-900 mb-2">Demo Mode</h3>
+          <p className="text-blue-700 text-sm mb-3">
+            This is a demo version. You can use any email and password to login, or click the demo button below.
+          </p>
+          <button
+            onClick={handleDemoLogin}
+            disabled={isLoading}
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
+          >
+            {isLoading ? 'Logging in...' : 'Try Demo Login'}
           </button>
         </div>
 
@@ -46,6 +96,7 @@ export function LoginModal({ isOpen, onClose, onLogin, onSwitchToSignup }: Login
                 className="w-full pl-10 pr-4 py-3 border border-accent-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="Enter your email"
                 required
+                disabled={isLoading}
               />
             </div>
           </div>
@@ -63,15 +114,17 @@ export function LoginModal({ isOpen, onClose, onLogin, onSwitchToSignup }: Login
                 className="w-full pl-10 pr-4 py-3 border border-accent-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="Enter your password"
                 required
+                disabled={isLoading}
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full bg-primary-900 text-white py-3 rounded-lg hover:bg-primary-800 transition-colors font-semibold"
+            disabled={isLoading}
+            className="w-full bg-primary-900 text-white py-3 rounded-lg hover:bg-primary-800 transition-colors font-semibold disabled:opacity-50"
           >
-            Sign In
+            {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 

@@ -1,56 +1,55 @@
 import { useState, useEffect } from 'react';
 import { User } from '../types';
-import { apiService } from '../services/api';
+
+// Dummy user data
+const DUMMY_USER: User = {
+  id: '1',
+  name: 'Dr. Sarah Johnson',
+  email: 'sarah.johnson@cityhospital.com',
+  hospitalName: 'City General Hospital'
+};
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on app load
-    const checkAuth = async () => {
-      const token = localStorage.getItem('medicost-token');
-      if (token) {
+    // Simulate checking for existing session
+    const checkAuth = () => {
+      const savedUser = localStorage.getItem('medicost-dummy-user');
+      if (savedUser) {
         try {
-          apiService.setToken(token);
-          const userData = await apiService.getCurrentUser();
-          setUser({
-            id: userData.id,
-            name: userData.name,
-            email: userData.email,
-            hospitalName: userData.hospital_name,
-          });
+          setUser(JSON.parse(savedUser));
         } catch (error) {
-          console.error('Auth check failed:', error);
-          // Clear invalid token
-          localStorage.removeItem('medicost-token');
-          apiService.clearToken();
+          console.error('Error parsing saved user:', error);
+          localStorage.removeItem('medicost-dummy-user');
         }
       }
       setIsLoading(false);
     };
 
-    checkAuth();
+    // Simulate network delay
+    setTimeout(checkAuth, 500);
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await apiService.login({ email, password });
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Set token
-      apiService.setToken(response.access_token);
-      
-      // Set user data
-      const userData = response.user;
-      const user: User = {
-        id: userData.id,
-        name: userData.name,
-        email: userData.email,
-        hospitalName: userData.hospital_name,
-      };
-      
-      setUser(user);
-      return Promise.resolve(user);
+      // For demo purposes, accept any email/password combination
+      if (email && password) {
+        const user: User = {
+          ...DUMMY_USER,
+          email: email
+        };
+        
+        setUser(user);
+        localStorage.setItem('medicost-dummy-user', JSON.stringify(user));
+        return Promise.resolve(user);
+      } else {
+        throw new Error('Please enter both email and password');
+      }
     } catch (error) {
       console.error('Login failed:', error);
       throw error;
@@ -59,27 +58,24 @@ export function useAuth() {
 
   const signup = async (name: string, email: string, password: string, hospitalName: string) => {
     try {
-      const response = await apiService.signup({
-        name,
-        email,
-        password,
-        hospital_name: hospitalName,
-      });
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Set token
-      apiService.setToken(response.access_token);
-      
-      // Set user data
-      const userData = response.user;
-      const user: User = {
-        id: userData.id,
-        name: userData.name,
-        email: userData.email,
-        hospitalName: userData.hospital_name,
-      };
-      
-      setUser(user);
-      return Promise.resolve(user);
+      // For demo purposes, accept any valid input
+      if (name && email && password && hospitalName) {
+        const user: User = {
+          id: '1',
+          name: name,
+          email: email,
+          hospitalName: hospitalName
+        };
+        
+        setUser(user);
+        localStorage.setItem('medicost-dummy-user', JSON.stringify(user));
+        return Promise.resolve(user);
+      } else {
+        throw new Error('Please fill in all required fields');
+      }
     } catch (error) {
       console.error('Signup failed:', error);
       throw error;
@@ -88,7 +84,7 @@ export function useAuth() {
 
   const logout = () => {
     setUser(null);
-    apiService.clearToken();
+    localStorage.removeItem('medicost-dummy-user');
   };
 
   return {
