@@ -18,6 +18,7 @@ interface DashboardProps {
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -60,6 +61,10 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     }
   };
 
+  const toggleSidebar = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  };
+
   return (
     <div className="flex h-screen bg-primary-50">
       <Sidebar
@@ -67,13 +72,22 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         activeSection={activeSection}
         onSectionChange={handleSectionChange}
         onLogout={onLogout}
+        collapsed={sidebarCollapsed}
       />
       <main className="flex-1 overflow-auto">
-        <div className="p-8">
+        <div className={`${activeSection === 'hospital-data' ? 'h-full' : 'p-8'}`}>
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Overview />} />
-            <Route path="/dashboard/hospital-data" element={<HospitalData />} />
+            <Route 
+              path="/dashboard/hospital-data" 
+              element={
+                <HospitalData 
+                  onToggleSidebar={toggleSidebar}
+                  sidebarCollapsed={sidebarCollapsed}
+                />
+              } 
+            />
             <Route path="/dashboard/tools" element={<Tools />} />
             <Route path="/dashboard/tools/revenue-analysis" element={<RevenueAnalysis />} />
             <Route path="/dashboard/tools/expense-analysis" element={<ExpenseAnalysis />} />
