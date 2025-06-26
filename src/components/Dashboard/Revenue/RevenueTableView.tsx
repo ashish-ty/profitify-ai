@@ -131,7 +131,7 @@ interface RevenueTableViewProps {
 
 export function RevenueTableView({ onToggleSidebar, sidebarCollapsed }: RevenueTableViewProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(10);
+  const [rowsPerPage] = useState(5); // Changed to 5 rows per page
   const [searchTerm, setSearchTerm] = useState('');
   const [columns, setColumns] = useState(BILL_REGISTER_COLUMNS);
   const [showColumnSettings, setShowColumnSettings] = useState(false);
@@ -329,16 +329,16 @@ export function RevenueTableView({ onToggleSidebar, sidebarCollapsed }: RevenueT
             </div>
           </div>
 
-          {/* Professional Custom Horizontal Scrollbar */}
-          <div className="h-3 bg-gray-50 border-t border-gray-200 relative rounded-b-2xl">
+          {/* Professional Custom Horizontal Scrollbar - Reduced gap */}
+          <div className="h-4 bg-gray-50 border-t border-gray-200 relative rounded-b-2xl">
             <div
               ref={scrollbarRef}
-              className="h-full cursor-pointer relative px-2 py-1"
+              className="h-full cursor-pointer relative px-3 py-1.5"
               onClick={handleScrollbarClick}
             >
-              <div className="h-1 bg-gray-200 rounded-full relative">
+              <div className="h-1.5 bg-gray-200 rounded-full relative">
                 <div
-                  className="h-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full shadow-sm transition-all duration-150 ease-out"
+                  className="h-1.5 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full shadow-sm transition-all duration-150 ease-out hover:from-primary-600 hover:to-primary-700"
                   style={{
                     width: `${scrollbarWidth}%`,
                     transform: `translateX(${scrollPosition * (100 - scrollbarWidth)}%)`,
@@ -350,7 +350,7 @@ export function RevenueTableView({ onToggleSidebar, sidebarCollapsed }: RevenueT
         </div>
       </div>
 
-      {/* Enhanced Pagination */}
+      {/* Enhanced Pagination - Matching vertical pagination style */}
       <div className="bg-white border-t border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2 text-sm text-gray-700">
@@ -367,9 +367,10 @@ export function RevenueTableView({ onToggleSidebar, sidebarCollapsed }: RevenueT
             <button
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
-              className="p-2 rounded-xl border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Previous
             </button>
             
             <div className="flex items-center space-x-1">
@@ -379,10 +380,10 @@ export function RevenueTableView({ onToggleSidebar, sidebarCollapsed }: RevenueT
                   <button
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                       currentPage === pageNum
                         ? 'bg-primary-600 text-white shadow-sm'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                     }`}
                   >
                     {pageNum}
@@ -394,9 +395,10 @@ export function RevenueTableView({ onToggleSidebar, sidebarCollapsed }: RevenueT
             <button
               onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
-              className="p-2 rounded-xl border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              <ChevronRight className="h-4 w-4" />
+              Next
+              <ChevronRight className="h-4 w-4 ml-1" />
             </button>
           </div>
         </div>
