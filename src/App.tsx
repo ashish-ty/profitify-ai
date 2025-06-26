@@ -13,6 +13,7 @@ function App() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-900 mx-auto mb-4"></div>
           <p className="text-accent-600">Loading Medicost.ai...</p>
+          <p className="text-sm text-accent-500 mt-2">Setting up your demo environment</p>
         </div>
       </div>
     );

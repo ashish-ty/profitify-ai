@@ -41,9 +41,33 @@ export function Landing({ onLogin, onSignup }: LandingProps) {
     handleCloseModals();
   };
 
+  // Quick access button for demo purposes
+  const handleQuickDemo = () => {
+    onLogin('demo@hospital.com', 'demo123');
+  };
+
   return (
     <div className="min-h-screen bg-primary-50">
       <Header onLoginClick={handleLoginClick} onSignupClick={handleSignupClick} />
+      
+      {/* Demo Access Banner */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium">🚀 Demo Mode Active</span>
+              <span className="text-sm opacity-90">Experience the full platform instantly</span>
+            </div>
+            <button
+              onClick={handleQuickDemo}
+              className="bg-white text-blue-600 px-4 py-1 rounded-full text-sm font-medium hover:bg-blue-50 transition-colors"
+            >
+              Quick Demo Access
+            </button>
+          </div>
+        </div>
+      </div>
+
       <Hero onGetStarted={handleSignupClick} />
       <Features />
       <Testimonials />
