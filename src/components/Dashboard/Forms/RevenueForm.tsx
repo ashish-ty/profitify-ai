@@ -35,7 +35,6 @@ interface PatientTypeData {
 export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
   const { createBulkRevenueData, fetchRevenueData, fetchRevenueSummary, revenueData, isLoading } = useRevenueData();
   const [activePatientType, setActivePatientType] = useState<'OPD' | 'IPD'>('OPD');
-  const [activeCategory, setActiveCategory] = useState<string>('Cardiology');
   const [isSaving, setIsSaving] = useState(false);
   const [currentRevenueIds, setCurrentRevenueIds] = useState<{ [key: string]: string }>({});
   const currentYear = new Date().getFullYear();
@@ -194,29 +193,6 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
     };
   };
 
-  const calculateCategoryTotals = (data: PatientTypeData, category: string) => {
-    const categoryData = data[category];
-    if (!categoryData) return { patients: 0, grossAmount: 0, discount: 0, netRevenue: 0 };
-
-    // Convert string values to numbers, defaulting to 0 if empty string or invalid
-    const cashGrossAmount = Number(categoryData.cash.grossAmount) || 0;
-    const cashDiscount = Number(categoryData.cash.discount) || 0;
-    const creditGrossAmount = Number(categoryData.credit.grossAmount) || 0;
-    const creditDiscount = Number(categoryData.credit.discount) || 0;
-    const cashPatients = Number(categoryData.cash.numberOfPatients) || 0;
-    const creditPatients = Number(categoryData.credit.numberOfPatients) || 0;
-
-    const cashNet = cashGrossAmount - cashDiscount;
-    const creditNet = creditGrossAmount - creditDiscount;
-    
-    return {
-      patients: cashPatients + creditPatients,
-      grossAmount: cashGrossAmount + creditGrossAmount,
-      discount: cashDiscount + creditDiscount,
-      netRevenue: cashNet + creditNet
-    };
-  };
-
   const handleSave = async () => {
     setIsSaving(true);
     try {
@@ -355,405 +331,282 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
 
   const currentData = activePatientType === 'OPD' ? opdData : ipdData;
   const totals = calculateTotals(currentData);
-  const categoryTotals = calculateCategoryTotals(currentData, activeCategory);
 
   return (
-    <div className="flex">
-      {/* Vertical Navigation */}
-      <div className="w-48 border-r border-primary-200 pr-6">
-        <div className="space-y-2">
-          <button
-            onClick={() => setActivePatientType('OPD')}
-            className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-              activePatientType === 'OPD'
-                ? 'bg-primary-900 text-white'
-                : 'text-accent-700 hover:bg-primary-50'
-            }`}
-          >
-            <div className="font-medium">OPD</div>
-            <div className="text-sm opacity-75">Outpatient Department</div>
-          </button>
-          <button
-            onClick={() => setActivePatientType('IPD')}
-            className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-              activePatientType === 'IPD'
-                ? 'bg-primary-900 text-white'
-                : 'text-accent-700 hover:bg-primary-50'
-            }`}
-          >
-            <div className="font-medium">IPD</div>
-            <div className="text-sm opacity-75">Inpatient Department</div>
-          </button>
-        </div>
-
-        {/* Overall Summary */}
-        <div className="mt-6 p-4 bg-primary-50 rounded-lg">
-          <h4 className="font-medium text-primary-900 mb-3 text-sm">
-            {activePatientType} Total Summary
-          </h4>
-          <div className="space-y-2 text-xs">
-            <div className="flex justify-between">
-              <span className="text-accent-600">Patients:</span>
-              <span className="font-semibold text-primary-900">{totals.totalPatients}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-accent-600">Net Revenue:</span>
-              <span className="font-semibold text-primary-900">${totals.netRevenue.toLocaleString()}</span>
-            </div>
+    <div className="h-full flex flex-col bg-gray-50">
+      {/* Compact Header */}
+      <div className="bg-white border-b border-gray-200 p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-primary-900">{activePatientType} Revenue Data - {month}</h3>
+            <p className="text-sm text-accent-600">Enter revenue data for all specialties</p>
           </div>
-        </div>
-
-        {/* Save Button */}
-        <div className="mt-6">
-          <button
-            onClick={handleSave}
-            disabled={isSaving || isLoading}
-            className="w-full bg-primary-900 text-white py-3 rounded-lg hover:bg-primary-800 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSaving ? 'Saving...' : 'Save All Data'}
-          </button>
+          
+          <div className="flex items-center space-x-3">
+            <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setActivePatientType('OPD')}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  activePatientType === 'OPD'
+                    ? 'bg-white text-primary-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                OPD
+              </button>
+              <button
+                onClick={() => setActivePatientType('IPD')}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  activePatientType === 'IPD'
+                    ? 'bg-white text-primary-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                IPD
+              </button>
+            </div>
+            
+            <button
+              onClick={handleSave}
+              disabled={isSaving || isLoading}
+              className="bg-primary-900 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSaving ? 'Saving...' : 'Save Data'}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Form Content */}
-      <div className="flex-1 pl-6">
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold text-primary-900 mb-2">
-            {activePatientType} Revenue Data - {month}
-          </h3>
-          <p className="text-accent-600 text-sm">
-            Select a specialty category and enter revenue data for Cash and Credit billing
-          </p>
-        </div>
-
-        {/* Horizontal Category Navigation */}
-        <div className="mb-6">
-          <div className="border-b border-primary-200">
-            <nav className="flex space-x-8">
-              {specialties.map(specialty => (
-                <button
-                  key={specialty}
-                  onClick={() => setActiveCategory(specialty)}
-                  className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
-                    activeCategory === specialty
-                      ? 'border-primary-600 text-primary-600'
-                      : 'border-transparent text-accent-500 hover:text-accent-700 hover:border-accent-300'
-                  }`}
+      {/* Compact Form Grid - Fixed Height */}
+      <div className="flex-1 p-4 overflow-hidden">
+        <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden flex flex-col">
+          {/* Specialty Grid - 2x2 Layout */}
+          <div className="flex-1 grid grid-cols-2 gap-0 border-b border-gray-200">
+            {specialties.map((specialty, index) => {
+              const specialtyData = currentData[specialty];
+              const cashNet = (specialtyData.cash.grossAmount || 0) - (specialtyData.cash.discount || 0);
+              const creditNet = (specialtyData.credit.grossAmount || 0) - (specialtyData.credit.discount || 0);
+              const totalNet = cashNet + creditNet;
+              
+              return (
+                <div 
+                  key={specialty} 
+                  className={`p-4 ${index % 2 === 0 ? 'border-r border-gray-200' : ''} ${index < 2 ? 'border-b border-gray-200' : ''} overflow-y-auto`}
                 >
-                  {specialty}
-                  {/* Show indicator if category has data */}
-                  {calculateCategoryTotals(currentData, specialty).netRevenue > 0 && (
-                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      ${Math.round(calculateCategoryTotals(currentData, specialty).netRevenue / 1000)}K
-                    </span>
-                  )}
-                </button>
-              ))}
-            </nav>
+                  <div className="mb-3">
+                    <h4 className="font-medium text-primary-900 text-sm">{specialty}</h4>
+                    {totalNet > 0 && (
+                      <div className="text-xs text-green-600 font-medium">
+                        Net: ₹{totalNet.toLocaleString()}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Cash Column */}
+                    <div className="bg-green-50 rounded-lg p-3">
+                      <div className="text-xs font-medium text-green-800 mb-2 flex items-center">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
+                        Cash
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <input
+                          type="number"
+                          placeholder="Patients"
+                          value={specialtyData.cash.numberOfPatients === 0 ? '' : specialtyData.cash.numberOfPatients}
+                          onChange={(e) => handleChange(activePatientType, specialty, 'cash', 'numberOfPatients', e.target.value)}
+                          className="w-full px-2 py-1 text-xs border border-green-300 rounded focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                          min="0"
+                        />
+                        
+                        {activePatientType === 'IPD' && (
+                          <>
+                            <input
+                              type="number"
+                              placeholder="ICU Days"
+                              value={specialtyData.cash.bedDaysICU === 0 ? '' : specialtyData.cash.bedDaysICU}
+                              onChange={(e) => handleChange(activePatientType, specialty, 'cash', 'bedDaysICU', e.target.value)}
+                              className="w-full px-2 py-1 text-xs border border-green-300 rounded focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                              min="0"
+                            />
+                            <input
+                              type="number"
+                              placeholder="Non-ICU Days"
+                              value={specialtyData.cash.bedDaysNonICU === 0 ? '' : specialtyData.cash.bedDaysNonICU}
+                              onChange={(e) => handleChange(activePatientType, specialty, 'cash', 'bedDaysNonICU', e.target.value)}
+                              className="w-full px-2 py-1 text-xs border border-green-300 rounded focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                              min="0"
+                            />
+                            <input
+                              type="number"
+                              placeholder="OT Hours"
+                              value={specialtyData.cash.ot_time_hrs === 0 ? '' : specialtyData.cash.ot_time_hrs || ''}
+                              onChange={(e) => handleChange(activePatientType, specialty, 'cash', 'ot_time_hrs', e.target.value)}
+                              className="w-full px-2 py-1 text-xs border border-green-300 rounded focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                              min="0"
+                              step="0.1"
+                            />
+                          </>
+                        )}
+                        
+                        {activePatientType === 'OPD' && (
+                          <input
+                            type="number"
+                            placeholder="Day Care"
+                            value={specialtyData.cash.day_care_procedures === 0 ? '' : specialtyData.cash.day_care_procedures || ''}
+                            onChange={(e) => handleChange(activePatientType, specialty, 'cash', 'day_care_procedures', e.target.value)}
+                            className="w-full px-2 py-1 text-xs border border-green-300 rounded focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                            min="0"
+                          />
+                        )}
+                        
+                        <input
+                          type="number"
+                          placeholder="Gross Amount"
+                          value={specialtyData.cash.grossAmount === 0 ? '' : specialtyData.cash.grossAmount}
+                          onChange={(e) => handleChange(activePatientType, specialty, 'cash', 'grossAmount', e.target.value)}
+                          className="w-full px-2 py-1 text-xs border border-green-300 rounded focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                          min="0"
+                        />
+                        
+                        <input
+                          type="number"
+                          placeholder="Discount"
+                          value={specialtyData.cash.discount === 0 ? '' : specialtyData.cash.discount}
+                          onChange={(e) => handleChange(activePatientType, specialty, 'cash', 'discount', e.target.value)}
+                          className="w-full px-2 py-1 text-xs border border-green-300 rounded focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                          min="0"
+                        />
+                      </div>
+                      
+                      {cashNet > 0 && (
+                        <div className="mt-2 pt-2 border-t border-green-200">
+                          <div className="text-xs font-medium text-green-800">
+                            Net: ₹{cashNet.toLocaleString()}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Credit Column */}
+                    <div className="bg-blue-50 rounded-lg p-3">
+                      <div className="text-xs font-medium text-blue-800 mb-2 flex items-center">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-1"></div>
+                        Credit
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <input
+                          type="number"
+                          placeholder="Patients"
+                          value={specialtyData.credit.numberOfPatients === 0 ? '' : specialtyData.credit.numberOfPatients}
+                          onChange={(e) => handleChange(activePatientType, specialty, 'credit', 'numberOfPatients', e.target.value)}
+                          className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                          min="0"
+                        />
+                        
+                        {activePatientType === 'IPD' && (
+                          <>
+                            <input
+                              type="number"
+                              placeholder="ICU Days"
+                              value={specialtyData.credit.bedDaysICU === 0 ? '' : specialtyData.credit.bedDaysICU}
+                              onChange={(e) => handleChange(activePatientType, specialty, 'credit', 'bedDaysICU', e.target.value)}
+                              className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                              min="0"
+                            />
+                            <input
+                              type="number"
+                              placeholder="Non-ICU Days"
+                              value={specialtyData.credit.bedDaysNonICU === 0 ? '' : specialtyData.credit.bedDaysNonICU}
+                              onChange={(e) => handleChange(activePatientType, specialty, 'credit', 'bedDaysNonICU', e.target.value)}
+                              className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                              min="0"
+                            />
+                            <input
+                              type="number"
+                              placeholder="OT Hours"
+                              value={specialtyData.credit.ot_time_hrs === 0 ? '' : specialtyData.credit.ot_time_hrs || ''}
+                              onChange={(e) => handleChange(activePatientType, specialty, 'credit', 'ot_time_hrs', e.target.value)}
+                              className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                              min="0"
+                              step="0.1"
+                            />
+                          </>
+                        )}
+                        
+                        {activePatientType === 'OPD' && (
+                          <input
+                            type="number"
+                            placeholder="Day Care"
+                            value={specialtyData.credit.day_care_procedures === 0 ? '' : specialtyData.credit.day_care_procedures || ''}
+                            onChange={(e) => handleChange(activePatientType, specialty, 'credit', 'day_care_procedures', e.target.value)}
+                            className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                            min="0"
+                          />
+                        )}
+                        
+                        <input
+                          type="number"
+                          placeholder="Gross Amount"
+                          value={specialtyData.credit.grossAmount === 0 ? '' : specialtyData.credit.grossAmount}
+                          onChange={(e) => handleChange(activePatientType, specialty, 'credit', 'grossAmount', e.target.value)}
+                          className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                          min="0"
+                        />
+                        
+                        <input
+                          type="number"
+                          placeholder="Discount"
+                          value={specialtyData.credit.discount === 0 ? '' : specialtyData.credit.discount}
+                          onChange={(e) => handleChange(activePatientType, specialty, 'credit', 'discount', e.target.value)}
+                          className="w-full px-2 py-1 text-xs border border-blue-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                          min="0"
+                        />
+                      </div>
+                      
+                      {creditNet > 0 && (
+                        <div className="mt-2 pt-2 border-t border-blue-200">
+                          <div className="text-xs font-medium text-blue-800">
+                            Net: ₹{creditNet.toLocaleString()}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </div>
 
-        <form className="space-y-6">
-          {/* Active Category Form */}
-          <div className="bg-white rounded-lg border border-primary-200 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h4 className="text-lg font-medium text-primary-900">
-                {activeCategory} - {activePatientType}
-              </h4>
-              {categoryTotals.netRevenue > 0 && (
-                <div className="text-sm text-accent-600">
-                  Category Revenue: <span className="font-semibold text-primary-900">${categoryTotals.netRevenue.toLocaleString()}</span>
-                </div>
-              )}
-            </div>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Cash Column */}
-              <div className="bg-green-50 rounded-lg p-4">
-                <div className="flex items-center mb-4">
-                  <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                  <h5 className="font-medium text-green-900">Cash Payments</h5>
-                </div>
-                
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm font-medium text-green-800 mb-1">
-                      Number of Patients
-                    </label>
-                    <input
-                      type="number"
-                      value={currentData[activeCategory]?.cash.numberOfPatients === 0 ? '' : currentData[activeCategory]?.cash.numberOfPatients}
-                      onChange={(e) => handleChange(activePatientType, activeCategory, 'cash', 'numberOfPatients', e.target.value)}
-                      className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                      placeholder="Enter number of patients"
-                      min="0"
-                      step="1"
-                    />
-                  </div>
-
-                  {activePatientType === 'IPD' && (
-                    <>
-                      <div>
-                        <label className="block text-sm font-medium text-green-800 mb-1">
-                          Bed Days - ICU
-                        </label>
-                        <input
-                          type="number"
-                          value={currentData[activeCategory]?.cash.bedDaysICU === 0 ? '' : currentData[activeCategory]?.cash.bedDaysICU}
-                          onChange={(e) => handleChange(activePatientType, activeCategory, 'cash', 'bedDaysICU', e.target.value)}
-                          className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                          placeholder="Enter ICU bed days"
-                          min="0"
-                          step="1"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-green-800 mb-1">
-                          Bed Days - Non ICU
-                        </label>
-                        <input
-                          type="number"
-                          value={currentData[activeCategory]?.cash.bedDaysNonICU === 0 ? '' : currentData[activeCategory]?.cash.bedDaysNonICU}
-                          onChange={(e) => handleChange(activePatientType, activeCategory, 'cash', 'bedDaysNonICU', e.target.value)}
-                          className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                          placeholder="Enter non-ICU bed days"
-                          min="0"
-                          step="1"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-green-800 mb-1">
-                          OT Time (hrs)
-                        </label>
-                        <input
-                          type="number"
-                          value={currentData[activeCategory]?.cash.ot_time_hrs === 0 ? '' : currentData[activeCategory]?.cash.ot_time_hrs || ''}
-                          onChange={(e) => handleChange(activePatientType, activeCategory, 'cash', 'ot_time_hrs', e.target.value)}
-                          className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                          placeholder="Enter OT time in hours"
-                          min="0"
-                          step="0.1"
-                        />
-                      </div>
-                    </>
-                  )}
-
-                  {activePatientType === 'OPD' && (
-                    <div>
-                      <label className="block text-sm font-medium text-green-800 mb-1">
-                        Day Care Procedures
-                      </label>
-                      <input
-                        type="number"
-                        value={currentData[activeCategory]?.cash.day_care_procedures === 0 ? '' : currentData[activeCategory]?.cash.day_care_procedures || ''}
-                        onChange={(e) => handleChange(activePatientType, activeCategory, 'cash', 'day_care_procedures', e.target.value)}
-                        className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                        placeholder="Enter number of day care procedures"
-                        min="0"
-                        step="1"
-                      />
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-sm font-medium text-green-800 mb-1">
-                      Gross Amount ($)
-                    </label>
-                    <input
-                      type="number"
-                      value={currentData[activeCategory]?.cash.grossAmount === 0 ? '' : currentData[activeCategory]?.cash.grossAmount}
-                      onChange={(e) => handleChange(activePatientType, activeCategory, 'cash', 'grossAmount', e.target.value)}
-                      className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                      placeholder="Enter gross amount"
-                      min="0"
-                      step="0.01"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-green-800 mb-1">
-                      Discount ($)
-                    </label>
-                    <input
-                      type="number"
-                      value={currentData[activeCategory]?.cash.discount === 0 ? '' : currentData[activeCategory]?.cash.discount}
-                      onChange={(e) => handleChange(activePatientType, activeCategory, 'cash', 'discount', e.target.value)}
-                      className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                      placeholder="Enter discount amount"
-                      min="0"
-                      step="0.01"
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-green-200">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="font-medium text-green-800">Net Revenue:</span>
-                    <span className="font-semibold text-green-900">
-                      ${((currentData[activeCategory]?.cash.grossAmount || 0) - (currentData[activeCategory]?.cash.discount || 0)).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
+          {/* Compact Summary Footer */}
+          <div className="bg-gradient-to-r from-primary-50 to-secondary-50 p-3 border-t border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="text-sm font-medium text-primary-900">
+                {activePatientType} Summary
               </div>
-
-              {/* Credit Column */}
-              <div className="bg-blue-50 rounded-lg p-4">
-                <div className="flex items-center mb-4">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                  <h5 className="font-medium text-blue-900">Credit Payments</h5>
-                </div>
-                
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm font-medium text-blue-800 mb-1">
-                      Number of Patients
-                    </label>
-                    <input
-                      type="number"
-                      value={currentData[activeCategory]?.credit.numberOfPatients === 0 ? '' : currentData[activeCategory]?.credit.numberOfPatients}
-                      onChange={(e) => handleChange(activePatientType, activeCategory, 'credit', 'numberOfPatients', e.target.value)}
-                      className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                      placeholder="Enter number of patients"
-                      min="0"
-                      step="1"
-                    />
-                  </div>
-
-                  {activePatientType === 'IPD' && (
-                    <>
-                      <div>
-                        <label className="block text-sm font-medium text-blue-800 mb-1">
-                          Bed Days - ICU
-                        </label>
-                        <input
-                          type="number"
-                          value={currentData[activeCategory]?.credit.bedDaysICU === 0 ? '' : currentData[activeCategory]?.credit.bedDaysICU}
-                          onChange={(e) => handleChange(activePatientType, activeCategory, 'credit', 'bedDaysICU', e.target.value)}
-                          className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                          placeholder="Enter ICU bed days"
-                          min="0"
-                          step="1"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-blue-800 mb-1">
-                          Bed Days - Non ICU
-                        </label>
-                        <input
-                          type="number"
-                          value={currentData[activeCategory]?.credit.bedDaysNonICU === 0 ? '' : currentData[activeCategory]?.credit.bedDaysNonICU}
-                          onChange={(e) => handleChange(activePatientType, activeCategory, 'credit', 'bedDaysNonICU', e.target.value)}
-                          className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                          placeholder="Enter non-ICU bed days"
-                          min="0"
-                          step="1"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-blue-800 mb-1">
-                          OT Time (hrs)
-                        </label>
-                        <input
-                          type="number"
-                          value={currentData[activeCategory]?.credit.ot_time_hrs === 0 ? '' : currentData[activeCategory]?.credit.ot_time_hrs || ''}
-                          onChange={(e) => handleChange(activePatientType, activeCategory, 'credit', 'ot_time_hrs', e.target.value)}
-                          className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                          placeholder="Enter OT time in hours"
-                          min="0"
-                          step="0.1"
-                        />
-                      </div>
-                    </>
-                  )}
-                  {activePatientType === 'OPD' && (
-                    <div>
-                      <label className="block text-sm font-medium text-blue-800 mb-1">
-                        Day Care Procedures
-                      </label>
-                      <input
-                        type="number"
-                        value={currentData[activeCategory]?.credit.day_care_procedures === 0 ? '' : currentData[activeCategory]?.credit.day_care_procedures || ''}
-                        onChange={(e) => handleChange(activePatientType, activeCategory, 'credit', 'day_care_procedures', e.target.value)}
-                        className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                        placeholder="Enter number of day care procedures"
-                        min="0"
-                        step="1"
-                      />
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-sm font-medium text-blue-800 mb-1">
-                      Gross Amount ($)
-                    </label>
-                    <input
-                      type="number"
-                      value={currentData[activeCategory]?.credit.grossAmount === 0 ? '' : currentData[activeCategory]?.credit.grossAmount}
-                      onChange={(e) => handleChange(activePatientType, activeCategory, 'credit', 'grossAmount', e.target.value)}
-                      className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                      placeholder="Enter gross amount"
-                      min="0"
-                      step="0.01"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-blue-800 mb-1">
-                      Discount ($)
-                    </label>
-                    <input
-                      type="number"
-                      value={currentData[activeCategory]?.credit.discount === 0 ? '' : currentData[activeCategory]?.credit.discount}
-                      onChange={(e) => handleChange(activePatientType, activeCategory, 'credit', 'discount', e.target.value)}
-                      className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                      placeholder="Enter discount amount"
-                      min="0"
-                      step="0.01"
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-blue-200">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="font-medium text-blue-800">Net Revenue:</span>
-                    <span className="font-semibold text-blue-900">
-                      ${((currentData[activeCategory]?.credit.grossAmount || 0) - (currentData[activeCategory]?.credit.discount || 0)).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Category Summary */}
-            <div className="mt-6 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-lg p-4">
-              <h4 className="font-medium text-primary-900 mb-3">
-                {activeCategory} Summary
-              </h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div className="flex items-center space-x-6 text-sm">
                 <div>
-                  <span className="text-accent-600">Total Patients:</span>
-                  <div className="font-semibold text-primary-900">{categoryTotals.patients}</div>
+                  <span className="text-accent-600">Patients:</span>
+                  <span className="font-semibold text-primary-900 ml-1">{totals.totalPatients}</span>
                 </div>
                 <div>
-                  <span className="text-accent-600">Gross Amount:</span>
-                  <div className="font-semibold text-green-600">${categoryTotals.grossAmount.toLocaleString()}</div>
+                  <span className="text-accent-600">Gross:</span>
+                  <span className="font-semibold text-green-600 ml-1">₹{totals.totalGrossAmount.toLocaleString()}</span>
                 </div>
                 <div>
-                  <span className="text-accent-600">Total Discount:</span>
-                  <div className="font-semibold text-red-600">${categoryTotals.discount.toLocaleString()}</div>
+                  <span className="text-accent-600">Discount:</span>
+                  <span className="font-semibold text-red-600 ml-1">₹{totals.totalDiscount.toLocaleString()}</span>
                 </div>
                 <div>
                   <span className="text-accent-600">Net Revenue:</span>
-                  <div className="font-bold text-primary-900">${categoryTotals.netRevenue.toLocaleString()}</div>
+                  <span className="font-bold text-primary-900 ml-1">₹{totals.netRevenue.toLocaleString()}</span>
                 </div>
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
