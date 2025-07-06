@@ -136,7 +136,7 @@ const dummyBillRegister: BillRegister[] = [
     CoPay3_Amount: 0,
     CoPay4: '',
     CoPay4_Amount: 0
-  }
+  },
   {
     UHID: 'UH002',
     IPD_No: 'IPD2024002',
