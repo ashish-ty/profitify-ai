@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ToolLayout } from './ToolLayout';
-import { SimpleChart } from './Charts/SimpleChart';
+import { ChartTableToggle, TableColumn, TableRow } from '../Common/ChartTableToggle';
 import { MetricCard } from './Charts/MetricCard';
 import { Building2, Users, Activity, Bed, Clock, TrendingUp, Zap, Target } from 'lucide-react';
 import { ChartData, MetricCard as MetricCardType } from '../../types';
@@ -99,15 +99,37 @@ export function MetadataAnalytics() {
 
         {/* Analytics Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <SimpleChart
-            data={occupancyData}
+          <ChartTableToggle
             title="Department Occupancy Rates (%)"
-            color="bg-blue-600"
+            chartData={occupancyData}
+            tableColumns={[
+              { key: 'department', label: 'Department', type: 'text' },
+              { key: 'occupancy', label: 'Occupancy', type: 'percentage' },
+              { key: 'capacity', label: 'Capacity', type: 'number' },
+              { key: 'status', label: 'Status', type: 'text' }
+            ]}
+            tableData={occupancyData.map(item => ({
+              department: item.month,
+              occupancy: item.value,
+              capacity: Math.round(item.value * 1.2),
+              status: item.value > 80 ? 'High' : item.value > 60 ? 'Medium' : 'Low'
+            }))}
+            chartColor="bg-blue-600"
           />
-          <SimpleChart
-            data={utilizationTrends}
+          <ChartTableToggle
             title="Monthly Utilization Trend (%)"
-            color="bg-green-600"
+            chartData={utilizationTrends}
+            tableColumns={[
+              { key: 'month', label: 'Month', type: 'text' },
+              { key: 'utilization', label: 'Utilization', type: 'percentage' },
+              { key: 'change', label: 'Change', type: 'percentage' }
+            ]}
+            tableData={utilizationTrends.map((item, index) => ({
+              month: item.month,
+              utilization: item.value,
+              change: index > 0 ? item.value - utilizationTrends[index - 1].value : 0
+            }))}
+            chartColor="bg-green-600"
           />
         </div>
 

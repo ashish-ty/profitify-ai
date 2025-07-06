@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ToolLayout } from './ToolLayout';
-import { SimpleChart } from './Charts/SimpleChart';
+import { ChartTableToggle, TableColumn, TableRow } from '../Common/ChartTableToggle';
 import { MetricCard } from './Charts/MetricCard';
 import { TrendingDown, AlertTriangle, Target, Calculator, Zap, DollarSign } from 'lucide-react';
 import { ChartData, MetricCard as MetricCardType } from '../../types';
@@ -101,15 +101,35 @@ export function ExpenseAnalytics() {
 
         {/* Expense Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <SimpleChart
-            data={expenseData}
+          <ChartTableToggle
             title="Expense Categories"
-            color="bg-red-600"
+            chartData={expenseData}
+            tableColumns={[
+              { key: 'category', label: 'Category', type: 'text' },
+              { key: 'amount', label: 'Amount', type: 'currency' },
+              { key: 'percentage', label: 'Percentage', type: 'percentage' }
+            ]}
+            tableData={expenseData.map((item, index) => ({
+              category: item.month,
+              amount: item.value,
+              percentage: (item.value / expenseData.reduce((sum, exp) => sum + exp.value, 0)) * 100
+            }))}
+            chartColor="bg-red-600"
           />
-          <SimpleChart
-            data={monthlyExpenses}
+          <ChartTableToggle
             title="Monthly Expense Trend"
-            color="bg-orange-600"
+            chartData={monthlyExpenses}
+            tableColumns={[
+              { key: 'month', label: 'Month', type: 'text' },
+              { key: 'expenses', label: 'Expenses', type: 'currency' },
+              { key: 'change', label: 'Change', type: 'percentage' }
+            ]}
+            tableData={monthlyExpenses.map((item, index) => ({
+              month: item.month,
+              expenses: item.value,
+              change: index > 0 ? ((item.value - monthlyExpenses[index - 1].value) / monthlyExpenses[index - 1].value) * 100 : 0
+            }))}
+            chartColor="bg-orange-600"
           />
         </div>
 

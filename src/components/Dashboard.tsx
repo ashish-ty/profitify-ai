@@ -8,7 +8,7 @@ import { RevenueAnalysis } from './Tools/RevenueAnalysis';
 import { RevenueAnalytics } from './Tools/RevenueAnalytics';
 import { ExpenseAnalytics } from './Tools/ExpenseAnalytics';
 import { MetadataAnalytics } from './Tools/MetadataAnalytics';
-import { ProfitabilityLevels } from './Tools/ProfitabilityLevels';
+import { ProfitabilityAnalysis } from './Tools/ProfitabilityAnalysis';
 import { BudgetPlanning } from './Tools/BudgetPlanning';
 import { CostAnalysis } from './Tools/CostAnalysis';
 import { User } from '../types';
@@ -80,8 +80,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             <Route path="/dashboard/tools/revenue-analytics" element={<RevenueAnalytics />} />
             <Route path="/dashboard/tools/expense-analytics" element={<ExpenseAnalytics />} />
             <Route path="/dashboard/tools/metadata-analytics" element={<MetadataAnalytics />} />
-            <Route path="/dashboard/tools/profitability" element={<ProfitabilityLevels />} />
-            <Route path="/dashboard/tools/profitability/:level" element={<ProfitabilityLevels />} />
+            <Route path="/dashboard/tools/profitability" element={<ProfitabilityAnalysis />} />
+            <Route path="/dashboard/tools/profitability/:level" element={<ProfitabilityAnalysis />} />
             <Route path="/dashboard/tools/budget-planning" element={<BudgetPlanning />} />
             <Route path="/dashboard/tools/budget-planner" element={<BudgetPlanning />} />
             <Route path="/dashboard/tools/cost-analysis" element={<CostAnalysis />} />

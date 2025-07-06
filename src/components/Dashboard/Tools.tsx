@@ -190,29 +190,6 @@ export function Tools() {
         </div>
       ))}
 
-      {/* Profitability Analysis Levels */}
-      <div className="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl p-8">
-        <div className="mb-6">
-          <h3 className="text-2xl font-bold text-primary-900 mb-2">Profitability Analysis Levels</h3>
-          <p className="text-accent-600">Choose the level of profitability analysis you want to perform</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {profitabilityLevels.map((level) => (
-            <div
-              key={level.id}
-              onClick={() => handleProfitabilityLevel(level.id)}
-              className="bg-white rounded-lg p-4 shadow-sm border border-primary-100 hover:shadow-md hover:-translate-y-1 cursor-pointer transition-all duration-300 group"
-            >
-              <div className="flex items-center space-x-3 mb-3">
-                <level.icon className={`h-5 w-5 ${level.color}`} />
-                <h4 className="font-semibold text-primary-900">{level.title}</h4>
-              </div>
-              <p className="text-accent-600 text-sm">{level.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Value Proposition Section */}
       <div className="bg-gradient-to-r from-primary-900 to-primary-700 rounded-xl p-8 text-white">

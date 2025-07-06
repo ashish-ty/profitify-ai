@@ -1,273 +1,283 @@
-import React, { useState, useEffect } from 'react';
-import { ToolLayout } from './ToolLayout';
-import { SimpleChart } from './Charts/SimpleChart';
-import { MetricCard } from './Charts/MetricCard';
-import { DollarSign, TrendingUp, Users, Calendar, ArrowUp, ArrowDown, AlertCircle, Target } from 'lucide-react';
-import { ChartData, MetricCard as MetricCardType } from '../../types';
-import { useRevenueAnalytics } from '../../hooks/useRevenueAnalytics';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  BarChart3, 
+  TrendingUp, 
+  PieChart, 
+  Calculator,
+  Target,
+  DollarSign,
+  Activity,
+  Zap,
+  Building2,
+  Users,
+  Stethoscope,
+  Bed,
+  Scissors
+} from 'lucide-react';
+import { ToolCategory } from '../../types';
 
-export function RevenueAnalytics() {
-  const [selectedTimeframe, setSelectedTimeframe] = useState(6);
-  const { revenueAnalysis, isLoading, error, fetchRevenueAnalysis } = useRevenueAnalytics();
-
-  useEffect(() => {
-    fetchRevenueAnalysis({ months: selectedTimeframe });
-  }, [selectedTimeframe]);
-
-  if (isLoading) {
-    return (
-      <ToolLayout
-        title="Revenue Analytics"
-        description="Comprehensive revenue analysis with trends, patterns, and growth opportunities"
-      >
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-900"></div>
-        </div>
-      </ToolLayout>
-    );
+const toolCategories: ToolCategory[] = [
+  {
+    id: 'analytics-tools',
+    title: 'Analytics Tools',
+    description: 'Essential analytics based on your input data for quick insights',
+    icon: BarChart3,
+    color: 'bg-blue-100 text-blue-600',
+    tools: [
+      {
+        id: 'revenue-analytics',
+        title: 'Revenue Analytics',
+        description: 'Comprehensive revenue analysis with trends, patterns, and growth opportunities',
+        route: '/dashboard/tools/revenue-analytics',
+        category: 'analytics-tools'
+      },
+      {
+        id: 'expense-analytics',
+        title: 'Expense Analytics',
+        description: 'Detailed expense breakdown with cost optimization recommendations',
+        route: '/dashboard/tools/expense-analytics',
+        category: 'analytics-tools'
+      },
+      {
+        id: 'metadata-analytics',
+        title: 'Metadata Analytics',
+        description: 'Hospital operational analytics including capacity utilization and efficiency metrics',
+        route: '/dashboard/tools/metadata-analytics',
+        category: 'analytics-tools'
+      }
+    ]
+  },
+  {
+    id: 'advanced-tools',
+    title: 'Advanced Tools',
+    description: 'Sophisticated profitability analysis and strategic planning tools',
+    icon: Target,
+    color: 'bg-green-100 text-green-600',
+    tools: [
+      {
+        id: 'profitability-analysis',
+        title: 'Profitability Analysis',
+        description: 'Multi-level profitability analysis with drill-down capabilities across different dimensions',
+        route: '/dashboard/tools/profitability',
+        category: 'advanced-tools'
+      },
+      {
+        id: 'budget-planner',
+        title: 'Budget Planner',
+        description: 'Interactive budget planning with scenario analysis and forecasting capabilities',
+        route: '/dashboard/tools/budget-planner',
+        category: 'advanced-tools'
+      }
+    ]
   }
+];
 
-  if (error) {
-    return (
-      <ToolLayout
-        title="Revenue Analytics"
-        description="Comprehensive revenue analysis with trends, patterns, and growth opportunities"
-      >
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <div className="flex items-center">
-            <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
-            <span className="text-red-800">{error}</span>
-          </div>
-        </div>
-      </ToolLayout>
-    );
+const profitabilityLevels = [
+  {
+    id: 'net-figures',
+    title: 'Net Figures',
+    description: 'Overall hospital profitability analysis',
+    icon: DollarSign,
+    color: 'text-green-600'
+  },
+  {
+    id: 'service-level',
+    title: 'Service Level',
+    description: 'Profitability by individual services',
+    icon: Activity,
+    color: 'text-blue-600'
+  },
+  {
+    id: 'specialty-level',
+    title: 'Specialty Level',
+    description: 'Department and specialty profitability',
+    icon: Stethoscope,
+    color: 'text-purple-600'
+  },
+  {
+    id: 'doctor-level',
+    title: 'Doctor Level',
+    description: 'Individual doctor performance analysis',
+    icon: Users,
+    color: 'text-orange-600'
+  },
+  {
+    id: 'bed-level',
+    title: 'Bed Level',
+    description: 'Bed utilization and profitability',
+    icon: Bed,
+    color: 'text-cyan-600'
+  },
+  {
+    id: 'ot-level',
+    title: 'OT Level',
+    description: 'Operating theater efficiency analysis',
+    icon: Scissors,
+    color: 'text-red-600'
+  },
+  {
+    id: 'cath-lab-level',
+    title: 'Cath Lab Level',
+    description: 'Catheterization lab performance',
+    icon: Building2,
+    color: 'text-indigo-600'
   }
+];
 
-  if (!revenueAnalysis) {
-    return (
-      <ToolLayout
-        title="Revenue Analytics"
-        description="Comprehensive revenue analysis with trends, patterns, and growth opportunities"
-      >
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-          <div className="flex items-center">
-            <AlertCircle className="h-5 w-5 text-yellow-600 mr-2" />
-            <span className="text-yellow-800">No revenue data available. Please add revenue data first.</span>
-          </div>
-        </div>
-      </ToolLayout>
-    );
-  }
+export function Tools() {
+  const navigate = useNavigate();
 
-  const { metrics, trends, insights, specialty_analysis, patient_type_analysis, payment_analysis } = revenueAnalysis;
-
-  // Convert data for charts
-  const monthlyRevenueData: ChartData[] = trends.monthly_trends.map(trend => ({
-    month: trend.month.substring(0, 3),
-    value: trend.revenue
-  }));
-
-  const specialtyRevenueData: ChartData[] = Object.entries(specialty_analysis).map(([specialty, data]) => ({
-    month: specialty,
-    value: data.total_revenue
-  }));
-
-  // Create metrics cards
-  const metricsCards: MetricCardType[] = [
-    {
-      title: 'Total Revenue',
-      value: `$${(metrics.total_revenue / 1000).toFixed(0)}K`,
-      change: `${metrics.monthly_growth_rate > 0 ? '+' : ''}${metrics.monthly_growth_rate.toFixed(1)}%`,
-      trend: metrics.monthly_growth_rate >= 0 ? 'up' : 'down',
-      icon: DollarSign
-    },
-    {
-      title: 'Revenue Growth',
-      value: `${metrics.monthly_growth_rate.toFixed(1)}%`,
-      change: trends.trend_direction === 'increasing' ? '+2.1%' : '-1.2%',
-      trend: trends.trend_direction === 'increasing' ? 'up' : 'down',
-      icon: TrendingUp
-    },
-    {
-      title: 'Avg Revenue/Patient',
-      value: `$${metrics.avg_revenue_per_patient.toFixed(0)}`,
-      change: '+3.2%',
-      trend: 'up',
-      icon: Users
-    },
-    {
-      title: 'Daily Revenue',
-      value: `$${(metrics.daily_avg_revenue / 1000).toFixed(1)}K`,
-      change: '+5.4%',
-      trend: 'up',
-      icon: Calendar
+  const handleToolLaunch = (route: string) => {
+    if (route !== '#') {
+      navigate(route);
     }
-  ];
+  };
+
+  const handleProfitabilityLevel = (level: string) => {
+    navigate(`/dashboard/tools/profitability/${level}`);
+  };
 
   return (
-    <ToolLayout
-      title="Revenue Analytics"
-      description="Comprehensive revenue analysis with trends, patterns, and growth opportunities"
-    >
-      <div className="space-y-8">
-        {/* Time Frame Selector */}
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-primary-900">Analysis Period</h3>
-          <div className="flex space-x-2">
-            {[3, 6, 12].map((months) => (
-              <button
-                key={months}
-                onClick={() => setSelectedTimeframe(months)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  selectedTimeframe === months
-                    ? 'bg-primary-900 text-white'
-                    : 'bg-primary-50 text-primary-700 hover:bg-primary-100'
-                }`}
-              >
-                {months} Months
-              </button>
-            ))}
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold text-primary-900 mb-2">AI-Powered Financial Tools</h1>
+        <p className="text-accent-600">Advanced analytics and insights to maximize your hospital's financial performance</p>
+      </div>
+
+      {toolCategories.map((category) => (
+        <div key={category.id} className="space-y-6">
+          <div className="flex items-center space-x-3">
+            <div className={`p-3 rounded-lg ${category.color}`}>
+              <category.icon className="h-7 w-7" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-semibold text-primary-900">{category.title}</h2>
+              <p className="text-accent-600">{category.description}</p>
+            </div>
           </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {category.tools.map((tool) => (
+              <div
+                key={tool.id}
+                onClick={() => handleToolLaunch(tool.route)}
+                className="bg-white rounded-xl p-6 shadow-sm border border-primary-100 hover:shadow-lg hover:-translate-y-1 cursor-pointer transition-all duration-300 group"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 rounded-lg bg-primary-50 text-primary-600 group-hover:bg-primary-100 transition-colors">
+                    {tool.id === 'revenue-analytics' && <DollarSign className="h-6 w-6" />}
+                    {tool.id === 'expense-analytics' && <TrendingUp className="h-6 w-6" />}
+                    {tool.id === 'metadata-analytics' && <Building2 className="h-6 w-6" />}
+                    {tool.id === 'profitability-analysis' && <PieChart className="h-6 w-6" />}
+                    {tool.id === 'budget-planner' && <Calculator className="h-6 w-6" />}
+                  </div>
+                  <div className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded-full font-medium">
+                    {category.id === 'analytics-tools' ? 'Analytics' : 'Advanced'}
+                  </div>
+                </div>
+                
+                <h3 className="text-lg font-semibold text-primary-900 mb-3">{tool.title}</h3>
+                <p className="text-accent-600 text-sm leading-relaxed mb-4">{tool.description}</p>
+                
+                <button className="w-full bg-primary-900 text-white py-3 rounded-lg hover:bg-primary-800 transition-colors font-medium flex items-center justify-center space-x-2 group-hover:bg-primary-800">
+                  <Zap className="h-4 w-4" />
+                  <span>Launch Analysis</span>
+                </button>
+              </div>
+            ))}
+            <Route path="/dashboard/tools/profitability" element={<ProfitabilityAnalysis />} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <ChartTableToggle
+            title="Monthly Revenue Trend"
+            chartData={monthlyRevenueData}
+            tableColumns={[
+              { key: 'month', label: 'Month', type: 'text' },
+              { key: 'value', label: 'Revenue', type: 'currency' }
+            ]}
+            tableData={monthlyRevenueData.map(item => ({ month: item.month, value: item.value }))}
+            chartColor="bg-green-600"
+          />
+          <ChartTableToggle
+            title="Revenue by Specialty"
+            chartData={specialtyRevenueData}
+            tableColumns={[
+              { key: 'specialty', label: 'Specialty', type: 'text' },
+              { key: 'revenue', label: 'Revenue', type: 'currency' },
+              { key: 'patients', label: 'Patients', type: 'number' },
+              { key: 'revenuePerPatient', label: 'Revenue/Patient', type: 'currency' }
+            ]}
+            tableData={Object.entries(specialty_analysis).map(([specialty, data]) => ({
+              specialty,
+              revenue: data.total_revenue,
+              patients: data.total_patients,
+              revenuePerPatient: data.revenue_per_patient
+            }))}
+            chartColor="bg-blue-600"
+          />
         </div>
 
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {metricsCards.map((metric, index) => (
-            <MetricCard key={index} metric={metric} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {profitabilityLevels.map((level) => (
+            <div
+              key={level.id}
+              onClick={() => handleProfitabilityLevel(level.id)}
+              className="bg-white rounded-lg p-4 shadow-sm border border-primary-100 hover:shadow-md hover:-translate-y-1 cursor-pointer transition-all duration-300 group"
+            >
+              <div className="flex items-center space-x-3 mb-3">
+                <level.icon className={`h-5 w-5 ${level.color}`} />
+                <h4 className="font-semibold text-primary-900">{level.title}</h4>
+              </div>
+              <p className="text-accent-600 text-sm">{level.description}</p>
+            </div>
           ))}
         </div>
+      </div>
 
-        {/* Revenue Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <SimpleChart
-            data={monthlyRevenueData}
-            title="Monthly Revenue Trend"
-            color="bg-green-600"
-          />
-          <SimpleChart
-            data={specialtyRevenueData}
-            title="Revenue by Specialty"
-            color="bg-blue-600"
-          />
-        </div>
-
-        {/* Revenue Insights */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
-            <h3 className="text-lg font-semibold text-primary-900 mb-4">Revenue Sources</h3>
-            <div className="space-y-4">
-              {Object.entries(patient_type_analysis).map(([type, data]) => (
-                <div key={type}>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-accent-600">{type} Revenue</span>
-                    <span className="font-semibold text-primary-900">{data.revenue_percentage.toFixed(1)}%</span>
-                  </div>
-                  <div className="bg-primary-100 rounded-full h-2">
-                    <div 
-                      className={`h-2 rounded-full ${type === 'OPD' ? 'bg-primary-600' : 'bg-blue-600'}`}
-                      style={{ width: `${data.revenue_percentage}%` }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
-            <h3 className="text-lg font-semibold text-primary-900 mb-4">Payment Methods</h3>
-            <div className="space-y-4">
-              {Object.entries(payment_analysis).map(([method, data]) => (
-                <div key={method} className="flex items-center justify-between">
-                  <span className="text-accent-600">{method} Payments</span>
-                  <div className="flex items-center space-x-2">
-                    <span className="font-semibold text-primary-900">{data.revenue_percentage.toFixed(1)}%</span>
-                    {data.discount_rate > 10 ? (
-                      <ArrowDown className="h-4 w-4 text-red-600" />
-                    ) : (
-                      <ArrowUp className="h-4 w-4 text-green-600" />
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
-            <h3 className="text-lg font-semibold text-primary-900 mb-4">Top Performing</h3>
-            <div className="text-center">
-              {(() => {
-                const topSpecialty = Object.entries(specialty_analysis).reduce((max, [specialty, data]) => 
-                  data.total_revenue > max.revenue ? { name: specialty, revenue: data.total_revenue } : max,
-                  { name: '', revenue: 0 }
-                );
-                return (
-                  <>
-                    <div className="text-3xl font-bold text-primary-900 mb-2">{topSpecialty.name}</div>
-                    <div className="text-accent-600 mb-2">Best Specialty</div>
-                    <div className="text-green-600 font-medium">${topSpecialty.revenue.toLocaleString()}</div>
-                    <div className="text-sm text-accent-500 mt-1">Total Revenue</div>
-                  </>
-                );
-              })()}
-            </div>
-          </div>
-        </div>
-
-        {/* AI Insights */}
-        <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-primary-900 mb-4">AI-Powered Revenue Insights</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {insights.map((insight, index) => (
-              <div key={index} className="bg-white rounded-lg p-4">
-                <h4 className="font-medium text-primary-900 mb-2 flex items-center">
-                  {insight.type === 'growth_opportunity' && <TrendingUp className="h-4 w-4 mr-2 text-green-600" />}
-                  {insight.type === 'patient_volume_insight' && <Users className="h-4 w-4 mr-2 text-blue-600" />}
-                  {insight.type === 'seasonal_pattern' && <Calendar className="h-4 w-4 mr-2 text-purple-600" />}
-                  {insight.type === 'revenue_optimization' && <Target className="h-4 w-4 mr-2 text-orange-600" />}
-                  {insight.title}
-                </h4>
-                <p className="text-sm text-accent-600 mb-2">{insight.description}</p>
-                <div className={`text-xs px-2 py-1 rounded-full inline-block ${
-                  insight.impact === 'high' ? 'bg-red-100 text-red-700' :
-                  insight.impact === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                  'bg-green-100 text-green-700'
-                }`}>
-                  {insight.impact.toUpperCase()} IMPACT
-                </div>
+      {/* Value Proposition Section */}
+      <div className="bg-gradient-to-r from-primary-900 to-primary-700 rounded-xl p-8 text-white">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <h3 className="text-2xl font-bold mb-4">Unlock Advanced Financial Intelligence</h3>
+            <p className="text-primary-100 mb-6 leading-relaxed">
+              Our AI-powered tools provide deep insights into your hospital's financial performance, 
+              helping you make data-driven decisions that improve profitability and operational efficiency.
+            </p>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-primary-100">Real-time financial analytics</span>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Data Summary */}
-        <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
-          <h3 className="text-lg font-semibold text-primary-900 mb-4">Analysis Summary</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-            <div>
-              <span className="text-accent-600">Analysis Period:</span>
-              <div className="font-semibold text-primary-900">
-                {revenueAnalysis.data_period.start_date && revenueAnalysis.data_period.end_date ? (
-                  `${new Date(revenueAnalysis.data_period.start_date).toLocaleDateString()} - ${new Date(revenueAnalysis.data_period.end_date).toLocaleDateString()}`
-                ) : 'N/A'}
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-primary-100">Multi-level profitability analysis</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-primary-100">Interactive budget planning</span>
               </div>
             </div>
-            <div>
-              <span className="text-accent-600">Total Records:</span>
-              <div className="font-semibold text-primary-900">{revenueAnalysis.data_period.total_records}</div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-primary-800 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold mb-1 text-green-400">15%</div>
+              <div className="text-primary-200 text-sm">Avg. Cost Reduction</div>
             </div>
-            <div>
-              <span className="text-accent-600">Discount Rate:</span>
-              <div className="font-semibold text-primary-900">{metrics.discount_rate.toFixed(1)}%</div>
+            <div className="bg-primary-800 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold mb-1 text-green-400">98%</div>
+              <div className="text-primary-200 text-sm">Accuracy Rate</div>
             </div>
-            <div>
-              <span className="text-accent-600">Trend Direction:</span>
-              <div className={`font-semibold ${trends.trend_direction === 'increasing' ? 'text-green-600' : 'text-accent-600'}`}>
-                {trends.trend_direction.toUpperCase()}
-              </div>
+            <div className="bg-primary-800 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold mb-1 text-green-400">24/7</div>
+              <div className="text-primary-200 text-sm">Real-time Insights</div>
+            </div>
+            <div className="bg-primary-800 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold mb-1 text-green-400">7</div>
+              <div className="text-primary-200 text-sm">Analysis Levels</div>
             </div>
           </div>
         </div>
       </div>
-    </ToolLayout>
+    </div>
   );
 }
