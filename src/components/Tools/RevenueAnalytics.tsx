@@ -186,53 +186,56 @@ export function Tools() {
                 </button>
               </div>
             ))}
-            <Route path="/dashboard/tools/profitability" element={<ProfitabilityAnalysis />} />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <ChartTableToggle
-            title="Monthly Revenue Trend"
-            chartData={monthlyRevenueData}
-            tableColumns={[
-              { key: 'month', label: 'Month', type: 'text' },
-              { key: 'value', label: 'Revenue', type: 'currency' }
-            ]}
-            tableData={monthlyRevenueData.map(item => ({ month: item.month, value: item.value }))}
-            chartColor="bg-green-600"
-          />
-          <ChartTableToggle
-            title="Revenue by Specialty"
-            chartData={specialtyRevenueData}
-            tableColumns={[
-              { key: 'specialty', label: 'Specialty', type: 'text' },
-              { key: 'revenue', label: 'Revenue', type: 'currency' },
-              { key: 'patients', label: 'Patients', type: 'number' },
-              { key: 'revenuePerPatient', label: 'Revenue/Patient', type: 'currency' }
-            ]}
-            tableData={Object.entries(specialty_analysis).map(([specialty, data]) => ({
-              specialty,
-              revenue: data.total_revenue,
-              patients: data.total_patients,
-              revenuePerPatient: data.revenue_per_patient
-            }))}
-            chartColor="bg-blue-600"
-          />
-        </div>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {profitabilityLevels.map((level) => (
-            <div
-              key={level.id}
-              onClick={() => handleProfitabilityLevel(level.id)}
-              className="bg-white rounded-lg p-4 shadow-sm border border-primary-100 hover:shadow-md hover:-translate-y-1 cursor-pointer transition-all duration-300 group"
-            >
-              <div className="flex items-center space-x-3 mb-3">
-                <level.icon className={`h-5 w-5 ${level.color}`} />
-                <h4 className="font-semibold text-primary-900">{level.title}</h4>
+          <Route path="/dashboard/tools/profitability" element={<ProfitabilityAnalysis />} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <ChartTableToggle
+              title="Monthly Revenue Trend"
+              chartData={monthlyRevenueData}
+              tableColumns={[
+                { key: 'month', label: 'Month', type: 'text' },
+                { key: 'value', label: 'Revenue', type: 'currency' }
+              ]}
+              tableData={monthlyRevenueData.map(item => ({ month: item.month, value: item.value }))}
+              chartColor="bg-green-600"
+            />
+            <ChartTableToggle
+              title="Revenue by Specialty"
+              chartData={specialtyRevenueData}
+              tableColumns={[
+                { key: 'specialty', label: 'Specialty', type: 'text' },
+                { key: 'revenue', label: 'Revenue', type: 'currency' },
+                { key: 'patients', label: 'Patients', type: 'number' },
+                { key: 'revenuePerPatient', label: 'Revenue/Patient', type: 'currency' }
+              ]}
+              tableData={Object.entries(specialty_analysis).map(([specialty, data]) => ({
+                specialty,
+                revenue: data.total_revenue,
+                patients: data.total_patients,
+                revenuePerPatient: data.revenue_per_patient
+              }))}
+              chartColor="bg-blue-600"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {profitabilityLevels.map((level) => (
+              <div
+                key={level.id}
+                onClick={() => handleProfitabilityLevel(level.id)}
+                className="bg-white rounded-lg p-4 shadow-sm border border-primary-100 hover:shadow-md hover:-translate-y-1 cursor-pointer transition-all duration-300 group"
+              >
+                <div className="flex items-center space-x-3 mb-3">
+                  <level.icon className={`h-5 w-5 ${level.color}`} />
+                  <h4 className="font-semibold text-primary-900">{level.title}</h4>
+                </div>
+                <p className="text-accent-600 text-sm">{level.description}</p>
               </div>
-              <p className="text-accent-600 text-sm">{level.description}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      ))}
 
       {/* Value Proposition Section */}
       <div className="bg-gradient-to-r from-primary-900 to-primary-700 rounded-xl p-8 text-white">
