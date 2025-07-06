@@ -11,7 +11,7 @@ interface SimpleChartProps {
 export function SimpleChart({ data, title, color = 'bg-primary-600', type = 'bar' }: SimpleChartProps) {
   const maxValue = Math.max(...data.map(d => d.value));
   const minValue = Math.min(...data.map(d => d.value));
-  const range = maxValue - minValue;
+  const range = maxValue - minValue || 1; // Prevent division by zero
 
   // Generate SVG path for line chart
   const generateLinePath = () => {
@@ -57,12 +57,17 @@ export function SimpleChart({ data, title, color = 'bg-primary-600', type = 'bar
 
   if (type === 'line') {
     return (
-      <div className="h-full">
+      <div className="w-full h-full flex flex-col">
         {title && <h3 className="text-lg font-semibold text-primary-900 mb-4">{title}</h3>}
-        <div className="h-full flex flex-col">
-          {/* Line Chart SVG */}
-          <div className="flex-1 relative">
-            <svg viewBox="0 0 100 60" className="w-full h-full" preserveAspectRatio="none">
+        <div className="flex-1 min-h-0 flex flex-col">
+          {/* Line Chart SVG Container */}
+          <div className="flex-1 relative min-h-[200px] max-h-[300px]">
+            <svg 
+              viewBox="0 0 100 60" 
+              className="w-full h-full" 
+              preserveAspectRatio="none"
+              style={{ minHeight: '200px', maxHeight: '300px' }}
+            >
               {/* Grid lines */}
               <defs>
                 <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
@@ -122,9 +127,9 @@ export function SimpleChart({ data, title, color = 'bg-primary-600', type = 'bar
           </div>
           
           {/* X-axis labels */}
-          <div className="flex justify-between mt-2 text-xs text-accent-600">
+          <div className="flex justify-between mt-3 text-xs text-accent-600 px-2">
             {data.map((item, index) => (
-              <span key={index} className="text-center">
+              <span key={index} className="text-center flex-1">
                 {item.month}
               </span>
             ))}
@@ -136,9 +141,9 @@ export function SimpleChart({ data, title, color = 'bg-primary-600', type = 'bar
 
   // Bar chart (existing implementation)
   return (
-    <div className="h-full">
+    <div className="w-full h-full flex flex-col">
       {title && <h3 className="text-lg font-semibold text-primary-900 mb-4">{title}</h3>}
-      <div className="space-y-3 h-full flex flex-col justify-center">
+      <div className="flex-1 min-h-0 flex flex-col justify-center space-y-3">
         {data.map((item, index) => (
           <div key={index} className="flex items-center justify-between group">
             <span className="text-sm font-medium text-accent-700 w-20 truncate">{item.month}</span>

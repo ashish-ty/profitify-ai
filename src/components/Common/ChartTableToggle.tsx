@@ -113,7 +113,7 @@ export function ChartTableToggle({
       {/* Content */}
       <div className="p-6">
         {viewMode === 'chart' ? (
-          <div className="h-80">
+          <div className={`${chartType === 'line' ? 'h-80' : 'h-64'} w-full`}>
             <SimpleChart
               data={chartData}
               title=""
@@ -122,9 +122,9 @@ export function ChartTableToggle({
             />
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto max-h-96">
             <table className="w-full">
-              <thead className="bg-accent-50">
+              <thead className="bg-accent-50 sticky top-0">
                 <tr>
                   {tableColumns.map((column) => (
                     <th
