@@ -5,7 +5,6 @@ import { Overview } from './Dashboard/Overview';
 import { HospitalData } from './Dashboard/HospitalData';
 import { Tools } from './Dashboard/Tools';
 import { RevenueAnalysis } from './Tools/RevenueAnalysis';
-import { RevenueAnalytics } from './Tools/RevenueAnalytics';
 import { ExpenseAnalytics } from './Tools/ExpenseAnalytics';
 import { MetadataAnalytics } from './Tools/MetadataAnalytics';
 import { ProfitabilityAnalysis } from './Tools/ProfitabilityAnalysis';
@@ -77,7 +76,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             <Route path="/dashboard" element={<Overview />} />
             <Route path="/dashboard/hospital-data" element={<HospitalData />} />
             <Route path="/dashboard/tools" element={<Tools />} />
-            <Route path="/dashboard/tools/revenue-analytics" element={<RevenueAnalytics />} />
+            <Route path="/dashboard/tools/revenue-analytics" element={<RevenueAnalysis />} />
             <Route path="/dashboard/tools/expense-analytics" element={<ExpenseAnalytics />} />
             <Route path="/dashboard/tools/metadata-analytics" element={<MetadataAnalytics />} />
             <Route path="/dashboard/tools/profitability" element={<ProfitabilityAnalysis />} />
