@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { DollarSign, TrendingDown, Building2 } from 'lucide-react';
+import { DollarSign, TrendingDown, Building2, Table } from 'lucide-react';
 import { DataCard } from './DataCard';
 import { DataForm } from './DataForm';
+import { RevenueDataTables } from './Revenue/RevenueDataTables';
 import { DataType } from '../../types';
 
 const dataCards = [
   {
     id: 'revenue' as DataType,
-    title: 'Revenue Data',
-    description: 'Track income from OPD, IPD, and different specialties',
+    title: 'Revenue Tables',
+    description: 'Manage Bill Register and Patient Service data with detailed tracking',
     icon: DollarSign,
     color: 'bg-green-100 text-green-600',
-    fields: ['Patient Type', 'Specialty', 'Billing Category', 'Gross Amount']
+    fields: ['Bill Register', 'Patient Services', 'Payment Tracking', 'Service Analysis']
   },
   {
     id: 'expenses' as DataType,
@@ -32,17 +33,37 @@ const dataCards = [
 ];
 
 export function HospitalData() {
-  const [selectedDataType, setSelectedDataType] = useState<DataType | null>(null);
+  const [selectedDataType, setSelectedDataType] = useState<DataType | 'revenue-tables' | null>(null);
 
   const handleCardClick = (dataType: DataType) => {
-    setSelectedDataType(dataType);
+    if (dataType === 'revenue') {
+      setSelectedDataType('revenue-tables');
+    } else {
+      setSelectedDataType(dataType);
+    }
   };
 
   const handleBack = () => {
     setSelectedDataType(null);
   };
 
-  if (selectedDataType) {
+  if (selectedDataType === 'revenue-tables') {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={handleBack}
+            className="flex items-center space-x-2 text-accent-600 hover:text-primary-900 transition-colors"
+          >
+            <span>← Back to Hospital Data</span>
+          </button>
+        </div>
+        <RevenueDataTables />
+      </div>
+    );
+  }
+
+  if (selectedDataType && selectedDataType !== 'revenue-tables') {
     return <DataForm dataType={selectedDataType} onBack={handleBack} />;
   }
 
