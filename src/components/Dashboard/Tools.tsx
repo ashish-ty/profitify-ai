@@ -8,63 +8,120 @@ import {
   Target,
   DollarSign,
   Activity,
-  Zap
+  Zap,
+  Building2,
+  Users,
+  Stethoscope,
+  Bed,
+  Scissors
 } from 'lucide-react';
 import { ToolCategory } from '../../types';
 
 const toolCategories: ToolCategory[] = [
   {
-    id: 'basic-analysis',
-    title: 'Basic Financial Analysis',
-    description: 'Core financial insights and performance metrics',
+    id: 'analytics-tools',
+    title: 'Analytics Tools',
+    description: 'Essential analytics based on your input data for quick insights',
     icon: BarChart3,
     color: 'bg-blue-100 text-blue-600',
     tools: [
       {
-        id: 'revenue-analysis',
-        title: 'Revenue Analysis',
-        description: 'Comprehensive insights based on revenue data including trends, patterns, and growth opportunities',
-        route: '/dashboard/tools/revenue-analysis',
-        category: 'basic-analysis'
+        id: 'revenue-analytics',
+        title: 'Revenue Analytics',
+        description: 'Comprehensive revenue analysis with trends, patterns, and growth opportunities',
+        route: '/dashboard/tools/revenue-analytics',
+        category: 'analytics-tools'
       },
       {
-        id: 'expense-analysis',
-        title: 'Expense Analysis',
-        description: 'Detailed breakdown of expense categories with cost optimization recommendations',
-        route: '/dashboard/tools/expense-analysis',
-        category: 'basic-analysis'
+        id: 'expense-analytics',
+        title: 'Expense Analytics',
+        description: 'Detailed expense breakdown with cost optimization recommendations',
+        route: '/dashboard/tools/expense-analytics',
+        category: 'analytics-tools'
       },
       {
-        id: 'profitability-analysis',
-        title: 'Profitability Analysis',
-        description: 'Profit insights based on revenue and expense data with margin analysis',
-        route: '/dashboard/tools/profitability-analysis',
-        category: 'basic-analysis'
+        id: 'metadata-analytics',
+        title: 'Metadata Analytics',
+        description: 'Hospital operational analytics including capacity utilization and efficiency metrics',
+        route: '/dashboard/tools/metadata-analytics',
+        category: 'analytics-tools'
       }
     ]
   },
   {
-    id: 'advanced-planning',
-    title: 'Advanced Planning & Optimization',
-    description: 'Strategic tools for budget planning and cost optimization',
+    id: 'advanced-tools',
+    title: 'Advanced Tools',
+    description: 'Sophisticated profitability analysis and strategic planning tools',
     icon: Target,
     color: 'bg-green-100 text-green-600',
     tools: [
       {
-        id: 'budget-planning',
-        title: 'Budget Planning',
-        description: 'Interactive budget planning with percentage-based projections and scenario analysis',
-        route: '/dashboard/tools/budget-planning',
-        category: 'advanced-planning'
+        id: 'profitability-analysis',
+        title: 'Profitability Analysis',
+        description: 'Multi-level profitability analysis with drill-down capabilities across different dimensions',
+        route: '/dashboard/tools/profitability',
+        category: 'advanced-tools'
       },
       {
-        id: 'cost-analysis',
-        title: 'Specialty-wise Cost Analysis',
-        description: 'Detailed cost breakdown by specialty with profitability mapping and per-patient costs',
-        route: '/dashboard/tools/cost-analysis',
-        category: 'advanced-planning'
+        id: 'budget-planner',
+        title: 'Budget Planner',
+        description: 'Interactive budget planning with scenario analysis and forecasting capabilities',
+        route: '/dashboard/tools/budget-planner',
+        category: 'advanced-tools'
       }
     ]
+  }
+];
+
+const profitabilityLevels = [
+  {
+    id: 'net-figures',
+    title: 'Net Figures',
+    description: 'Overall hospital profitability analysis',
+    icon: DollarSign,
+    color: 'text-green-600'
+  },
+  {
+    id: 'service-level',
+    title: 'Service Level',
+    description: 'Profitability by individual services',
+    icon: Activity,
+    color: 'text-blue-600'
+  },
+  {
+    id: 'specialty-level',
+    title: 'Specialty Level',
+    description: 'Department and specialty profitability',
+    icon: Stethoscope,
+    color: 'text-purple-600'
+  },
+  {
+    id: 'doctor-level',
+    title: 'Doctor Level',
+    description: 'Individual doctor performance analysis',
+    icon: Users,
+    color: 'text-orange-600'
+  },
+  {
+    id: 'bed-level',
+    title: 'Bed Level',
+    description: 'Bed utilization and profitability',
+    icon: Bed,
+    color: 'text-cyan-600'
+  },
+  {
+    id: 'ot-level',
+    title: 'OT Level',
+    description: 'Operating theater efficiency analysis',
+    icon: Scissors,
+    color: 'text-red-600'
+  },
+  {
+    id: 'cath-lab-level',
+    title: 'Cath Lab Level',
+    description: 'Catheterization lab performance',
+    icon: Building2,
+    color: 'text-indigo-600'
   }
 ];
 
@@ -75,6 +132,10 @@ export function Tools() {
     if (route !== '#') {
       navigate(route);
     }
+  };
+
+  const handleProfitabilityLevel = (level: string) => {
+    navigate(`/dashboard/tools/profitability/${level}`);
   };
 
   return (
@@ -105,14 +166,14 @@ export function Tools() {
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="p-3 rounded-lg bg-primary-50 text-primary-600 group-hover:bg-primary-100 transition-colors">
-                    {tool.id === 'revenue-analysis' && <DollarSign className="h-6 w-6" />}
-                    {tool.id === 'expense-analysis' && <TrendingUp className="h-6 w-6" />}
+                    {tool.id === 'revenue-analytics' && <DollarSign className="h-6 w-6" />}
+                    {tool.id === 'expense-analytics' && <TrendingUp className="h-6 w-6" />}
+                    {tool.id === 'metadata-analytics' && <Building2 className="h-6 w-6" />}
                     {tool.id === 'profitability-analysis' && <PieChart className="h-6 w-6" />}
-                    {tool.id === 'budget-planning' && <Calculator className="h-6 w-6" />}
-                    {tool.id === 'cost-analysis' && <Activity className="h-6 w-6" />}
+                    {tool.id === 'budget-planner' && <Calculator className="h-6 w-6" />}
                   </div>
                   <div className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded-full font-medium">
-                    {category.id === 'basic-analysis' ? 'Basic' : 'Advanced'}
+                    {category.id === 'analytics-tools' ? 'Analytics' : 'Advanced'}
                   </div>
                 </div>
                 
@@ -128,6 +189,30 @@ export function Tools() {
           </div>
         </div>
       ))}
+
+      {/* Profitability Analysis Levels */}
+      <div className="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl p-8">
+        <div className="mb-6">
+          <h3 className="text-2xl font-bold text-primary-900 mb-2">Profitability Analysis Levels</h3>
+          <p className="text-accent-600">Choose the level of profitability analysis you want to perform</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {profitabilityLevels.map((level) => (
+            <div
+              key={level.id}
+              onClick={() => handleProfitabilityLevel(level.id)}
+              className="bg-white rounded-lg p-4 shadow-sm border border-primary-100 hover:shadow-md hover:-translate-y-1 cursor-pointer transition-all duration-300 group"
+            >
+              <div className="flex items-center space-x-3 mb-3">
+                <level.icon className={`h-5 w-5 ${level.color}`} />
+                <h4 className="font-semibold text-primary-900">{level.title}</h4>
+              </div>
+              <p className="text-accent-600 text-sm">{level.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Value Proposition Section */}
       <div className="bg-gradient-to-r from-primary-900 to-primary-700 rounded-xl p-8 text-white">
@@ -145,7 +230,7 @@ export function Tools() {
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-primary-100">Specialty-wise profitability mapping</span>
+                <span className="text-primary-100">Multi-level profitability analysis</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
@@ -167,8 +252,8 @@ export function Tools() {
               <div className="text-primary-200 text-sm">Real-time Insights</div>
             </div>
             <div className="bg-primary-800 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold mb-1 text-green-400">500+</div>
-              <div className="text-primary-200 text-sm">Hospitals Trust Us</div>
+              <div className="text-2xl font-bold mb-1 text-green-400">7</div>
+              <div className="text-primary-200 text-sm">Analysis Levels</div>
             </div>
           </div>
         </div>

@@ -5,8 +5,10 @@ import { Overview } from './Dashboard/Overview';
 import { HospitalData } from './Dashboard/HospitalData';
 import { Tools } from './Dashboard/Tools';
 import { RevenueAnalysis } from './Tools/RevenueAnalysis';
-import { ExpenseAnalysis } from './Tools/ExpenseAnalysis';
-import { ProfitabilityAnalysis } from './Tools/ProfitabilityAnalysis';
+import { RevenueAnalytics } from './Tools/RevenueAnalytics';
+import { ExpenseAnalytics } from './Tools/ExpenseAnalytics';
+import { MetadataAnalytics } from './Tools/MetadataAnalytics';
+import { ProfitabilityLevels } from './Tools/ProfitabilityLevels';
 import { BudgetPlanning } from './Tools/BudgetPlanning';
 import { CostAnalysis } from './Tools/CostAnalysis';
 import { User } from '../types';
@@ -75,10 +77,13 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             <Route path="/dashboard" element={<Overview />} />
             <Route path="/dashboard/hospital-data" element={<HospitalData />} />
             <Route path="/dashboard/tools" element={<Tools />} />
-            <Route path="/dashboard/tools/revenue-analysis" element={<RevenueAnalysis />} />
-            <Route path="/dashboard/tools/expense-analysis" element={<ExpenseAnalysis />} />
-            <Route path="/dashboard/tools/profitability-analysis" element={<ProfitabilityAnalysis />} />
+            <Route path="/dashboard/tools/revenue-analytics" element={<RevenueAnalytics />} />
+            <Route path="/dashboard/tools/expense-analytics" element={<ExpenseAnalytics />} />
+            <Route path="/dashboard/tools/metadata-analytics" element={<MetadataAnalytics />} />
+            <Route path="/dashboard/tools/profitability" element={<ProfitabilityLevels />} />
+            <Route path="/dashboard/tools/profitability/:level" element={<ProfitabilityLevels />} />
             <Route path="/dashboard/tools/budget-planning" element={<BudgetPlanning />} />
+            <Route path="/dashboard/tools/budget-planner" element={<BudgetPlanning />} />
             <Route path="/dashboard/tools/cost-analysis" element={<CostAnalysis />} />
             <Route path="/dashboard/settings" element={<div className="p-8">Settings content coming soon...</div>} />
             <Route path="/dashboard/help" element={<div className="p-8">Help & Support content coming soon...</div>} />
