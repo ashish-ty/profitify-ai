@@ -130,6 +130,7 @@ export function ExpenseAnalytics() {
               change: index > 0 ? ((item.value - monthlyExpenses[index - 1].value) / monthlyExpenses[index - 1].value) * 100 : 0
             }))}
             chartColor="bg-orange-600"
+            chartType="line"
           />
         </div>
 

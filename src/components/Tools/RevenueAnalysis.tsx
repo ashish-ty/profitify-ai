@@ -139,15 +139,36 @@ export function RevenueAnalysis() {
 
         {/* Revenue Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <SimpleChart
-            data={monthlyRevenueData}
+          <ChartTableToggle
             title="Monthly Revenue Trend"
-            color="bg-green-600"
+            chartData={monthlyRevenueData}
+            tableColumns={[
+              { key: 'month', label: 'Month', type: 'text' },
+              { key: 'revenue', label: 'Revenue', type: 'currency' },
+              { key: 'change', label: 'Change', type: 'percentage' }
+            ]}
+            tableData={monthlyRevenueData.map((item, index) => ({
+              month: item.month,
+              revenue: item.value,
+              change: index > 0 ? ((item.value - monthlyRevenueData[index - 1].value) / monthlyRevenueData[index - 1].value) * 100 : 0
+            }))}
+            chartColor="bg-green-600"
+            chartType="line"
           />
-          <SimpleChart
-            data={specialtyRevenueData}
+          <ChartTableToggle
             title="Revenue by Specialty"
-            color="bg-blue-600"
+            chartData={specialtyRevenueData}
+            tableColumns={[
+              { key: 'specialty', label: 'Specialty', type: 'text' },
+              { key: 'revenue', label: 'Revenue', type: 'currency' },
+              { key: 'percentage', label: 'Share', type: 'percentage' }
+            ]}
+            tableData={specialtyRevenueData.map(item => ({
+              specialty: item.month,
+              revenue: item.value,
+              percentage: (item.value / specialtyRevenueData.reduce((sum, s) => sum + s.value, 0)) * 100
+            }))}
+            chartColor="bg-blue-600"
           />
         </div>
 

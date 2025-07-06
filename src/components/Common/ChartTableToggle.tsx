@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BarChart3, Table, Download } from 'lucide-react';
 import { SimpleChart } from '../Tools/Charts/SimpleChart';
+import { ProfessionalChart } from './ProfessionalChart';
 import { ChartData } from '../../types';
 
 export interface TableColumn {
@@ -114,12 +115,25 @@ export function ChartTableToggle({
       <div className="p-6">
         {viewMode === 'chart' ? (
           <div className={`${chartType === 'line' ? 'h-80' : 'h-64'} w-full`}>
-            <SimpleChart
-              data={chartData}
-              title=""
-              color={chartColor}
-              type={chartType}
-            />
+            {chartType === 'line' ? (
+              <ProfessionalChart
+                data={chartData}
+                title=""
+                type="area"
+                color={chartColor.includes('primary') ? '#16A34A' : chartColor.includes('blue') ? '#3B82F6' : '#16A34A'}
+                height={320}
+                showGrid={true}
+                showDataPoints={true}
+                gradient={true}
+              />
+            ) : (
+              <SimpleChart
+                data={chartData}
+                title=""
+                color={chartColor}
+                type={chartType}
+              />
+            )}
           </div>
         ) : (
           <div className="overflow-x-auto max-h-96">

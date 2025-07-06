@@ -130,6 +130,7 @@ export function MetadataAnalytics() {
               change: index > 0 ? item.value - utilizationTrends[index - 1].value : 0
             }))}
             chartColor="bg-green-600"
+            chartType="line"
           />
         </div>
 

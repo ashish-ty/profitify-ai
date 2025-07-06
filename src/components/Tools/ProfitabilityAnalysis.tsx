@@ -474,23 +474,24 @@ export function ProfitabilityAnalysis() {
 
         {/* Historical Trend Analysis - Fixed sizing */}
         <div className="space-y-6">
-          <ChartTableToggle
-            title={`${currentLevelConfig.title} - 12 Month Trend`}
-            chartData={historicalData}
-            tableColumns={[
-              { key: 'month', label: 'Month', type: 'text' },
-              { key: 'value', label: level === 'net-figures' ? 'Profit ($)' : level === 'specialty-level' ? 'Margin (%)' : 'Performance (%)', type: level === 'net-figures' ? 'currency' : 'percentage' },
-              { key: 'change', label: 'Change', type: 'percentage' }
-            ]}
-            tableData={historicalData.map((item, index) => ({
-              month: item.month,
-              value: item.value,
-              change: index > 0 ? ((item.value - historicalData[index - 1].value) / historicalData[index - 1].value) * 100 : 0
-            }))}
-            chartColor="bg-blue-600"
-            chartType="line"
-            className="mb-8"
-          />
+          <div className="mb-8">
+            <ChartTableToggle
+              title={`${currentLevelConfig.title} - 12 Month Historical Trend`}
+              chartData={historicalData}
+              tableColumns={[
+                { key: 'month', label: 'Month', type: 'text' },
+                { key: 'value', label: level === 'net-figures' ? 'Profit ($)' : level === 'specialty-level' ? 'Margin (%)' : 'Performance (%)', type: level === 'net-figures' ? 'currency' : 'percentage' },
+                { key: 'change', label: 'Change', type: 'percentage' }
+              ]}
+              tableData={historicalData.map((item, index) => ({
+                month: item.month,
+                value: item.value,
+                change: index > 0 ? ((item.value - historicalData[index - 1].value) / historicalData[index - 1].value) * 100 : 0
+              }))}
+              chartColor="bg-blue-600"
+              chartType="line"
+            />
+          </div>
         </div>
 
         {/* Insights and Recommendations */}
