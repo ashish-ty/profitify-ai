@@ -30,8 +30,8 @@ export function Sidebar({ user, activeSection, onSectionChange, onLogout }: Side
     <div className="w-64 bg-white border-r border-primary-200 h-screen flex flex-col">
       <div className="p-6 border-b border-primary-200">
         <div className="flex items-center space-x-2 mb-4">
-          <Activity className="h-8 w-8 text-primary-900" />
-          <span className="text-xl font-bold text-primary-900">Medicost.ai</span>
+          <Activity className="h-8 w-8 text-primary-600" />
+          <span className="text-xl font-bold text-primary-900">Profitify.ai</span>
         </div>
         <div className="bg-primary-50 rounded-lg p-3">
           <h3 className="font-semibold text-primary-900">{user.name}</h3>

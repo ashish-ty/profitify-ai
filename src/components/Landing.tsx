@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Header } from './Landing/Header';
 import { Hero } from './Landing/Hero';
 import { Features } from './Landing/Features';
-import { Testimonials } from './Landing/Testimonials';
+import { Solutions } from './Landing/Solutions';
 import { Footer } from './Landing/Footer';
 import { LoginModal } from './Auth/LoginModal';
 import { SignupModal } from './Auth/SignupModal';
@@ -42,11 +42,11 @@ export function Landing({ onLogin, onSignup }: LandingProps) {
   };
 
   return (
-    <div className="min-h-screen bg-primary-50">
+    <div className="min-h-screen bg-dark-900">
       <Header onLoginClick={handleLoginClick} onSignupClick={handleSignupClick} />
       <Hero onGetStarted={handleSignupClick} />
       <Features />
-      <Testimonials />
+      <Solutions onGetStarted={handleSignupClick} />
       <Footer />
       
       <LoginModal
