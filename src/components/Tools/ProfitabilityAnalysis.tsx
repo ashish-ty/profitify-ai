@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ToolLayout } from './ToolLayout';
 import { ChartTableToggle, TableColumn, TableRow } from '../Common/ChartTableToggle';
 import { MetricCard } from './Charts/MetricCard';
@@ -12,7 +13,8 @@ import {
   Building2,
   TrendingUp,
   PieChart,
-  Target
+  Target,
+  ArrowLeft
 } from 'lucide-react';
 import { ChartData, MetricCard as MetricCardType } from '../../types';
 
@@ -67,6 +69,57 @@ const profitabilityLevels = [
     color: 'text-indigo-600'
   }
 ];
+
+// Historical data for trend analysis
+const getHistoricalData = (level: string): ChartData[] => {
+  switch (level) {
+    case 'net-figures':
+      return [
+        { month: 'Jan', value: 480000 },
+        { month: 'Feb', value: 520000 },
+        { month: 'Mar', value: 495000 },
+        { month: 'Apr', value: 580000 },
+        { month: 'May', value: 615000 },
+        { month: 'Jun', value: 650000 },
+        { month: 'Jul', value: 625000 },
+        { month: 'Aug', value: 680000 },
+        { month: 'Sep', value: 720000 },
+        { month: 'Oct', value: 695000 },
+        { month: 'Nov', value: 750000 },
+        { month: 'Dec', value: 780000 }
+      ];
+    case 'specialty-level':
+      return [
+        { month: 'Jan', value: 22.5 },
+        { month: 'Feb', value: 23.1 },
+        { month: 'Mar', value: 22.8 },
+        { month: 'Apr', value: 24.2 },
+        { month: 'May', value: 23.9 },
+        { month: 'Jun', value: 25.1 },
+        { month: 'Jul', value: 24.8 },
+        { month: 'Aug', value: 25.5 },
+        { month: 'Sep', value: 26.2 },
+        { month: 'Oct', value: 25.8 },
+        { month: 'Nov', value: 26.8 },
+        { month: 'Dec', value: 27.2 }
+      ];
+    default:
+      return [
+        { month: 'Jan', value: 75 },
+        { month: 'Feb', value: 78 },
+        { month: 'Mar', value: 82 },
+        { month: 'Apr', value: 79 },
+        { month: 'May', value: 85 },
+        { month: 'Jun', value: 88 },
+        { month: 'Jul', value: 86 },
+        { month: 'Aug', value: 91 },
+        { month: 'Sep', value: 89 },
+        { month: 'Oct', value: 93 },
+        { month: 'Nov', value: 95 },
+        { month: 'Dec', value: 92 }
+      ];
+  }
+};
 
 // Dummy data for different levels
 const getLevelData = (level: string) => {
@@ -275,47 +328,116 @@ const getLevelData = (level: string) => {
 };
 
 export function ProfitabilityAnalysis() {
-  const [selectedLevel, setSelectedLevel] = useState('net-figures');
+  const { level } = useParams();
+  const navigate = useNavigate();
   const [selectedPeriod, setSelectedPeriod] = useState('current-year');
 
-  const currentLevelConfig = profitabilityLevels.find(level => level.id === selectedLevel);
-  const levelData = getLevelData(selectedLevel);
+  // If no level is specified, show level selection
+  if (!level) {
+    return (
+      <ToolLayout
+        title="Profitability Analysis"
+        description="Select the analysis level to dive deep into profitability insights"
+      >
+        <div className="space-y-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-primary-900 mb-4">Choose Your Analysis Level</h2>
+            <p className="text-accent-600 max-w-2xl mx-auto">
+              Select the level of detail you want to analyze. Each level provides unique insights 
+              into different aspects of your hospital's profitability.
+            </p>
+          </div>
 
-  return (
-    <ToolLayout
-      title="Profitability Analysis"
-      description="Multi-level profitability analysis with drill-down capabilities across different dimensions"
-    >
-      <div className="space-y-8">
-        {/* Level Selector */}
-        <div className="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-primary-900 mb-4">Select Analysis Level</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {profitabilityLevels.map((level) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {profitabilityLevels.map((levelOption) => (
               <div
-                key={level.id}
-                onClick={() => setSelectedLevel(level.id)}
-                className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 hover:-translate-y-1 ${
-                  selectedLevel === level.id
-                    ? 'border-primary-600 bg-white shadow-lg'
-                    : 'border-primary-200 bg-white hover:border-primary-400 hover:shadow-md'
-                }`}
+                key={levelOption.id}
+                onClick={() => navigate(`/dashboard/tools/profitability/${levelOption.id}`)}
+                className="bg-white rounded-xl p-6 shadow-sm border border-primary-100 hover:shadow-lg hover:-translate-y-2 cursor-pointer transition-all duration-300 group"
               >
-                <div className="flex items-center space-x-3 mb-3">
-                  <level.icon className={`h-5 w-5 ${level.color}`} />
-                  <h4 className="font-semibold text-primary-900">{level.title}</h4>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className={`p-3 rounded-lg bg-primary-50 ${levelOption.color} group-hover:scale-110 transition-transform`}>
+                    <levelOption.icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-primary-900">{levelOption.title}</h3>
+                  </div>
                 </div>
-                <p className="text-accent-600 text-sm">{level.description}</p>
+                <p className="text-accent-600 leading-relaxed">{levelOption.description}</p>
+                
+                <div className="mt-4 flex items-center text-primary-600 font-medium group-hover:text-primary-700">
+                  <span>Analyze {levelOption.title}</span>
+                  <ArrowLeft className="h-4 w-4 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Period Selector */}
+          {/* Quick Stats */}
+          <div className="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl p-8">
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-bold text-primary-900 mb-2">Multi-Level Analysis Benefits</h3>
+              <p className="text-accent-600">Get comprehensive insights across all operational levels</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-primary-900 mb-2">7</div>
+                <div className="text-accent-600">Analysis Levels</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600 mb-2">15%</div>
+                <div className="text-accent-600">Avg Profit Increase</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-600 mb-2">24/7</div>
+                <div className="text-accent-600">Real-time Insights</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ToolLayout>
+    );
+  }
+
+  const currentLevelConfig = profitabilityLevels.find(l => l.id === level);
+  const levelData = getLevelData(level);
+  const historicalData = getHistoricalData(level);
+
+  if (!currentLevelConfig) {
+    return (
+      <ToolLayout
+        title="Profitability Analysis"
+        description="Analysis level not found"
+      >
+        <div className="text-center py-12">
+          <h2 className="text-xl font-semibold text-primary-900 mb-4">Analysis Level Not Found</h2>
+          <button
+            onClick={() => navigate('/dashboard/tools/profitability')}
+            className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            Back to Level Selection
+          </button>
+        </div>
+      </ToolLayout>
+    );
+  }
+
+  return (
+    <ToolLayout
+      title={`${currentLevelConfig.title} Analysis`}
+      description={currentLevelConfig.description}
+    >
+      <div className="space-y-8">
+        {/* Navigation */}
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-primary-900">
-            {currentLevelConfig?.title} Analysis
-          </h3>
+          <button
+            onClick={() => navigate('/dashboard/tools/profitability')}
+            className="flex items-center space-x-2 text-accent-600 hover:text-primary-900 transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span>Back to Level Selection</span>
+          </button>
+          
           <div className="flex space-x-2">
             {['current-month', 'current-quarter', 'current-year'].map((period) => (
               <button
@@ -342,7 +464,7 @@ export function ProfitabilityAnalysis() {
 
         {/* Main Analysis with Chart/Table Toggle */}
         <ChartTableToggle
-          title={`${currentLevelConfig?.title} Performance`}
+          title={`${currentLevelConfig.title} Performance`}
           chartData={levelData.chartData}
           tableColumns={levelData.tableColumns}
           tableData={levelData.tableData}
@@ -350,12 +472,30 @@ export function ProfitabilityAnalysis() {
           chartType="bar"
         />
 
+        {/* Historical Trend Analysis */}
+        <ChartTableToggle
+          title={`${currentLevelConfig.title} - 12 Month Trend`}
+          chartData={historicalData}
+          tableColumns={[
+            { key: 'month', label: 'Month', type: 'text' },
+            { key: 'value', label: level === 'net-figures' ? 'Profit ($)' : level === 'specialty-level' ? 'Margin (%)' : 'Performance (%)', type: level === 'net-figures' ? 'currency' : 'percentage' },
+            { key: 'change', label: 'Change', type: 'percentage' }
+          ]}
+          tableData={historicalData.map((item, index) => ({
+            month: item.month,
+            value: item.value,
+            change: index > 0 ? ((item.value - historicalData[index - 1].value) / historicalData[index - 1].value) * 100 : 0
+          }))}
+          chartColor="bg-blue-600"
+          chartType="line"
+        />
+
         {/* Insights and Recommendations */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
             <h3 className="text-lg font-semibold text-primary-900 mb-4">Key Insights</h3>
             <div className="space-y-4">
-              {selectedLevel === 'net-figures' && (
+              {level === 'net-figures' && (
                 <>
                   <div className="bg-green-50 rounded-lg p-4">
                     <h4 className="font-medium text-green-900 mb-2">Strong Performance</h4>
@@ -367,7 +507,7 @@ export function ProfitabilityAnalysis() {
                   </div>
                 </>
               )}
-              {selectedLevel === 'specialty-level' && (
+              {level === 'specialty-level' && (
                 <>
                   <div className="bg-green-50 rounded-lg p-4">
                     <h4 className="font-medium text-green-900 mb-2">Top Performer</h4>
@@ -379,7 +519,7 @@ export function ProfitabilityAnalysis() {
                   </div>
                 </>
               )}
-              {selectedLevel === 'doctor-level' && (
+              {level === 'doctor-level' && (
                 <>
                   <div className="bg-green-50 rounded-lg p-4">
                     <h4 className="font-medium text-green-900 mb-2">Excellence Recognition</h4>
@@ -391,7 +531,7 @@ export function ProfitabilityAnalysis() {
                   </div>
                 </>
               )}
-              {(selectedLevel === 'service-level' || selectedLevel === 'bed-level' || selectedLevel === 'ot-level' || selectedLevel === 'cath-lab-level') && (
+              {(level === 'service-level' || level === 'bed-level' || level === 'ot-level' || level === 'cath-lab-level') && (
                 <>
                   <div className="bg-green-50 rounded-lg p-4">
                     <h4 className="font-medium text-green-900 mb-2">High Utilization</h4>
@@ -415,12 +555,12 @@ export function ProfitabilityAnalysis() {
                   Growth Opportunity
                 </h4>
                 <p className="text-sm text-accent-600">
-                  {selectedLevel === 'specialty-level' ? 'Expand Cardiology services to capture more market share.' :
-                   selectedLevel === 'doctor-level' ? 'Implement best practices from top performers across the team.' :
-                   selectedLevel === 'service-level' ? 'Focus on high-margin consultation services.' :
-                   selectedLevel === 'bed-level' ? 'Consider adding ICU beds to meet high demand.' :
-                   selectedLevel === 'ot-level' ? 'Optimize OT scheduling to increase procedure volume.' :
-                   selectedLevel === 'cath-lab-level' ? 'Expand cath lab capacity during peak hours.' :
+                  {level === 'specialty-level' ? 'Expand Cardiology services to capture more market share.' :
+                   level === 'doctor-level' ? 'Implement best practices from top performers across the team.' :
+                   level === 'service-level' ? 'Focus on high-margin consultation services.' :
+                   level === 'bed-level' ? 'Consider adding ICU beds to meet high demand.' :
+                   level === 'ot-level' ? 'Optimize OT scheduling to increase procedure volume.' :
+                   level === 'cath-lab-level' ? 'Expand cath lab capacity during peak hours.' :
                    'Focus on high-margin services to improve overall profitability.'}
                 </p>
               </div>
@@ -430,12 +570,12 @@ export function ProfitabilityAnalysis() {
                   Optimization Focus
                 </h4>
                 <p className="text-sm text-accent-600">
-                  {selectedLevel === 'specialty-level' ? 'Optimize costs in Neurology to improve margins.' :
-                   selectedLevel === 'doctor-level' ? 'Provide additional training for performance improvement.' :
-                   selectedLevel === 'service-level' ? 'Improve emergency service efficiency to boost margins.' :
-                   selectedLevel === 'bed-level' ? 'Increase general ward occupancy through better patient flow.' :
-                   selectedLevel === 'ot-level' ? 'Reduce changeover time between procedures.' :
-                   selectedLevel === 'cath-lab-level' ? 'Standardize procedures to reduce average duration.' :
+                  {level === 'specialty-level' ? 'Optimize costs in Neurology to improve margins.' :
+                   level === 'doctor-level' ? 'Provide additional training for performance improvement.' :
+                   level === 'service-level' ? 'Improve emergency service efficiency to boost margins.' :
+                   level === 'bed-level' ? 'Increase general ward occupancy through better patient flow.' :
+                   level === 'ot-level' ? 'Reduce changeover time between procedures.' :
+                   level === 'cath-lab-level' ? 'Standardize procedures to reduce average duration.' :
                    'Streamline operations to reduce overhead costs.'}
                 </p>
               </div>

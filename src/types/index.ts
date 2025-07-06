@@ -71,3 +71,11 @@ export interface MetricCard {
   trend: 'up' | 'down';
   icon: any;
 }
+
+export interface ProfitabilityLevel {
+  id: string;
+  title: string;
+  description: string;
+  icon: any;
+  color: string;
+}
