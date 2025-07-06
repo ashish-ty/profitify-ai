@@ -95,15 +95,15 @@ export function ProfessionalChart({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full mb-8">
       {title && <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>}
       
-      <div className="relative bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div className="relative bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
         <svg
           width="100%"
           height={height}
           viewBox={`0 0 ${chartWidth} ${height}`}
-          className="overflow-visible"
+          className="overflow-visible mb-4"
         >
           {/* Gradient Definitions */}
           <defs>

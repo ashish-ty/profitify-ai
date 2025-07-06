@@ -138,7 +138,7 @@ export function RevenueAnalysis() {
         </div>
 
         {/* Revenue Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <ChartTableToggle
             title="Monthly Revenue Trend"
             chartData={monthlyRevenueData}
@@ -154,6 +154,7 @@ export function RevenueAnalysis() {
             }))}
             chartColor="bg-green-600"
             chartType="line"
+            className="mb-8"
           />
           <ChartTableToggle
             title="Revenue by Specialty"
@@ -169,11 +170,12 @@ export function RevenueAnalysis() {
               percentage: (item.value / specialtyRevenueData.reduce((sum, s) => sum + s.value, 0)) * 100
             }))}
             chartColor="bg-blue-600"
+            className="mb-8"
           />
         </div>
 
         {/* Revenue Insights */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
           <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
             <h3 className="text-lg font-semibold text-primary-900 mb-4">Revenue Sources</h3>
             <div className="space-y-4">

@@ -100,7 +100,7 @@ export function ExpenseAnalytics() {
         </div>
 
         {/* Expense Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <ChartTableToggle
             title="Expense Categories"
             chartData={expenseData}
@@ -115,6 +115,7 @@ export function ExpenseAnalytics() {
               percentage: (item.value / expenseData.reduce((sum, exp) => sum + exp.value, 0)) * 100
             }))}
             chartColor="bg-red-600"
+            className="mb-8"
           />
           <ChartTableToggle
             title="Monthly Expense Trend"
@@ -131,11 +132,12 @@ export function ExpenseAnalytics() {
             }))}
             chartColor="bg-orange-600"
             chartType="line"
+            className="mb-8"
           />
         </div>
 
         {/* Cost Analysis */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
           <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
             <h3 className="text-lg font-semibold text-primary-900 mb-4">Cost Optimization Opportunities</h3>
             <div className="space-y-4">

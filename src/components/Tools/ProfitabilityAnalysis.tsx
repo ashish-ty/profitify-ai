@@ -473,8 +473,8 @@ export function ProfitabilityAnalysis() {
         />
 
         {/* Historical Trend Analysis - Fixed sizing */}
-        <div className="space-y-6">
-          <div className="mb-8">
+        <div className="space-y-8 mt-12">
+          <div className="mb-12">
             <ChartTableToggle
               title={`${currentLevelConfig.title} - 12 Month Historical Trend`}
               chartData={historicalData}
@@ -490,12 +490,13 @@ export function ProfitabilityAnalysis() {
               }))}
               chartColor="bg-blue-600"
               chartType="line"
+              className="mb-12"
             />
           </div>
         </div>
 
         {/* Insights and Recommendations */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-16">
           <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
             <h3 className="text-lg font-semibold text-primary-900 mb-4">Key Insights</h3>
             <div className="space-y-4">

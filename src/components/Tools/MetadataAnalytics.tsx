@@ -98,7 +98,7 @@ export function MetadataAnalytics() {
         </div>
 
         {/* Analytics Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <ChartTableToggle
             title="Department Occupancy Rates (%)"
             chartData={occupancyData}
@@ -115,6 +115,7 @@ export function MetadataAnalytics() {
               status: item.value > 80 ? 'High' : item.value > 60 ? 'Medium' : 'Low'
             }))}
             chartColor="bg-blue-600"
+            className="mb-8"
           />
           <ChartTableToggle
             title="Monthly Utilization Trend (%)"
@@ -131,11 +132,12 @@ export function MetadataAnalytics() {
             }))}
             chartColor="bg-green-600"
             chartType="line"
+            className="mb-8"
           />
         </div>
 
         {/* Detailed Analysis */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
           <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
             <h3 className="text-lg font-semibold text-primary-900 mb-4">Capacity Analysis</h3>
             <div className="space-y-4">

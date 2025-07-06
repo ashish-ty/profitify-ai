@@ -112,16 +112,16 @@ export function ChartTableToggle({
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-6 mb-8">
         {viewMode === 'chart' ? (
-          <div className={`${chartType === 'line' ? 'h-80' : 'h-64'} w-full`}>
+          <div className={`${chartType === 'line' ? 'h-96 mb-8' : 'h-64 mb-6'} w-full`}>
             {chartType === 'line' ? (
               <ProfessionalChart
                 data={chartData}
                 title=""
                 type="area"
                 color={chartColor.includes('primary') ? '#16A34A' : chartColor.includes('blue') ? '#3B82F6' : '#16A34A'}
-                height={320}
+                height={360}
                 showGrid={true}
                 showDataPoints={true}
                 gradient={true}
@@ -136,7 +136,7 @@ export function ChartTableToggle({
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto max-h-96">
+          <div className="overflow-x-auto max-h-96 mb-6">
             <table className="w-full">
               <thead className="bg-accent-50 sticky top-0">
                 <tr>
