@@ -84,20 +84,6 @@ export function SignupModal({ isOpen, onClose, onSignup, onSwitchToLogin }: Sign
           </div>
         )}
 
-        {/* Demo Notice */}
-        <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
-          <h3 className="font-medium text-primary-900 mb-2">Demo Mode</h3>
-          <p className="text-primary-700 text-sm mb-3">
-            This is a demo version. You can enter any information to create an account, or use our demo data.
-          </p>
-          <button
-            onClick={handleDemoSignup}
-            disabled={isLoading}
-            className="w-full bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 transition-colors font-medium disabled:opacity-50"
-          >
-            {isLoading ? 'Creating Account...' : 'Use Demo Data'}
-          </button>
-        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>

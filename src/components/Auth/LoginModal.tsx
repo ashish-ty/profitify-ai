@@ -67,20 +67,6 @@ export function LoginModal({ isOpen, onClose, onLogin, onSwitchToSignup }: Login
           </div>
         )}
 
-        {/* Demo Notice */}
-        <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
-          <h3 className="font-medium text-primary-900 mb-2">Demo Mode</h3>
-          <p className="text-primary-700 text-sm mb-3">
-            This is a demo version. You can use any email and password to login, or click the demo button below.
-          </p>
-          <button
-            onClick={handleDemoLogin}
-            disabled={isLoading}
-            className="w-full bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 transition-colors font-medium disabled:opacity-50"
-          >
-            {isLoading ? 'Logging in...' : 'Try Demo Login'}
-          </button>
-        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>

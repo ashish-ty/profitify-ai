@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react';
 import { User } from '../types';
-
-// Dummy user data
-const DUMMY_USER: User = {
-  id: '1',
-  name: 'Dr. Sarah Johnson',
-  email: 'sarah.johnson@cityhospital.com',
-  hospitalName: 'City General Hospital'
-};
+import { apiService } from '../services/api';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -16,13 +9,19 @@ export function useAuth() {
   useEffect(() => {
     // Simulate checking for existing session
     const checkAuth = () => {
-      const savedUser = localStorage.getItem('medicost-dummy-user');
-      if (savedUser) {
+      const savedUser = localStorage.getItem('medicost-user');
+      const savedToken = localStorage.getItem('medicost-token');
+      
+      if (savedUser && savedToken) {
         try {
-          setUser(JSON.parse(savedUser));
+          const userData = JSON.parse(savedUser);
+          setUser(userData);
+          apiService.setToken(savedToken);
         } catch (error) {
           console.error('Error parsing saved user:', error);
-          localStorage.removeItem('medicost-dummy-user');
+          localStorage.removeItem('medicost-user');
+          localStorage.removeItem('medicost-token');
+          apiService.clearToken();
         }
       }
       setIsLoading(false);
@@ -34,21 +33,25 @@ export function useAuth() {
 
   const login = async (email: string, password: string) => {
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await apiService.login({ email, password });
       
-      // For demo purposes, accept any email/password combination
-      if (email && password) {
+      if (response.access_token && response.user) {
+        // Set token in API service
+        apiService.setToken(response.access_token);
+        
+        // Transform backend user format to frontend format
         const user: User = {
-          ...DUMMY_USER,
-          email: email
+          id: response.user.id,
+          name: response.user.name,
+          email: response.user.email,
+          hospitalName: response.user.hospital_name
         };
         
         setUser(user);
-        localStorage.setItem('medicost-dummy-user', JSON.stringify(user));
-        return Promise.resolve(user);
-      } else {
-        throw new Error('Please enter both email and password');
+        localStorage.setItem('medicost-user', JSON.stringify(user));
+        localStorage.setItem('medicost-token', response.access_token);
+        
+        return user;
       }
     } catch (error) {
       console.error('Login failed:', error);
@@ -58,23 +61,30 @@ export function useAuth() {
 
   const signup = async (name: string, email: string, password: string, hospitalName: string) => {
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await apiService.signup({
+        name,
+        email,
+        password,
+        hospital_name: hospitalName
+      });
       
-      // For demo purposes, accept any valid input
-      if (name && email && password && hospitalName) {
+      if (response.access_token && response.user) {
+        // Set token in API service
+        apiService.setToken(response.access_token);
+        
+        // Transform backend user format to frontend format
         const user: User = {
-          id: '1',
-          name: name,
-          email: email,
-          hospitalName: hospitalName
+          id: response.user.id,
+          name: response.user.name,
+          email: response.user.email,
+          hospitalName: response.user.hospital_name
         };
         
         setUser(user);
-        localStorage.setItem('medicost-dummy-user', JSON.stringify(user));
-        return Promise.resolve(user);
-      } else {
-        throw new Error('Please fill in all required fields');
+        localStorage.setItem('medicost-user', JSON.stringify(user));
+        localStorage.setItem('medicost-token', response.access_token);
+        
+        return user;
       }
     } catch (error) {
       console.error('Signup failed:', error);
@@ -84,7 +94,9 @@ export function useAuth() {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('medicost-dummy-user');
+    localStorage.removeItem('medicost-user');
+    localStorage.removeItem('medicost-token');
+    apiService.clearToken();
   };
 
   return {
