@@ -10,451 +10,119 @@ import {
   CostCenter, 
   SecondaryCostDriver 
 } from '../../../types/metadata';
+import { 
+  useOccupancyRegister, 
+  useOTRegister, 
+  useConsumptionData, 
+  useConnectedLoad, 
+  useFixedAssetRegister, 
+  useTATData, 
+  useCostCenter, 
+  useSecondaryCostDriver 
+} from '../../../hooks/useNewTables';
 import { Bed, Activity, Package, Zap, Building, Clock, Target, BarChart3 } from 'lucide-react';
-
-// Dummy data for all tables
-const dummyOccupancyRegister: OccupancyRegisterNew[] = [
-  {
-    NatureOfData: 'Patient Stay',
-    UHID: 'UH001',
-    PatientAdmissionDate: '15/01/24',
-    PatientDischargeDate: '20/01/24',
-    IPDNumber: 'IPD2024001',
-    DateOfFinalBill: '20/01/24',
-    BillNo: 'B001',
-    WardCode: 'ICU01',
-    WardName: 'Cardiac ICU',
-    BedNumber: 'ICU-01',
-    LengthOfStayInHours: 120,
-    BedAssignDateTime: '15/01/24 10:00',
-    BedReleaseDateTime: '20/01/24 10:00',
-    WardCategoryCode: 'ICU',
-    BedCategoryName: 'ICU Bed',
-    PayorType: 'Insurance',
-    ServiceName: 'Cardiac Monitoring'
-  },
-  {
-    NatureOfData: 'Patient Stay',
-    UHID: 'UH002',
-    PatientAdmissionDate: '18/01/24',
-    PatientDischargeDate: '22/01/24',
-    IPDNumber: 'IPD2024002',
-    DateOfFinalBill: '22/01/24',
-    BillNo: 'B002',
-    WardCode: 'GW01',
-    WardName: 'General Ward',
-    BedNumber: 'GW-15',
-    LengthOfStayInHours: 96,
-    BedAssignDateTime: '18/01/24 14:00',
-    BedReleaseDateTime: '22/01/24 14:00',
-    WardCategoryCode: 'GEN',
-    BedCategoryName: 'General Bed',
-    PayorType: 'Cash',
-    ServiceName: 'General Care'
-  },
-  {
-    NatureOfData: 'Patient Stay',
-    UHID: 'UH003',
-    PatientAdmissionDate: '20/01/24',
-    PatientDischargeDate: '25/01/24',
-    IPDNumber: 'IPD2024003',
-    DateOfFinalBill: '25/01/24',
-    BillNo: 'B003',
-    WardCode: 'PW01',
-    WardName: 'Private Ward',
-    BedNumber: 'PW-08',
-    LengthOfStayInHours: 120,
-    BedAssignDateTime: '20/01/24 16:00',
-    BedReleaseDateTime: '25/01/24 16:00',
-    WardCategoryCode: 'PVT',
-    BedCategoryName: 'Private Bed',
-    PayorType: 'Insurance',
-    ServiceName: 'Private Care'
-  }
-];
-
-const dummyOTRegister: OTRegister[] = [
-  {
-    SerialNo: 'OT001',
-    UHID: 'UH001',
-    PatientBillNumber: 'B001',
-    PatientAdmissionDate: '15/01/24',
-    PatientDischargeDate: '20/01/24',
-    IPDNumber: 'IPD2024001',
-    ServiceDate: '16/01/24',
-    ServiceName: 'Cardiac Catheterization',
-    PerformingDoctorName: 'Dr. Smith',
-    PerformingDoctorDepartment: 'Cardiology',
-    AnaesthesistName: 'Dr. Anesthesia',
-    AnesthesiaType: 'General',
-    TypeOfProcedure: 'Interventional',
-    NatureOfProcedure: 'Elective',
-    OperationTheatreCode: 'OT01',
-    OperationTheatreName: 'Cath Lab 1',
-    OnTableTime: '09:00',
-    IncisionTime: '09:15',
-    FinishTime: '11:30',
-    ProcedureTime: '135 min',
-    ChangeOverTime: '30 min',
-    TotalTime: '165 min',
-    Remarks: 'Successful procedure',
-    PayorType: 'Insurance',
-    ServiceNameSecond: 'Cardiac Catheterization'
-  },
-  {
-    SerialNo: 'OT002',
-    UHID: 'UH002',
-    PatientBillNumber: 'B002',
-    PatientAdmissionDate: '18/01/24',
-    PatientDischargeDate: '22/01/24',
-    IPDNumber: 'IPD2024002',
-    ServiceDate: '19/01/24',
-    ServiceName: 'Angioplasty',
-    PerformingDoctorName: 'Dr. Smith',
-    PerformingDoctorDepartment: 'Cardiology',
-    AnaesthesistName: 'Dr. Anesthesia',
-    AnesthesiaType: 'Local',
-    TypeOfProcedure: 'Interventional',
-    NatureOfProcedure: 'Emergency',
-    OperationTheatreCode: 'OT01',
-    OperationTheatreName: 'Cath Lab 1',
-    OnTableTime: '14:00',
-    IncisionTime: '14:10',
-    FinishTime: '16:45',
-    ProcedureTime: '155 min',
-    ChangeOverTime: '25 min',
-    TotalTime: '180 min',
-    Remarks: 'Emergency procedure completed',
-    PayorType: 'Cash',
-    ServiceNameSecond: 'Angioplasty'
-  }
-];
-
-const dummyConsumptionData: ConsumptionData[] = [
-  {
-    SerialNo: 'C001',
-    CostCentreCode: 'CC001',
-    CostCentre: 'Cardiology',
-    SubCostCentreCode: 'SCC001',
-    SubCostCentre: 'Cath Lab',
-    TransactionDate: '15/01/24',
-    FromStore: 'Central Pharmacy',
-    ToStore: 'Cath Lab Store',
-    SKUName: 'Cardiac Stents',
-    LedgerCode: 'LED001',
-    LedgerName: 'Medical Implants',
-    UnitOfMeasurement: 'Pieces',
-    Quantity: 5,
-    Rate: 25000,
-    TransactionValue: 125000,
-    Remarks: 'Cardiac stent consumption'
-  },
-  {
-    SerialNo: 'C002',
-    CostCentreCode: 'CC002',
-    CostCentre: 'Laboratory',
-    SubCostCentreCode: 'SCC002',
-    SubCostCentre: 'Biochemistry',
-    TransactionDate: '16/01/24',
-    FromStore: 'Central Store',
-    ToStore: 'Lab Store',
-    SKUName: 'Lab Reagents',
-    LedgerCode: 'LED002',
-    LedgerName: 'Laboratory Supplies',
-    UnitOfMeasurement: 'Bottles',
-    Quantity: 20,
-    Rate: 500,
-    TransactionValue: 10000,
-    Remarks: 'Monthly reagent supply'
-  }
-];
-
-const dummyConnectedLoad: ConnectedLoad[] = [
-  {
-    SerialNo: 'CL001',
-    SubCostCentreCode: 'SCC001',
-    SubCostCentre: 'Cath Lab',
-    ConnectedLoad: 150,
-    RunningLoad: 120,
-    StandbyLoad: 25,
-    Days: 31,
-    Hours: 12,
-    TotalLoadKg: 44640,
-    Remarks: 'High usage during procedures'
-  },
-  {
-    SerialNo: 'CL002',
-    SubCostCentreCode: 'SCC002',
-    SubCostCentre: 'ICU',
-    ConnectedLoad: 200,
-    RunningLoad: 180,
-    StandbyLoad: 40,
-    Days: 31,
-    Hours: 24,
-    TotalLoadKg: 133920,
-    Remarks: '24/7 operation'
-  }
-];
-
-const dummyFixedAssetRegister: FixedAssetRegister[] = [
-  {
-    SerialNo: 'FA001',
-    SubCostCentreCode: 'SCC001',
-    SubCostCentre: 'Cath Lab',
-    BioMedicalEquipments: 2500000,
-    EngineeringEquipments: 500000,
-    FurnitureFixture: 150000,
-    Others: 100000,
-    Remarks: 'Cath lab equipment valuation'
-  },
-  {
-    SerialNo: 'FA002',
-    SubCostCentreCode: 'SCC002',
-    SubCostCentre: 'ICU',
-    BioMedicalEquipments: 1800000,
-    EngineeringEquipments: 300000,
-    FurnitureFixture: 200000,
-    Others: 80000,
-    Remarks: 'ICU equipment and furniture'
-  }
-];
-
-const dummyTATData: TATData[] = [
-  {
-    SerialNo: 'TAT001',
-    SubCostCentreCode: 'SCC001',
-    SubCostCentre: 'Laboratory',
-    TAT: '2 hours',
-    Remarks: 'Standard lab test turnaround time'
-  },
-  {
-    SerialNo: 'TAT002',
-    SubCostCentreCode: 'SCC002',
-    SubCostCentre: 'Radiology',
-    TAT: '4 hours',
-    Remarks: 'CT scan report delivery time'
-  }
-];
-
-const dummyCostCenter: CostCenter[] = [
-  {
-    CCType: 'Revenue',
-    CostCentreCode: 'CC001',
-    CostCentreCategory: 'Clinical',
-    CostCentre: 'Cardiology',
-    SubCostCentreCode: 'SCC001',
-    SubCostCentre: 'Cath Lab',
-    AliasCode: 'CATH01',
-    AliasName: 'Cardiac Catheterization',
-    CostDriver: 'Number of procedures',
-    SourceOfDriver: 'OT Register',
-    Remarks: 'Primary cardiac intervention center'
-  },
-  {
-    CCType: 'Support',
-    CostCentreCode: 'CC002',
-    CostCentreCategory: 'Support',
-    CostCentre: 'Laboratory',
-    SubCostCentreCode: 'SCC002',
-    SubCostCentre: 'Biochemistry',
-    AliasCode: 'LAB01',
-    AliasName: 'Bio Lab',
-    CostDriver: 'Number of tests',
-    SourceOfDriver: 'Lab Register',
-    Remarks: 'Main biochemistry laboratory'
-  }
-];
-
-const dummySecondaryCostDriver: SecondaryCostDriver[] = [
-  {
-    SerialNo: 'SCD001',
-    SubCostCentreCode: 'SCC001',
-    SubCostCentre: 'Cath Lab',
-    NursingHostelOccupancy: 0,
-    DoctorsHostelOccupancy: 0,
-    StaffAccommodationOccupancy: 0,
-    FrequencyOfAudit: 2,
-    NoOfITUsers: 15,
-    NoOfTransactionInFinanceBilling: 450,
-    ListOfEquipmentForLoan: 'Cath Lab Equipment',
-    NoOfTripsKm: 0,
-    NoOfLaboratoryTest: 0,
-    NoOfSampleCollectedReportDispatch: 0,
-    NoOfHomeSampleCollection: 0,
-    NoOfRadiologyTest: 25,
-    NoOfNeuroTest: 0,
-    NoOfCardiacTest: 85,
-    NoOfNuclearMedicineTest: 0,
-    NoOfIVFConsultation: 0,
-    OTTimeHours: 180,
-    CCUOccupancy: 0,
-    MICUOccupancy: 0,
-    PICUOccupancy: 0,
-    NICUOccupancy: 0,
-    HDUOccupancy: 0,
-    IsolationRoomOccupancy: 0,
-    GWOccupancy: 0,
-    PWSROccupancy: 0,
-    SWTSOccupancy: 0,
-    DWOccupancy: 0,
-    HeadOffice: 0,
-    OtherUnit1AllocationRatio: 0,
-    OtherUnit2AllocationRatio: 0,
-    OtherUnit3AllocationRatio: 0,
-    OtherUnit4AllocationRatio: 0,
-    OtherUnit5AllocationRatio: 0,
-    NoOfPatientOPIP: 450,
-    NoOfCorporatePatientOPIP: 120,
-    NoOfInstitutionalPatientOPIP: 80,
-    NoOfInternationalPatientOPIP: 15,
-    NoOfIPPatients: 180,
-    NoOfCreditIPPatients: 120,
-    SurgicalStoreIssueRatio: 0.8,
-    CentralStoreIssueRatio: 0.6,
-    NonSurgicalStoreIssueRatio: 0.4,
-    StationeryHousekeepingIssueRatio: 0.2,
-    NoOfDoctors: 8,
-    DoctorFeeForServiceRatio: 0.15,
-    ConsultantRetainerFeeMGBonusRatio: 0.25,
-    NoOfNursingStaff: 25,
-    NursingStation1ForCareUnits: 8,
-    NursingStation2ForCareUnits: 8,
-    NursingStation3ForCareUnits: 9,
-    NursingStation4ForCareUnits: 0,
-    NursingStation5ForCareUnits: 0,
-    ServiceUnderOPBilling1: 150,
-    ServiceUnderOPBilling2: 120,
-    ServiceUnderOPBilling3: 80,
-    ServiceUnderOPBilling4: 0,
-    BrokerageCommission: 15000,
-    NoOfCSSDSetIssued: 85,
-    NoOfDietServed: 540,
-    NoOfWardBoy: 12,
-    NoOfHousekeepingStaff: 8,
-    NoOfFumigationCyclePerformed: 4,
-    VolumeOfClothLoad: 250,
-    EffortsOfSupplyChainDepartment: 0.3,
-    AreaInSqMeter: 1200,
-    NoOfSecurityStaffDeployed: 6,
-    ActualWaterUtilization: 15000,
-    ActualGasUtilization: 8000,
-    ActualVaccumeUtilization: 2000,
-    Civil: 'Good condition'
-  }
-];
-
 
 // Column definitions for each table
 const occupancyColumns: TableColumn[] = [
-  { key: 'NatureOfData', label: 'Nature of Data', width: '120px', sortable: true },
-  { key: 'UHID', label: 'UHID', width: '100px', sortable: true },
-  { key: 'PatientAdmissionDate', label: 'Admission Date', width: '130px', sortable: true },
-  { key: 'PatientDischargeDate', label: 'Discharge Date', width: '130px', sortable: true },
-  { key: 'IPDNumber', label: 'IPD Number', width: '120px', sortable: true },
-  { key: 'WardName', label: 'Ward Name', width: '150px', sortable: true },
-  { key: 'BedNumber', label: 'Bed Number', width: '100px', sortable: true },
-  { key: 'LengthOfStayInHours', label: 'Stay Hours', width: '100px', type: 'number', sortable: true },
-  { key: 'BedCategoryName', label: 'Bed Category', width: '120px', sortable: true },
-  { key: 'PayorType', label: 'Payor Type', width: '100px', sortable: true },
-  { key: 'ServiceName', label: 'Service Name', width: '150px', sortable: true }
+  { key: 'nature_of_data', label: 'Nature of Data', width: '120px', sortable: true },
+  { key: 'uhid', label: 'UHID', width: '100px', sortable: true },
+  { key: 'patient_admission_date', label: 'Admission Date', width: '130px', type: 'date', sortable: true },
+  { key: 'patient_discharge_date', label: 'Discharge Date', width: '130px', type: 'date', sortable: true },
+  { key: 'ipd_number', label: 'IPD Number', width: '120px', sortable: true },
+  { key: 'ward_name', label: 'Ward Name', width: '150px', sortable: true },
+  { key: 'bed_number', label: 'Bed Number', width: '100px', sortable: true },
+  { key: 'length_of_stay_in_hours', label: 'Stay Hours', width: '100px', type: 'number', sortable: true },
+  { key: 'bed_category_name', label: 'Bed Category', width: '120px', sortable: true },
+  { key: 'payor_type', label: 'Payor Type', width: '100px', sortable: true },
+  { key: 'service_name', label: 'Service Name', width: '150px', sortable: true }
 ];
 
 const otRegisterColumns: TableColumn[] = [
-  { key: 'SerialNo', label: 'S.No.', width: '80px', sortable: true },
-  { key: 'UHID', label: 'UHID', width: '100px', sortable: true },
-  { key: 'ServiceDate', label: 'Service Date', width: '120px', sortable: true },
-  { key: 'ServiceName', label: 'Service Name', width: '180px', sortable: true },
-  { key: 'PerformingDoctorName', label: 'Doctor Name', width: '150px', sortable: true },
-  { key: 'PerformingDoctorDepartment', label: 'Department', width: '120px', sortable: true },
-  { key: 'AnesthesiaType', label: 'Anesthesia', width: '100px', sortable: true },
-  { key: 'TypeOfProcedure', label: 'Procedure Type', width: '130px', sortable: true },
-  { key: 'NatureOfProcedure', label: 'Nature', width: '100px', sortable: true },
-  { key: 'OperationTheatreName', label: 'OT Name', width: '120px', sortable: true },
-  { key: 'ProcedureTime', label: 'Procedure Time', width: '120px', sortable: true },
-  { key: 'TotalTime', label: 'Total Time', width: '100px', sortable: true },
-  { key: 'PayorType', label: 'Payor Type', width: '100px', sortable: true }
+  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 'uhid', label: 'UHID', width: '100px', sortable: true },
+  { key: 'service_date', label: 'Service Date', width: '120px', type: 'date', sortable: true },
+  { key: 'service_name', label: 'Service Name', width: '180px', sortable: true },
+  { key: 'performing_doctor_name', label: 'Doctor Name', width: '150px', sortable: true },
+  { key: 'performing_doctor_department', label: 'Department', width: '120px', sortable: true },
+  { key: 'anesthesia_type', label: 'Anesthesia', width: '100px', sortable: true },
+  { key: 'type_of_procedure', label: 'Procedure Type', width: '130px', sortable: true },
+  { key: 'nature_of_procedure', label: 'Nature', width: '100px', sortable: true },
+  { key: 'operation_theatre_name', label: 'OT Name', width: '120px', sortable: true },
+  { key: 'procedure_time', label: 'Procedure Time', width: '120px', sortable: true },
+  { key: 'total_time', label: 'Total Time', width: '100px', sortable: true },
+  { key: 'payor_type', label: 'Payor Type', width: '100px', sortable: true }
 ];
 
 const consumptionColumns: TableColumn[] = [
-  { key: 'SerialNo', label: 'S.No.', width: '80px', sortable: true },
-  { key: 'CostCentre', label: 'Cost Centre', width: '150px', sortable: true },
-  { key: 'SubCostCentre', label: 'Sub Cost Centre', width: '150px', sortable: true },
-  { key: 'TransactionDate', label: 'Transaction Date', width: '130px', sortable: true },
-  { key: 'SKUName', label: 'SKU Name', width: '180px', sortable: true },
-  { key: 'LedgerName', label: 'Ledger Name', width: '150px', sortable: true },
-  { key: 'Quantity', label: 'Quantity', width: '100px', type: 'number', sortable: true },
-  { key: 'Rate', label: 'Rate', width: '100px', type: 'currency', sortable: true },
-  { key: 'TransactionValue', label: 'Value', width: '120px', type: 'currency', sortable: true },
-  { key: 'Remarks', label: 'Remarks', width: '200px', sortable: true }
+  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 'cost_centre', label: 'Cost Centre', width: '150px', sortable: true },
+  { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '150px', sortable: true },
+  { key: 'transaction_date', label: 'Transaction Date', width: '130px', type: 'date', sortable: true },
+  { key: 'sku_name', label: 'SKU Name', width: '180px', sortable: true },
+  { key: 'ledger_name', label: 'Ledger Name', width: '150px', sortable: true },
+  { key: 'quantity', label: 'Quantity', width: '100px', type: 'number', sortable: true },
+  { key: 'rate', label: 'Rate', width: '100px', type: 'currency', sortable: true },
+  { key: 'transaction_value', label: 'Value', width: '120px', type: 'currency', sortable: true },
+  { key: 'remarks', label: 'Remarks', width: '200px', sortable: true }
 ];
 
 const connectedLoadColumns: TableColumn[] = [
-  { key: 'SerialNo', label: 'S.No.', width: '80px', sortable: true },
-  { key: 'SubCostCentre', label: 'Sub Cost Centre', width: '150px', sortable: true },
-  { key: 'ConnectedLoad', label: 'Connected Load', width: '130px', type: 'number', sortable: true },
-  { key: 'RunningLoad', label: 'Running Load', width: '120px', type: 'number', sortable: true },
-  { key: 'StandbyLoad', label: 'Standby Load', width: '120px', type: 'number', sortable: true },
-  { key: 'Days', label: 'Days', width: '80px', type: 'number', sortable: true },
-  { key: 'Hours', label: 'Hours', width: '80px', type: 'number', sortable: true },
-  { key: 'TotalLoadKg', label: 'Total Load (kWh)', width: '130px', type: 'number', sortable: true },
-  { key: 'Remarks', label: 'Remarks', width: '200px', sortable: true }
+  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '150px', sortable: true },
+  { key: 'connected_load', label: 'Connected Load', width: '130px', type: 'number', sortable: true },
+  { key: 'running_load', label: 'Running Load', width: '120px', type: 'number', sortable: true },
+  { key: 'standby_load', label: 'Standby Load', width: '120px', type: 'number', sortable: true },
+  { key: 'days', label: 'Days', width: '80px', type: 'number', sortable: true },
+  { key: 'hours', label: 'Hours', width: '80px', type: 'number', sortable: true },
+  { key: 'total_load_kg', label: 'Total Load (kWh)', width: '130px', type: 'number', sortable: true },
+  { key: 'remarks', label: 'Remarks', width: '200px', sortable: true }
 ];
 
 const fixedAssetColumns: TableColumn[] = [
-  { key: 'SerialNo', label: 'S.No.', width: '80px', sortable: true },
-  { key: 'SubCostCentre', label: 'Sub Cost Centre', width: '150px', sortable: true },
-  { key: 'BioMedicalEquipments', label: 'Bio Medical', width: '130px', type: 'currency', sortable: true },
-  { key: 'EngineeringEquipments', label: 'Engineering', width: '130px', type: 'currency', sortable: true },
-  { key: 'FurnitureFixture', label: 'Furniture', width: '120px', type: 'currency', sortable: true },
-  { key: 'Others', label: 'Others', width: '100px', type: 'currency', sortable: true },
-  { key: 'Remarks', label: 'Remarks', width: '200px', sortable: true }
+  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '150px', sortable: true },
+  { key: 'bio_medical_equipments', label: 'Bio Medical', width: '130px', type: 'currency', sortable: true },
+  { key: 'engineering_equipments', label: 'Engineering', width: '130px', type: 'currency', sortable: true },
+  { key: 'furniture_fixture', label: 'Furniture', width: '120px', type: 'currency', sortable: true },
+  { key: 'others', label: 'Others', width: '100px', type: 'currency', sortable: true },
+  { key: 'remarks', label: 'Remarks', width: '200px', sortable: true }
 ];
 
 const tatColumns: TableColumn[] = [
-  { key: 'SerialNo', label: 'S.No.', width: '80px', sortable: true },
-  { key: 'SubCostCentre', label: 'Sub Cost Centre', width: '200px', sortable: true },
-  { key: 'TAT', label: 'TAT', width: '150px', sortable: true },
-  { key: 'Remarks', label: 'Remarks', width: '300px', sortable: true }
+  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '200px', sortable: true },
+  { key: 'tat', label: 'TAT', width: '150px', sortable: true },
+  { key: 'remarks', label: 'Remarks', width: '300px', sortable: true }
 ];
 
 const costCenterColumns: TableColumn[] = [
-  { key: 'CCType', label: 'CC Type', width: '100px', sortable: true },
-  { key: 'CostCentreCode', label: 'Cost Centre Code', width: '130px', sortable: true },
-  { key: 'CostCentre', label: 'Cost Centre', width: '150px', sortable: true },
-  { key: 'SubCostCentre', label: 'Sub Cost Centre', width: '150px', sortable: true },
-  { key: 'AliasName', label: 'Alias Name', width: '150px', sortable: true },
-  { key: 'CostDriver', label: 'Cost Driver', width: '150px', sortable: true },
-  { key: 'SourceOfDriver', label: 'Source of Driver', width: '130px', sortable: true },
-  { key: 'Remarks', label: 'Remarks', width: '200px', sortable: true }
+  { key: 'cc_type', label: 'CC Type', width: '100px', sortable: true },
+  { key: 'cost_centre_code', label: 'Cost Centre Code', width: '130px', sortable: true },
+  { key: 'cost_centre', label: 'Cost Centre', width: '150px', sortable: true },
+  { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '150px', sortable: true },
+  { key: 'alias_name', label: 'Alias Name', width: '150px', sortable: true },
+  { key: 'cost_driver', label: 'Cost Driver', width: '150px', sortable: true },
+  { key: 'source_of_driver', label: 'Source of Driver', width: '130px', sortable: true },
+  { key: 'remarks', label: 'Remarks', width: '200px', sortable: true }
 ];
 
 export function MetadataTablesNew() {
   const [activeTable, setActiveTable] = useState<'occupancy' | 'ot-register' | 'consumption' | 'connected-load' | 'fixed-asset' | 'tat' | 'cost-center' | 'secondary-cost'>('occupancy');
-  const [occupancyData, setOccupancyData] = useState<OccupancyRegisterNew[]>([]);
-  const [otData, setOTData] = useState<OTRegister[]>([]);
-  const [consumptionData, setConsumptionData] = useState<ConsumptionData[]>([]);
-  const [connectedLoadData, setConnectedLoadData] = useState<ConnectedLoad[]>([]);
-  const [fixedAssetData, setFixedAssetData] = useState<FixedAssetRegister[]>([]);
-  const [tatData, setTATData] = useState<TATData[]>([]);
-  const [costCenterData, setCostCenterData] = useState<CostCenter[]>([]);
-  const [secondaryCostData, setSecondaryCostData] = useState<SecondaryCostDriver[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  
+  // Use hooks for each table
+  const { occupancyData, isLoading: occupancyLoading, error: occupancyError } = useOccupancyRegister();
+  const { otRegisterData, isLoading: otLoading, error: otError } = useOTRegister();
+  const { consumptionData, isLoading: consumptionLoading, error: consumptionError } = useConsumptionData();
+  const { connectedLoadData, isLoading: connectedLoadLoading, error: connectedLoadError } = useConnectedLoad();
+  const { fixedAssetData, isLoading: fixedAssetLoading, error: fixedAssetError } = useFixedAssetRegister();
+  const { tatData, isLoading: tatLoading, error: tatError } = useTATData();
+  const { costCenterData, isLoading: costCenterLoading, error: costCenterError } = useCostCenter();
+  const { secondaryCostData, isLoading: secondaryCostLoading, error: secondaryCostError } = useSecondaryCostDriver();
 
-  useEffect(() => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setOccupancyData(dummyOccupancyRegister);
-      setOTData(dummyOTRegister);
-      setConsumptionData(dummyConsumptionData);
-      setConnectedLoadData(dummyConnectedLoad);
-      setFixedAssetData(dummyFixedAssetRegister);
-      setTATData(dummyTATData);
-      setCostCenterData(dummyCostCenter);
-      setSecondaryCostData(dummySecondaryCostDriver);
-      setIsLoading(false);
-    }, 600);
-  }, []);
-
+  const isLoading = occupancyLoading || otLoading || consumptionLoading || connectedLoadLoading || 
+                   fixedAssetLoading || tatLoading || costCenterLoading || secondaryCostLoading;
+  const error = occupancyError || otError || consumptionError || connectedLoadError || 
+                fixedAssetError || tatError || costCenterError || secondaryCostError;
   const handleRowClick = (row: any) => {
     console.log('Metadata row clicked:', row);
   };
@@ -464,7 +132,7 @@ export function MetadataTablesNew() {
       case 'occupancy':
         return occupancyData;
       case 'ot-register':
-        return otData;
+        return otRegisterData;
       case 'consumption':
         return consumptionData;
       case 'connected-load':
@@ -633,7 +301,7 @@ export function MetadataTablesNew() {
           <h3 className="text-lg font-semibold text-primary-900 mb-4">Secondary Cost Driver Data</h3>
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
             <p className="text-yellow-800">
-              This table contains {Object.keys(dummySecondaryCostDriver[0] || {}).length} columns with extensive cost driver data. 
+              This table contains {Object.keys(secondaryCostData[0] || {}).length} columns with extensive cost driver data. 
               Due to the large number of columns, please export the data to view all details.
             </p>
           </div>
@@ -670,6 +338,13 @@ export function MetadataTablesNew() {
         />
       )}
 
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-red-800">{error}</p>
+        </div>
+      )}
+
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {activeTable === 'occupancy' && (
@@ -677,26 +352,26 @@ export function MetadataTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Admissions</h3>
               <p className="text-2xl font-bold text-primary-900">
-                {new Set(occupancyData.map(item => item.UHID)).size}
+                {new Set(occupancyData.map(item => item.uhid)).size}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Avg Stay Hours</h3>
               <p className="text-2xl font-bold text-blue-600">
                 {occupancyData.length > 0 ? 
-                  Math.round(occupancyData.reduce((sum, item) => sum + item.LengthOfStayInHours, 0) / occupancyData.length) : 0}h
+                  Math.round(occupancyData.reduce((sum, item) => sum + (item.length_of_stay_in_hours || 0), 0) / occupancyData.length) : 0}h
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">ICU Stays</h3>
               <p className="text-2xl font-bold text-red-600">
-                {occupancyData.filter(item => item.WardCategoryCode === 'ICU').length}
+                {occupancyData.filter(item => item.ward_category_code === 'ICU').length}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Insurance Patients</h3>
               <p className="text-2xl font-bold text-green-600">
-                {occupancyData.filter(item => item.PayorType === 'Insurance').length}
+                {occupancyData.filter(item => item.payor_type === 'Insurance').length}
               </p>
             </div>
           </>
@@ -706,25 +381,25 @@ export function MetadataTablesNew() {
           <>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Procedures</h3>
-              <p className="text-2xl font-bold text-primary-900">{otData.length}</p>
+              <p className="text-2xl font-bold text-primary-900">{otRegisterData.length}</p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Emergency Cases</h3>
               <p className="text-2xl font-bold text-red-600">
-                {otData.filter(item => item.NatureOfProcedure === 'Emergency').length}
+                {otRegisterData.filter(item => item.nature_of_procedure === 'Emergency').length}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Elective Cases</h3>
               <p className="text-2xl font-bold text-green-600">
-                {otData.filter(item => item.NatureOfProcedure === 'Elective').length}
+                {otRegisterData.filter(item => item.nature_of_procedure === 'Elective').length}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Avg Procedure Time</h3>
               <p className="text-2xl font-bold text-blue-600">
-                {otData.length > 0 ? 
-                  Math.round(otData.reduce((sum, item) => sum + parseInt(item.ProcedureTime), 0) / otData.length) : 0} min
+                {otRegisterData.length > 0 ? 
+                  Math.round(otRegisterData.reduce((sum, item) => sum + (parseInt(item.procedure_time) || 0), 0) / otRegisterData.length) : 0} min
               </p>
             </div>
           </>
@@ -739,19 +414,19 @@ export function MetadataTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Value</h3>
               <p className="text-2xl font-bold text-green-600">
-                ${consumptionData.reduce((sum, item) => sum + item.TransactionValue, 0).toLocaleString()}
+                ${consumptionData.reduce((sum, item) => sum + (item.transaction_value || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Cost Centres</h3>
               <p className="text-2xl font-bold text-blue-600">
-                {new Set(consumptionData.map(item => item.CostCentre)).size}
+                {new Set(consumptionData.map(item => item.cost_centre)).size}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Quantity</h3>
               <p className="text-2xl font-bold text-purple-600">
-                {consumptionData.reduce((sum, item) => sum + item.Quantity, 0)}
+                {consumptionData.reduce((sum, item) => sum + (item.quantity || 0), 0)}
               </p>
             </div>
           </>
@@ -766,10 +441,10 @@ export function MetadataTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Cost Centres</h3>
               <p className="text-2xl font-bold text-blue-600">
-                {activeTable === 'connected-load' ? new Set(connectedLoadData.map(item => item.SubCostCentre)).size :
-                 activeTable === 'fixed-asset' ? new Set(fixedAssetData.map(item => item.SubCostCentre)).size :
-                 activeTable === 'tat' ? new Set(tatData.map(item => item.SubCostCentre)).size :
-                 new Set(costCenterData.map(item => item.CostCentre)).size}
+                {activeTable === 'connected-load' ? new Set(connectedLoadData.map(item => item.sub_cost_centre)).size :
+                 activeTable === 'fixed-asset' ? new Set(fixedAssetData.map(item => item.sub_cost_centre)).size :
+                 activeTable === 'tat' ? new Set(tatData.map(item => item.sub_cost_centre)).size :
+                 new Set(costCenterData.map(item => item.cost_centre)).size}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
@@ -780,10 +455,10 @@ export function MetadataTablesNew() {
                  'Revenue Centres'}
               </h3>
               <p className="text-2xl font-bold text-green-600">
-                {activeTable === 'connected-load' ? connectedLoadData.reduce((sum, item) => sum + item.TotalLoadKg, 0).toLocaleString() :
-                 activeTable === 'fixed-asset' ? `$${fixedAssetData.reduce((sum, item) => sum + item.BioMedicalEquipments + item.EngineeringEquipments + item.FurnitureFixture + item.Others, 0).toLocaleString()}` :
+                {activeTable === 'connected-load' ? connectedLoadData.reduce((sum, item) => sum + (item.total_load_kg || 0), 0).toLocaleString() :
+                 activeTable === 'fixed-asset' ? `$${fixedAssetData.reduce((sum, item) => sum + (item.bio_medical_equipments || 0) + (item.engineering_equipments || 0) + (item.furniture_fixture || 0) + (item.others || 0), 0).toLocaleString()}` :
                  activeTable === 'tat' ? 'Variable' :
-                 costCenterData.filter(item => item.CCType === 'Revenue').length}
+                 costCenterData.filter(item => item.cc_type === 'Revenue').length}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
@@ -794,10 +469,10 @@ export function MetadataTablesNew() {
                  'Support Centres'}
               </h3>
               <p className="text-2xl font-bold text-purple-600">
-                {activeTable === 'connected-load' ? `${connectedLoadData.length > 0 ? Math.round(connectedLoadData.reduce((sum, item) => sum + item.ConnectedLoad, 0) / connectedLoadData.length) : 0} kW` :
-                 activeTable === 'fixed-asset' ? `$${fixedAssetData.reduce((sum, item) => sum + item.BioMedicalEquipments, 0).toLocaleString()}` :
+                {activeTable === 'connected-load' ? `${connectedLoadData.length > 0 ? Math.round(connectedLoadData.reduce((sum, item) => sum + (item.connected_load || 0), 0) / connectedLoadData.length) : 0} kW` :
+                 activeTable === 'fixed-asset' ? `$${fixedAssetData.reduce((sum, item) => sum + (item.bio_medical_equipments || 0), 0).toLocaleString()}` :
                  activeTable === 'tat' ? tatData.length :
-                 costCenterData.filter(item => item.CCType === 'Support').length}
+                 costCenterData.filter(item => item.cc_type === 'Support').length}
               </p>
             </div>
           </>
