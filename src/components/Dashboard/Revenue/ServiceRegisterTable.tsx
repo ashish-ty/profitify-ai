@@ -97,3 +97,5 @@ export default function ServiceRegisterTable() {
     </div>
   );
 }
+
+export { ServiceRegisterTable }
