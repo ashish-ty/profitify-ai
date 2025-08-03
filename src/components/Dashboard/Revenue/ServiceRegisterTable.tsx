@@ -38,6 +38,7 @@ const serviceRegisterColumns: TableColumn[] = [
   { key: 'service_date', label: 'Service Date', width: '120px', type: 'date', sortable: true }
 ];
 
+export default function ServiceRegisterTable() {
   const { serviceRegisterData, isLoading, error, fetchServiceRegister } = useServiceRegister();
 
   const handleRowClick = (row: ServiceRegister) => {
