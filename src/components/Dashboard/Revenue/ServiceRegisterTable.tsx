@@ -45,6 +45,7 @@ export default function ServiceRegisterTable() {
     console.log('Service register row clicked:', row);
   };
 
+export function ServiceRegisterTable() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -97,4 +98,3 @@ export default function ServiceRegisterTable() {
       </div>
     </div>
   );
-}
