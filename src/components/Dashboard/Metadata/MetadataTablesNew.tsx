@@ -343,62 +343,6 @@ const dummySecondaryCostDriver: SecondaryCostDriver[] = [
   }
 ];
 
-const dummyOTRegister: OTRegister[] = [
-  {
-    SerialNo: 'OT001',
-    UHID: 'UH001',
-    PatientBillNumber: 'B001',
-    PatientAdmissionDate: '15/01/24',
-    PatientDischargeDate: '20/01/24',
-    IPDNumber: 'IPD2024001',
-    ServiceDate: '16/01/24',
-    ServiceName: 'Cardiac Catheterization',
-    PerformingDoctorName: 'Dr. Smith',
-    PerformingDoctorDepartment: 'Cardiology',
-    AnaesthesistName: 'Dr. Anesthesia',
-    AnesthesiaType: 'General',
-    TypeOfProcedure: 'Interventional',
-    NatureOfProcedure: 'Elective',
-    OperationTheatreCode: 'OT01',
-    OperationTheatreName: 'Cath Lab 1',
-    OnTableTime: '09:00',
-    IncisionTime: '09:15',
-    FinishTime: '11:30',
-    ProcedureTime: '135 min',
-    ChangeOverTime: '30 min',
-    TotalTime: '165 min',
-    Remarks: 'Successful procedure',
-    PayorType: 'Insurance',
-    ServiceNameSecond: 'Cardiac Catheterization'
-  },
-  {
-    SerialNo: 'OT002',
-    UHID: 'UH002',
-    PatientBillNumber: 'B002',
-    PatientAdmissionDate: '18/01/24',
-    PatientDischargeDate: '22/01/24',
-    IPDNumber: 'IPD2024002',
-    ServiceDate: '19/01/24',
-    ServiceName: 'Angioplasty',
-    PerformingDoctorName: 'Dr. Smith',
-    PerformingDoctorDepartment: 'Cardiology',
-    AnaesthesistName: 'Dr. Anesthesia',
-    AnesthesiaType: 'Local',
-    TypeOfProcedure: 'Interventional',
-    NatureOfProcedure: 'Emergency',
-    OperationTheatreCode: 'OT01',
-    OperationTheatreName: 'Cath Lab 1',
-    OnTableTime: '14:00',
-    IncisionTime: '14:10',
-    FinishTime: '16:45',
-    ProcedureTime: '155 min',
-    ChangeOverTime: '25 min',
-    TotalTime: '180 min',
-    Remarks: 'Emergency procedure completed',
-    PayorType: 'Cash',
-    ServiceNameSecond: 'Angioplasty'
-  }
-];
 
 // Column definitions for each table
 const occupancyColumns: TableColumn[] = [
