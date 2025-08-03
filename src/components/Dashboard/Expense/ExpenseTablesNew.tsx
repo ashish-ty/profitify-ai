@@ -315,12 +315,12 @@ export function ExpenseTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Avg Utilization</h3>
               <p className="text-2xl font-bold text-purple-600">
-                ${hrData.reduce((sum, item) => sum + (item.deduction || 0), 0).toLocaleString()}
+                {hrData.length > 0 ? Math.round(hrData.reduce((sum, item) => sum + (item.utilization || 0), 0) / hrData.length) : 0}%
               </p>
             </div>
           </>
         )}
       </div>
-                {hrData.length > 0 ? Math.round(hrData.reduce((sum, item) => sum + (item.utilization || 0), 0) / hrData.length) : 0}%
+    </div>
   );
 }
