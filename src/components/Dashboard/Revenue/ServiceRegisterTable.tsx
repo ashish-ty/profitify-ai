@@ -44,6 +44,7 @@ export default function ServiceRegisterTable() {
   const handleRowClick = (row: ServiceRegister) => {
     console.log('Service register row clicked:', row);
   };
+}
 
 export function ServiceRegisterTable() {
   return (
@@ -98,3 +99,4 @@ export function ServiceRegisterTable() {
       </div>
     </div>
   );
+}
