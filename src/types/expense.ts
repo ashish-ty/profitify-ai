@@ -93,3 +93,96 @@ export interface HRSalarySheet {
   Deductions: number;
   NetPay: number;
 }
+
+// New expense table types based on your specifications
+export interface TrialBalanceNew {
+  CategoryCode: string;
+  Category: string;
+  GroupingCode: string;
+  Grouping: string;
+  LedgerCode: string;
+  LedgerName: string;
+  AliasCode: string;
+  AliasName: string;
+  Amount: number;
+  Remarks: string;
+  PrimaryCostDriver: string;
+  CategoryCodeSecond: string;
+  CategorySecond: string;
+  AmountSecond: number;
+}
+
+export interface ExpenseWise {
+  NatureOfData: string;
+  LedgerCode: string;
+  LedgerName: string;
+  AliasName: string;
+  SubCostCentreCode: string;
+  SubCostCentre: string;
+  Amount: number;
+  Remarks: string;
+}
+
+export interface VariableCostBillWiseNew {
+  PatientType: string;
+  RegNo: string;
+  IPDNumber: string;
+  BillNo: string;
+  PharmacyChargedToPatient: number;
+  MedicalSurgicalConsumables: number;
+  ImplantsAndProsthetics: number;
+  NonMedicalConsumables: number;
+  FeeForService: number;
+  IncentivesToDoctors: number;
+  PatientFoodBeverages: number;
+  LaboratoryTestOutsource: number;
+  OtherOutsourcedServices1: number;
+  OtherOutsourcedServices2: number;
+  OtherOutsourcedServices3: number;
+  BrokerageCommission: number;
+  ProvisionForBadDebts: number;
+  DoctorName: string;
+  ServiceName: string;
+  PayorType: string;
+}
+
+export interface HRNew {
+  NatureOfData: string;
+  GroupCode: string;
+  GroupName: string;
+  SubGroupCode: string;
+  SubGroupName: string;
+  AssociateCode: string;
+  AssociateName: string;
+  Period: string;
+  DateOfJoining: string;
+  DateOfResignation: string;
+  WorkingPeriod: string;
+  Department: string;
+  SubDepartment: string;
+  Designation: string;
+  EffortsCategory: string;
+  MasterForMultiple: string;
+  NatureOfAllocation: string;
+  EffortsAllocation: number;
+  EffortsSubAllocation: number;
+  Utilization: number;
+  AvailableHours: number;
+  ActualHours: number;
+  CostCentreCode: string;
+  CostCentreName: string;
+  SubCostCentreCode: string;
+  SubCostCentreName: string;
+  BasicPay: number;
+  Allowances: number;
+  OtherBenefits: number;
+  Overtime: number;
+  Bonus: number;
+  EPF: number;
+  ESIC: number;
+  AnyOtherContribution: number;
+  GrossTotal: number;
+  Deduction: number;
+  NetSalary: number;
+  NoOfHeadcount: number;
+}

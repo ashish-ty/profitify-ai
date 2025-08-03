@@ -32,6 +32,41 @@ export interface BillRegister {
   CoPay4_Amount: number;
 }
 
+export interface ServiceRegister {
+  DateOfFinalBill: string;
+  Month: string;
+  BillNo: string;
+  PatientType: string;
+  RegNo: string;
+  IPDNumber: string;
+  PayorType: string;
+  PayorAliasName: string;
+  AdmittingDoctorName: string;
+  AdmittingDoctorDepartment: string;
+  PerformingDoctorName: string;
+  PerformingDoctorDepartment: string;
+  ReferingDoctorName: string;
+  ReferingDoctorDepartment: string;
+  ServiceName: string;
+  ServiceDepartment: string;
+  ServiceSubDepartment: string;
+  ServiceStatus: string;
+  IsPackaged: string;
+  IsOutsourced: string;
+  Quantity: number;
+  GrossAmount: number;
+  Discount: number;
+  NetAmount: number;
+  EmergencyCharges: string;
+  PerformingDoctorShare: number;
+  PharmacyMaterialCost: number;
+  OutsourceShare: number;
+  SubCostCentreCode: string;
+  SubCostCentreName: string;
+  ServiceTAT: string;
+  ServiceDate: string;
+}
+
 export interface PatientServiceRegister {
   SerialNo: string;
   IPDNo: string;

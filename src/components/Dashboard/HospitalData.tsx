@@ -2,52 +2,50 @@ import React, { useState } from 'react';
 import { DollarSign, TrendingDown, Building2, Table } from 'lucide-react';
 import { DataCard } from './DataCard';
 import { DataForm } from './DataForm';
-import { RevenueDataTables } from './Revenue/RevenueDataTables';
+import { ServiceRegisterTable } from './Revenue/ServiceRegisterTable';
+import { ExpenseTablesNew } from './Expense/ExpenseTablesNew';
+import { MetadataTablesNew } from './Metadata/MetadataTablesNew';
 import { DataType } from '../../types';
 
 const dataCards = [
   {
     id: 'revenue' as DataType,
-    title: 'Revenue Tables',
-    description: 'Manage Bill Register and Patient Service data with detailed tracking',
+    title: 'Revenue Data',
+    description: 'Manage Service Register with detailed patient service tracking',
     icon: DollarSign,
     color: 'bg-green-100 text-green-600',
-    fields: ['Bill Register', 'Patient Services', 'Payment Tracking', 'Service Analysis']
+    fields: ['Service Register', 'Patient Services', 'Payment Tracking', 'Service Analysis']
   },
   {
     id: 'expenses' as DataType,
-    title: 'Expense Data',
-    description: 'Monitor costs across all hospital departments',
+    title: 'Expense Tables',
+    description: 'Monitor costs with Trial Balance, Expense Wise, Variable Cost, and HR data',
     icon: TrendingDown,
     color: 'bg-red-100 text-red-600',
-    fields: ['Pharmacy', 'Salaries', 'Power & Fuel', 'Admin Expenses']
+    fields: ['Trial Balance', 'Expense Wise', 'Variable Cost', 'HR Data']
   },
   {
     id: 'metadata' as DataType,
-    title: 'Hospital Metadata',
-    description: 'Maintain hospital capacity and staff information',
+    title: 'Metadata Tables',
+    description: 'Comprehensive hospital operational data across 8 different tables',
     icon: Building2,
     color: 'bg-blue-100 text-blue-600',
-    fields: ['Bed Capacity', 'Staff Count', 'Equipment', 'Facilities']
+    fields: ['Occupancy', 'OT Register', 'Consumption', 'Power Load', 'Assets', 'TAT', 'Cost Centers', 'Drivers']
   }
 ];
 
 export function HospitalData() {
-  const [selectedDataType, setSelectedDataType] = useState<DataType | 'revenue-tables' | null>(null);
+  const [selectedDataType, setSelectedDataType] = useState<DataType | null>(null);
 
   const handleCardClick = (dataType: DataType) => {
-    if (dataType === 'revenue') {
-      setSelectedDataType('revenue-tables');
-    } else {
-      setSelectedDataType(dataType);
-    }
+    setSelectedDataType(dataType);
   };
 
   const handleBack = () => {
     setSelectedDataType(null);
   };
 
-  if (selectedDataType === 'revenue-tables') {
+  if (selectedDataType === 'revenue') {
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-4">
@@ -58,13 +56,41 @@ export function HospitalData() {
             <span>← Back to Hospital Data</span>
           </button>
         </div>
-        <RevenueDataTables />
+        <ServiceRegisterTable />
       </div>
     );
   }
 
-  if (selectedDataType && selectedDataType !== 'revenue-tables') {
-    return <DataForm dataType={selectedDataType} onBack={handleBack} />;
+  if (selectedDataType === 'expenses') {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={handleBack}
+            className="flex items-center space-x-2 text-accent-600 hover:text-primary-900 transition-colors"
+          >
+            <span>← Back to Hospital Data</span>
+          </button>
+        </div>
+        <ExpenseTablesNew />
+      </div>
+    );
+  }
+
+  if (selectedDataType === 'metadata') {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={handleBack}
+            className="flex items-center space-x-2 text-accent-600 hover:text-primary-900 transition-colors"
+          >
+            <span>← Back to Hospital Data</span>
+          </button>
+        </div>
+        <MetadataTablesNew />
+      </div>
+    );
   }
 
   return (
