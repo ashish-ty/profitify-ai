@@ -9,7 +9,6 @@ import { ExpenseAnalytics } from './Tools/ExpenseAnalytics';
 import { MetadataAnalytics } from './Tools/MetadataAnalytics';
 import { ProfitabilityAnalysis } from './Tools/ProfitabilityAnalysis';
 import { BudgetPlanning } from './Tools/BudgetPlanning';
-import { CostAnalysis } from './Tools/CostAnalysis';
 import { User } from '../types';
 
 interface DashboardProps {
@@ -83,7 +82,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             <Route path="/dashboard/tools/profitability/:level" element={<ProfitabilityAnalysis />} />
             <Route path="/dashboard/tools/budget-planning" element={<BudgetPlanning />} />
             <Route path="/dashboard/tools/budget-planner" element={<BudgetPlanning />} />
-            <Route path="/dashboard/tools/cost-analysis" element={<CostAnalysis />} />
             <Route path="/dashboard/settings" element={<div className="p-8">Settings content coming soon...</div>} />
             <Route path="/dashboard/help" element={<div className="p-8">Help & Support content coming soon...</div>} />
           </Routes>

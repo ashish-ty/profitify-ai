@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, hospitals, revenue, expenses, analytics, revenue_analytics, new_tables
+from app.routers import auth, new_tables
 from app.core.config import settings
 
 app = FastAPI(
-    title="Medicost.ai API",
+    title="Profitify.ai API",
     description="AI-powered hospital financial management system",
     version="1.0.0"
 )
@@ -20,16 +20,11 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
-app.include_router(hospitals.router, prefix="/api/hospitals", tags=["hospitals"])
-app.include_router(revenue.router, prefix="/api/revenue", tags=["revenue"])
-app.include_router(expenses.router, prefix="/api/expenses", tags=["expenses"])
-app.include_router(analytics.router, prefix="/api/analytics", tags=["analytics"])
-app.include_router(revenue_analytics.router, prefix="/api/revenue-analytics", tags=["revenue-analytics"])
 app.include_router(new_tables.router, prefix="/api/new-tables", tags=["new-tables"])
 
 @app.get("/")
 async def root():
-    return {"message": "Medicost.ai API is running"}
+    return {"message": "Profitify.ai API is running"}
 
 @app.get("/health")
 async def health_check():

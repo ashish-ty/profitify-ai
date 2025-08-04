@@ -73,58 +73,6 @@ const toolCategories: ToolCategory[] = [
   }
 ];
 
-const profitabilityLevels = [
-  {
-    id: 'net-figures',
-    title: 'Net Figures',
-    description: 'Overall hospital profitability analysis',
-    icon: DollarSign,
-    color: 'text-green-600'
-  },
-  {
-    id: 'service-level',
-    title: 'Service Level',
-    description: 'Profitability by individual services',
-    icon: Activity,
-    color: 'text-blue-600'
-  },
-  {
-    id: 'specialty-level',
-    title: 'Specialty Level',
-    description: 'Department and specialty profitability',
-    icon: Stethoscope,
-    color: 'text-purple-600'
-  },
-  {
-    id: 'doctor-level',
-    title: 'Doctor Level',
-    description: 'Individual doctor performance analysis',
-    icon: Users,
-    color: 'text-orange-600'
-  },
-  {
-    id: 'bed-level',
-    title: 'Bed Level',
-    description: 'Bed utilization and profitability',
-    icon: Bed,
-    color: 'text-cyan-600'
-  },
-  {
-    id: 'ot-level',
-    title: 'OT Level',
-    description: 'Operating theater efficiency analysis',
-    icon: Scissors,
-    color: 'text-red-600'
-  },
-  {
-    id: 'cath-lab-level',
-    title: 'Cath Lab Level',
-    description: 'Catheterization lab performance',
-    icon: Building2,
-    color: 'text-indigo-600'
-  }
-];
-
 export function Tools() {
   const navigate = useNavigate();
 
@@ -132,10 +80,6 @@ export function Tools() {
     if (route !== '#') {
       navigate(route);
     }
-  };
-
-  const handleProfitabilityLevel = (level: string) => {
-    navigate(`/dashboard/tools/profitability/${level}`);
   };
 
   return (
@@ -190,7 +134,6 @@ export function Tools() {
         </div>
       ))}
 
-
       {/* Value Proposition Section */}
       <div className="bg-gradient-to-r from-primary-900 to-primary-700 rounded-xl p-8 text-white">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -229,8 +172,8 @@ export function Tools() {
               <div className="text-primary-200 text-sm">Real-time Insights</div>
             </div>
             <div className="bg-primary-800 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold mb-1 text-green-400">7</div>
-              <div className="text-primary-200 text-sm">Analysis Levels</div>
+              <div className="text-2xl font-bold mb-1 text-green-400">8</div>
+              <div className="text-primary-200 text-sm">Data Tables</div>
             </div>
           </div>
         </div>

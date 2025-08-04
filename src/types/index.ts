@@ -5,40 +5,6 @@ export interface User {
   hospitalName: string;
 }
 
-export interface RevenueData {
-  month: string;
-  patientType: 'OPD' | 'IPD';
-  specialty: 'Cardiology' | 'Oncology' | 'Neurology' | 'Gynaecology';
-  billingCategory: 'Cash' | 'Credit';
-  numberOfPatients: number;
-  bedDaysICU: number;
-  bedDaysNonICU: number;
-  grossAmount: number;
-  discount: number;
-}
-
-export interface ExpenseData {
-  month: string;
-  pharmacy: number;
-  materialNonMedical: number;
-  doctorShare: number;
-  salaryWages: number;
-  powerFuel: number;
-  adminFinancial: number;
-  repairMaintenance: number;
-  salesMarketing: number;
-  depreciation: number;
-}
-
-export interface HospitalMetadata {
-  month: string;
-  bedsICU: number;
-  bedsNonICU: number;
-  numberOfNurses: number;
-  residentDoctors: number;
-  technicianStaff: number;
-}
-
 export type DataType = 'revenue' | 'expenses' | 'metadata';
 
 export interface ToolCategory {

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { DollarSign, TrendingDown, Building2, Table } from 'lucide-react';
+import { DollarSign, TrendingDown, Building2 } from 'lucide-react';
 import { DataCard } from './DataCard';
-import { DataForm } from './DataForm';
 import { ServiceRegisterTable } from './Revenue/ServiceRegisterTable';
 import { ExpenseTablesNew } from './Expense/ExpenseTablesNew';
 import { MetadataTablesNew } from './Metadata/MetadataTablesNew';
@@ -115,15 +114,15 @@ export function HospitalData() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-primary-50 rounded-lg p-4">
             <h4 className="font-medium text-primary-900 mb-2">Revenue Tracking</h4>
-            <p className="text-sm text-accent-600">Update revenue data monthly for accurate financial insights</p>
+            <p className="text-sm text-accent-600">Track detailed service-level revenue with comprehensive patient data</p>
           </div>
           <div className="bg-secondary-50 rounded-lg p-4">
             <h4 className="font-medium text-primary-900 mb-2">Expense Management</h4>
-            <p className="text-sm text-accent-600">Monitor expenses regularly to identify cost-saving opportunities</p>
+            <p className="text-sm text-accent-600">Monitor expenses across multiple categories with detailed cost allocation</p>
           </div>
           <div className="bg-accent-50 rounded-lg p-4">
-            <h4 className="font-medium text-primary-900 mb-2">Data Accuracy</h4>
-            <p className="text-sm text-accent-600">Ensure all data is accurate for reliable AI-powered insights</p>
+            <h4 className="font-medium text-primary-900 mb-2">Operational Data</h4>
+            <p className="text-sm text-accent-600">Comprehensive metadata tracking for optimal resource utilization</p>
           </div>
         </div>
       </div>

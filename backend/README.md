@@ -1,12 +1,11 @@
-# Medicost.ai Backend API
+# Profitify.ai Backend API
 
-A FastAPI-based backend service for the Medicost.ai hospital financial management platform.
+A FastAPI-based backend service for the Profitify.ai hospital financial management platform.
 
 ## Features
 
 - **User Authentication**: JWT-based authentication with Supabase integration
-- **Hospital Data Management**: CRUD operations for hospital metadata, revenue, and expense data
-- **Analytics Engine**: Advanced analytics and insights generation
+- **Hospital Data Management**: Comprehensive data management across 13 different tables
 - **Row-Level Security**: Secure data access with Supabase RLS
 - **RESTful API**: Well-documented API endpoints with automatic OpenAPI documentation
 
@@ -30,7 +29,7 @@ A FastAPI-based backend service for the Medicost.ai hospital financial managemen
 ### 2. Database Setup
 
 1. Create a new Supabase project at https://supabase.com
-2. Run the SQL schema in `database/schema.sql` in your Supabase SQL editor
+2. Run the SQL migrations in your Supabase SQL editor
 3. Enable Row Level Security (RLS) for all tables
 
 ### 3. Installation
@@ -56,7 +55,6 @@ A FastAPI-based backend service for the Medicost.ai hospital financial managemen
 2. The API will be available at:
    - API: http://localhost:8000
    - Documentation: http://localhost:8000/docs
-   - Alternative docs: http://localhost:8000/redoc
 
 ## API Endpoints
 
@@ -65,57 +63,10 @@ A FastAPI-based backend service for the Medicost.ai hospital financial managemen
 - `POST /api/auth/login` - User login
 - `GET /api/auth/me` - Get current user info
 
-### Hospital Data
-- `POST /api/hospitals/metadata` - Create hospital metadata
-- `GET /api/hospitals/metadata` - Get hospital metadata
-- `PUT /api/hospitals/metadata/{id}` - Update hospital metadata
-- `DELETE /api/hospitals/metadata/{id}` - Delete hospital metadata
-
-### Revenue Management
-- `POST /api/revenue/` - Create revenue data
-- `GET /api/revenue/` - Get revenue data with filtering
-- `GET /api/revenue/summary` - Get revenue summary
-- `PUT /api/revenue/{id}` - Update revenue data
-- `DELETE /api/revenue/{id}` - Delete revenue data
-
-### Expense Management
-- `POST /api/expenses/` - Create expense data
-- `GET /api/expenses/` - Get expense data with filtering
-- `GET /api/expenses/summary` - Get expense summary
-- `PUT /api/expenses/{id}` - Update expense data
-- `DELETE /api/expenses/{id}` - Delete expense data
-
-### Analytics
-- `GET /api/analytics/dashboard-metrics` - Get dashboard metrics
-- `GET /api/analytics/revenue-trends` - Get revenue trends
-- `GET /api/analytics/expense-analysis` - Get expense analysis
-- `GET /api/analytics/profitability-analysis` - Get profitability analysis
-- `GET /api/analytics/patient-volume-analysis` - Get patient volume analysis
-
-## Data Models
-
-### User
-- Email, name, hospital name
-- JWT-based authentication
-- Row-level security enabled
-
-### Hospital Metadata
-- Monthly capacity data (ICU/Non-ICU beds)
-- Staff information (nurses, doctors, technicians)
-- User-specific data isolation
-
-### Revenue Data
-- Patient type (OPD/IPD)
-- Specialty categories
-- Billing categories (Cash/Credit)
-- Patient counts and bed days
-- Gross amount and discounts
-
-### Expense Data
-- 9 expense categories
-- Monthly tracking
-- Automatic total calculation
-- Cost analysis capabilities
+### New Tables Data Management
+- Service Register (Revenue)
+- Trial Balance, Expense Wise, Variable Cost, HR Data (Expenses)
+- Occupancy, OT Register, Consumption, Connected Load, Fixed Assets, TAT, Cost Centers, Secondary Cost Drivers (Metadata)
 
 ## Security Features
 
@@ -125,39 +76,9 @@ A FastAPI-based backend service for the Medicost.ai hospital financial managemen
 - **CORS Configuration**: Proper cross-origin resource sharing
 - **Input Validation**: Pydantic model validation
 
-## Development
+## Data Structure
 
-### Running Tests
-```bash
-pytest
-```
-
-### Code Structure
-```
-backend/
-├── app/
-│   ├── core/          # Core functionality (config, database, security)
-│   ├── models/        # Pydantic models
-│   ├── routers/       # API route handlers
-│   └── main.py        # FastAPI application
-├── database/
-│   └── schema.sql     # Database schema
-├── requirements.txt   # Python dependencies
-└── run.py            # Application runner
-```
-
-## Production Deployment
-
-1. Set environment variables for production
-2. Use a production WSGI server like Gunicorn
-3. Configure proper logging
-4. Set up monitoring and health checks
-5. Use HTTPS in production
-
-## Contributing
-
-1. Follow PEP 8 style guidelines
-2. Add tests for new features
-3. Update documentation
-4. Use type hints
-5. Follow RESTful API conventions
+The system manages 13 comprehensive tables:
+- **Revenue Tab**: 1 table (Service Register)
+- **Expense Tab**: 4 tables (Trial Balance, Expense Wise, Variable Cost, HR)
+- **Metadata Tab**: 8 tables (Occupancy, OT, Consumption, Power, Assets, TAT, Cost Centers, Drivers)
