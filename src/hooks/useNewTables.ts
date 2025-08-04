@@ -60,13 +60,6 @@ export function useServiceRegister() {
     fetchServiceRegister();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     serviceRegisterData,
     isLoading,
@@ -112,13 +105,6 @@ export function useTrialBalance() {
     fetchTrialBalance();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     trialBalanceData,
     isLoading,
@@ -162,13 +148,6 @@ export function useExpenseWise() {
     fetchExpenseWise();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     expenseWiseData,
     isLoading,
@@ -215,13 +194,6 @@ export function useVariableCostBillWise() {
     fetchVariableCostBillWise();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     variableCostData,
     isLoading,
@@ -268,13 +240,6 @@ export function useHRData() {
     fetchHRData();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     hrData,
     isLoading,
@@ -321,13 +286,6 @@ export function useOccupancyRegister() {
     fetchOccupancyRegister();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     occupancyData,
     isLoading,
@@ -374,13 +332,6 @@ export function useOTRegister() {
     fetchOTRegister();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     otRegisterData,
     isLoading,
@@ -424,13 +375,6 @@ export function useConsumptionData() {
     fetchConsumptionData();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     consumptionData,
     isLoading,
@@ -474,13 +418,6 @@ export function useConnectedLoad() {
     fetchConnectedLoad();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     connectedLoadData,
     isLoading,
@@ -524,13 +461,6 @@ export function useFixedAssetRegister() {
     fetchFixedAssetRegister();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     fixedAssetData,
     isLoading,
@@ -574,13 +504,6 @@ export function useTATData() {
     fetchTATData();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     tatData,
     isLoading,
@@ -627,13 +550,6 @@ export function useCostCenter() {
     fetchCostCenter();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     costCenterData,
     isLoading,
@@ -677,13 +593,6 @@ export function useSecondaryCostDriver() {
     fetchSecondaryCostDriver();
   }, []);
 
-  // Refresh token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('medicost-token');
-    if (token) {
-      newTablesApiService.setToken(token);
-    }
-  }, []);
   return {
     secondaryCostData,
     isLoading,
