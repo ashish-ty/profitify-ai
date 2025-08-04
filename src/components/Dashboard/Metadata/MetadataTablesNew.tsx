@@ -301,10 +301,21 @@ export function MetadataTablesNew() {
           <h3 className="text-lg font-semibold text-primary-900 mb-4">Secondary Cost Driver Data</h3>
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
             <p className="text-yellow-800">
-              This table contains {Object.keys(secondaryCostData[0] || {}).length} columns with extensive cost driver data. 
-              Due to the large number of columns, please export the data to view all details.
+              This table contains 70+ columns with extensive cost driver data. 
+              Use the table view below to see key metrics or export for complete data.
             </p>
           </div>
+          <DataTable
+            columns={secondaryCostColumns}
+            data={secondaryCostData}
+            title="Secondary Cost Driver"
+            isLoading={isLoading}
+            onRowClick={handleRowClick}
+            searchable={true}
+            filterable={true}
+            exportable={true}
+            pageSize={10}
+          />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-primary-50 rounded-lg p-4">
               <h4 className="font-medium text-primary-900 mb-2">Total Records</h4>
@@ -313,13 +324,13 @@ export function MetadataTablesNew() {
             <div className="bg-blue-50 rounded-lg p-4">
               <h4 className="font-medium text-blue-900 mb-2">Cost Centres</h4>
               <p className="text-2xl font-bold text-blue-900">
-                {new Set(secondaryCostData.map(item => item.SubCostCentre)).size}
+                {new Set(secondaryCostData.map(item => item.sub_cost_centre)).size}
               </p>
             </div>
             <div className="bg-green-50 rounded-lg p-4">
               <h4 className="font-medium text-green-900 mb-2">Total Patients</h4>
               <p className="text-2xl font-bold text-green-900">
-                {secondaryCostData.reduce((sum, item) => sum + item.NoOfPatientOPIP, 0)}
+                {secondaryCostData.reduce((sum, item) => sum + (item.no_of_patient_op_ip || 0), 0)}
               </p>
             </div>
           </div>
