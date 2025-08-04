@@ -106,6 +106,21 @@ const costCenterColumns: TableColumn[] = [
   { key: 'remarks', label: 'Remarks', width: '200px', sortable: true }
 ];
 
+const secondaryCostDriverColumns: TableColumn[] = [
+  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 'sub_cost_centre_code', label: 'Sub Cost Centre Code', width: '150px', sortable: true },
+  { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '180px', sortable: true },
+  { key: 'no_of_patient_op_ip', label: 'Patients (OP+IP)', width: '130px', type: 'number', sortable: true },
+  { key: 'no_of_ip_patients', label: 'IP Patients', width: '100px', type: 'number', sortable: true },
+  { key: 'no_of_doctors', label: 'Doctors', width: '80px', type: 'number', sortable: true },
+  { key: 'no_of_nursing_staff', label: 'Nursing Staff', width: '120px', type: 'number', sortable: true },
+  { key: 'ot_time_hours', label: 'OT Time (Hrs)', width: '120px', type: 'number', sortable: true },
+  { key: 'area_in_sq_meter', label: 'Area (sq.m)', width: '120px', type: 'number', sortable: true },
+  { key: 'no_of_laboratory_test', label: 'Lab Tests', width: '100px', type: 'number', sortable: true },
+  { key: 'no_of_radiology_test', label: 'Radiology Tests', width: '130px', type: 'number', sortable: true },
+  { key: 'no_of_cardiac_test', label: 'Cardiac Tests', width: '120px', type: 'number', sortable: true }
+];
+
 export function MetadataTablesNew() {
   const [activeTable, setActiveTable] = useState<'occupancy' | 'ot-register' | 'consumption' | 'connected-load' | 'fixed-asset' | 'tat' | 'cost-center' | 'secondary-cost'>('occupancy');
   
@@ -167,7 +182,7 @@ export function MetadataTablesNew() {
       case 'cost-center':
         return costCenterColumns;
       case 'secondary-cost':
-        return []; // Too many columns, will show message
+        return secondaryCostDriverColumns;
       default:
         return [];
     }
@@ -296,58 +311,17 @@ export function MetadataTablesNew() {
       </div>
 
       {/* Active Table */}
-      {activeTable === 'secondary-cost' ? (
-        <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
-          <h3 className="text-lg font-semibold text-primary-900 mb-4">Secondary Cost Driver Data</h3>
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-            <p className="text-yellow-800">
-              This table contains 70+ columns with extensive cost driver data. 
-              Use the table view below to see key metrics or export for complete data.
-            </p>
-          </div>
-          <DataTable
-            columns={secondaryCostColumns}
-            data={secondaryCostData}
-            title="Secondary Cost Driver"
-            isLoading={isLoading}
-            onRowClick={handleRowClick}
-            searchable={true}
-            filterable={true}
-            exportable={true}
-            pageSize={10}
-          />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-primary-50 rounded-lg p-4">
-              <h4 className="font-medium text-primary-900 mb-2">Total Records</h4>
-              <p className="text-2xl font-bold text-primary-900">{secondaryCostData.length}</p>
-            </div>
-            <div className="bg-blue-50 rounded-lg p-4">
-              <h4 className="font-medium text-blue-900 mb-2">Cost Centres</h4>
-              <p className="text-2xl font-bold text-blue-900">
-                {new Set(secondaryCostData.map(item => item.sub_cost_centre)).size}
-              </p>
-            </div>
-            <div className="bg-green-50 rounded-lg p-4">
-              <h4 className="font-medium text-green-900 mb-2">Total Patients</h4>
-              <p className="text-2xl font-bold text-green-900">
-                {secondaryCostData.reduce((sum, item) => sum + (item.no_of_patient_op_ip || 0), 0)}
-              </p>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <DataTable
-          columns={getCurrentColumns()}
-          data={getCurrentData()}
-          title={getTableTitle()}
-          isLoading={isLoading}
-          onRowClick={handleRowClick}
-          searchable={true}
-          filterable={true}
-          exportable={true}
-          pageSize={10}
-        />
-      )}
+      <DataTable
+        columns={getCurrentColumns()}
+        data={getCurrentData()}
+        title={getTableTitle()}
+        isLoading={isLoading}
+        onRowClick={handleRowClick}
+        searchable={true}
+        filterable={true}
+        exportable={true}
+        pageSize={10}
+      />
 
       {/* Error Display */}
       {error && (
@@ -438,6 +412,33 @@ export function MetadataTablesNew() {
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Quantity</h3>
               <p className="text-2xl font-bold text-purple-600">
                 {consumptionData.reduce((sum, item) => sum + (item.quantity || 0), 0)}
+              </p>
+            </div>
+          </>
+        )}
+
+        {activeTable === 'secondary-cost' && (
+          <>
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
+              <h3 className="text-sm font-medium text-accent-600 mb-2">Total Records</h3>
+              <p className="text-2xl font-bold text-primary-900">{secondaryCostData.length}</p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
+              <h3 className="text-sm font-medium text-accent-600 mb-2">Cost Centres</h3>
+              <p className="text-2xl font-bold text-blue-600">
+                {new Set(secondaryCostData.map(item => item.sub_cost_centre)).size}
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
+              <h3 className="text-sm font-medium text-accent-600 mb-2">Total Patients</h3>
+              <p className="text-2xl font-bold text-green-600">
+                {secondaryCostData.reduce((sum, item) => sum + (item.no_of_patient_op_ip || 0), 0)}
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
+              <h3 className="text-sm font-medium text-accent-600 mb-2">Total Doctors</h3>
+              <p className="text-2xl font-bold text-purple-600">
+                {secondaryCostData.reduce((sum, item) => sum + (item.no_of_doctors || 0), 0)}
               </p>
             </div>
           </>
