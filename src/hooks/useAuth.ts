@@ -17,6 +17,9 @@ export function useAuth() {
           const userData = JSON.parse(savedUser);
           setUser(userData);
           apiService.setToken(savedToken);
+          // Also set token for new tables API
+          const { newTablesApiService } = require('../services/newTablesApi');
+          newTablesApiService.setToken(savedToken);
         } catch (error) {
           console.error('Error parsing saved user:', error);
           localStorage.removeItem('medicost-user');
@@ -38,6 +41,10 @@ export function useAuth() {
       if (response.access_token && response.user) {
         // Set token in API service
         apiService.setToken(response.access_token);
+        
+        // Also set token for new tables API
+        const { newTablesApiService } = require('../services/newTablesApi');
+        newTablesApiService.setToken(response.access_token);
         
         // Transform backend user format to frontend format
         const user: User = {
@@ -72,6 +79,10 @@ export function useAuth() {
         // Set token in API service
         apiService.setToken(response.access_token);
         
+        // Also set token for new tables API
+        const { newTablesApiService } = require('../services/newTablesApi');
+        newTablesApiService.setToken(response.access_token);
+        
         // Transform backend user format to frontend format
         const user: User = {
           id: response.user.id,
@@ -97,6 +108,10 @@ export function useAuth() {
     localStorage.removeItem('medicost-user');
     localStorage.removeItem('medicost-token');
     apiService.clearToken();
+    
+    // Also clear token for new tables API
+    const { newTablesApiService } = require('../services/newTablesApi');
+    newTablesApiService.clearToken();
   };
 
   return {

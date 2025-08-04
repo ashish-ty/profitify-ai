@@ -127,26 +127,33 @@ async def login(user_credentials: UserLogin):
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
     """Get current authenticated user"""
-    token = credentials.credentials
-    payload = verify_token(token)
-    
-    user_id = payload.get("sub")
-    if user_id is None:
+    try:
+        token = credentials.credentials
+        payload = verify_token(token)
+        
+        user_id = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials"
+            )
+        
+        supabase = get_supabase_client()
+        result = supabase.table("users").select("*").eq("id", user_id).execute()
+        
+        if not result.data:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found"
+            )
+        
+        return result.data[0]
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials"
+            detail="Authentication failed",
+            headers={"WWW-Authenticate": "Bearer"},
         )
-    
-    supabase = get_supabase_client()
-    result = supabase.table("users").select("*").eq("id", user_id).execute()
-    
-    if not result.data:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found"
-        )
-    
-    return result.data[0]
 
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(current_user: dict = Depends(get_current_user)):

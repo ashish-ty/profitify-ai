@@ -23,6 +23,14 @@ class NewTablesApiService {
 
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
+      // Handle 401 specifically
+      if (response.status === 401) {
+        // Clear token and redirect to login
+        this.clearToken();
+        window.location.reload();
+        throw new Error('Authentication failed. Please log in again.');
+      }
+      
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
       throw new Error(error.detail || `HTTP ${response.status}`);
     }
@@ -32,6 +40,12 @@ class NewTablesApiService {
   setToken(token: string) {
     this.token = token;
     localStorage.setItem('medicost-token', token);
+  }
+
+  clearToken() {
+    this.token = null;
+    localStorage.removeItem('medicost-token');
+    localStorage.removeItem('medicost-user');
   }
 
   // Service Register endpoints (Revenue Tab)

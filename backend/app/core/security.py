@@ -32,6 +32,10 @@ def verify_token(token: str) -> dict:
     """Verify and decode JWT token"""
     try:
         payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
+        # Check if token is expired
+        exp = payload.get('exp')
+        if exp and datetime.utcnow().timestamp() > exp:
+            raise JWTError("Token has expired")
         return payload
     except JWTError:
         raise HTTPException(
