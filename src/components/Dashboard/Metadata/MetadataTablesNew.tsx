@@ -25,36 +25,38 @@ import { Bed, Activity, Package, Zap, Building, Clock, Target, BarChart3 } from 
 // Column definitions for each table
 const occupancyColumns: TableColumn[] = [
   { key: 'nature_of_data', label: 'Nature of Data', width: '120px', sortable: true },
-  { key: 'uhid', label: 'UHID', width: '100px', sortable: true },
+  { key: 'medical_record_number_or_registration_number_uhid', label: 'UHID', width: '100px', sortable: true },
   { key: 'patient_admission_date', label: 'Admission Date', width: '130px', type: 'date', sortable: true },
   { key: 'patient_discharge_date', label: 'Discharge Date', width: '130px', type: 'date', sortable: true },
   { key: 'ipd_number', label: 'IPD Number', width: '120px', sortable: true },
-  { key: 'ward_name', label: 'Ward Name', width: '150px', sortable: true },
+  { key: 'sub_cost_centre', label: 'Ward Name', width: '150px', sortable: true },
   { key: 'bed_number', label: 'Bed Number', width: '100px', sortable: true },
   { key: 'length_of_stay_in_hours', label: 'Stay Hours', width: '100px', type: 'number', sortable: true },
-  { key: 'bed_category_name', label: 'Bed Category', width: '120px', sortable: true },
-  { key: 'payor_type', label: 'Payor Type', width: '100px', sortable: true },
+  { key: 'the_date_time_at_which_patient_was_transferred_to_this_bed', label: 'Bed Assign Time', width: '150px', sortable: true },
+  { key: 'the_date_time_at_which_patient_left_this_bed', label: 'Bed Release Time', width: '150px', sortable: true },
   { key: 'service_name', label: 'Service Name', width: '150px', sortable: true }
 ];
 
 const otRegisterColumns: TableColumn[] = [
-  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
-  { key: 'uhid', label: 'UHID', width: '100px', sortable: true },
+  { key: 's_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 'medical_record_number_or_registration_number_uhid', label: 'UHID', width: '100px', sortable: true },
+  { key: 'bill_no', label: 'Bill No.', width: '100px', sortable: true },
   { key: 'service_date', label: 'Service Date', width: '120px', type: 'date', sortable: true },
   { key: 'service_name', label: 'Service Name', width: '180px', sortable: true },
   { key: 'performing_doctor_name', label: 'Doctor Name', width: '150px', sortable: true },
-  { key: 'performing_doctor_department', label: 'Department', width: '120px', sortable: true },
+  { key: 'performing_doctor_department_speciality_name', label: 'Department', width: '120px', sortable: true },
+  { key: 'anaesthesist_name', label: 'Anaesthetist', width: '120px', sortable: true },
   { key: 'anesthesia_type', label: 'Anesthesia', width: '100px', sortable: true },
   { key: 'type_of_procedure', label: 'Procedure Type', width: '130px', sortable: true },
   { key: 'nature_of_procedure', label: 'Nature', width: '100px', sortable: true },
-  { key: 'operation_theatre_name', label: 'OT Name', width: '120px', sortable: true },
+  { key: 'sub_cost_centre', label: 'OT Name', width: '120px', sortable: true },
   { key: 'procedure_time', label: 'Procedure Time', width: '120px', sortable: true },
   { key: 'total_time', label: 'Total Time', width: '100px', sortable: true },
   { key: 'payor_type', label: 'Payor Type', width: '100px', sortable: true }
 ];
 
 const consumptionColumns: TableColumn[] = [
-  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 's_no', label: 'S.No.', width: '80px', sortable: true },
   { key: 'cost_centre', label: 'Cost Centre', width: '150px', sortable: true },
   { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '150px', sortable: true },
   { key: 'transaction_date', label: 'Transaction Date', width: '130px', type: 'date', sortable: true },
@@ -62,12 +64,12 @@ const consumptionColumns: TableColumn[] = [
   { key: 'ledger_name', label: 'Ledger Name', width: '150px', sortable: true },
   { key: 'quantity', label: 'Quantity', width: '100px', type: 'number', sortable: true },
   { key: 'rate', label: 'Rate', width: '100px', type: 'currency', sortable: true },
-  { key: 'transaction_value', label: 'Value', width: '120px', type: 'currency', sortable: true },
+  { key: 'transaction_value_excluding_tax', label: 'Value', width: '120px', type: 'currency', sortable: true },
   { key: 'remarks', label: 'Remarks', width: '200px', sortable: true }
 ];
 
 const connectedLoadColumns: TableColumn[] = [
-  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 's_no', label: 'S.No.', width: '80px', sortable: true },
   { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '150px', sortable: true },
   { key: 'connected_load', label: 'Connected Load', width: '130px', type: 'number', sortable: true },
   { key: 'running_load', label: 'Running Load', width: '120px', type: 'number', sortable: true },
@@ -79,7 +81,7 @@ const connectedLoadColumns: TableColumn[] = [
 ];
 
 const fixedAssetColumns: TableColumn[] = [
-  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 's_no', label: 'S.No.', width: '80px', sortable: true },
   { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '150px', sortable: true },
   { key: 'bio_medical_equipments', label: 'Bio Medical', width: '130px', type: 'currency', sortable: true },
   { key: 'engineering_equipments', label: 'Engineering', width: '130px', type: 'currency', sortable: true },
@@ -89,7 +91,7 @@ const fixedAssetColumns: TableColumn[] = [
 ];
 
 const tatColumns: TableColumn[] = [
-  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 's_no', label: 'S.No.', width: '80px', sortable: true },
   { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '200px', sortable: true },
   { key: 'tat', label: 'TAT', width: '150px', sortable: true },
   { key: 'remarks', label: 'Remarks', width: '300px', sortable: true }
@@ -107,7 +109,7 @@ const costCenterColumns: TableColumn[] = [
 ];
 
 const secondaryCostDriverColumns: TableColumn[] = [
-  { key: 'serial_no', label: 'S.No.', width: '80px', sortable: true },
+  { key: 's_no', label: 'S.No.', width: '80px', sortable: true },
   { key: 'sub_cost_centre_code', label: 'Sub Cost Centre Code', width: '150px', sortable: true },
   { key: 'sub_cost_centre', label: 'Sub Cost Centre', width: '180px', sortable: true },
   { key: 'no_of_patient_op_ip', label: 'Patients (OP+IP)', width: '130px', type: 'number', sortable: true },
@@ -337,7 +339,7 @@ export function MetadataTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Admissions</h3>
               <p className="text-2xl font-bold text-primary-900">
-                {new Set(occupancyData.map(item => item.uhid)).size}
+                {new Set(occupancyData.map(item => item.medical_record_number_or_registration_number_uhid)).size}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
@@ -399,7 +401,7 @@ export function MetadataTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Value</h3>
               <p className="text-2xl font-bold text-green-600">
-                ${consumptionData.reduce((sum, item) => sum + (item.transaction_value || 0), 0).toLocaleString()}
+                ${consumptionData.reduce((sum, item) => sum + (item.transaction_value_excluding_tax || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">

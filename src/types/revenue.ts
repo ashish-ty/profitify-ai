@@ -33,38 +33,41 @@ export interface BillRegister {
 }
 
 export interface ServiceRegister {
-  DateOfFinalBill: string;
-  Month: string;
-  BillNo: string;
-  PatientType: string;
-  RegNo: string;
-  IPDNumber: string;
-  PayorType: string;
-  PayorAliasName: string;
-  AdmittingDoctorName: string;
-  AdmittingDoctorDepartment: string;
-  PerformingDoctorName: string;
-  PerformingDoctorDepartment: string;
-  ReferingDoctorName: string;
-  ReferingDoctorDepartment: string;
-  ServiceName: string;
-  ServiceDepartment: string;
-  ServiceSubDepartment: string;
-  ServiceStatus: string;
-  IsPackaged: string;
-  IsOutsourced: string;
-  Quantity: number;
-  GrossAmount: number;
-  Discount: number;
-  NetAmount: number;
-  EmergencyCharges: string;
-  PerformingDoctorShare: number;
-  PharmacyMaterialCost: number;
-  OutsourceShare: number;
-  SubCostCentreCode: string;
-  SubCostCentreName: string;
-  ServiceTAT: string;
-  ServiceDate: string;
+  id: string;
+  date_of_final_bill: string;
+  month: string;
+  bill_no: string;
+  patient_type: string;
+  reg_no: string;
+  ipd_number: string;
+  payor_type: string;
+  payor_alias_name: string;
+  admitting_doctor_name: string;
+  admitting_doctor_department_speciality_name: string;
+  performing_doctor_name: string;
+  performing_doctor_department_speciality_name: string;
+  refering_doctor_name: string;
+  refering_doctor_department_speciality_name: string;
+  service_name: string;
+  service_department: string;
+  service_sub_department: string;
+  service_status: string;
+  is_packaged: boolean;
+  is_outsourced: boolean;
+  quantity: number;
+  gross_amount: number;
+  discount: number;
+  net_amount: number;
+  emergency_charges_applied: boolean;
+  performing_doctor_share_if_applicable: number;
+  cost_of_pharmacy_material_billed_to_patient: number;
+  share_of_outsource_service_billed: number;
+  sub_cost_centre_code: string;
+  sub_cost_centre: string;
+  service_tat: string;
+  service_date: string;
+  created_at: string;
+  updated_at?: string;
 }
 
 export interface PatientServiceRegister {

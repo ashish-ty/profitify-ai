@@ -49,13 +49,12 @@ async def create_service_register(
         }
         
         # Convert date fields to string format
-        if record.get("date_of_final_bill"):
-            record["date_of_final_bill"] = record["date_of_final_bill"].isoformat()
-        if record.get("service_date"):
-            record["service_date"] = record["service_date"].isoformat()
+        for field in ["date_of_final_bill", "service_date"]:
+            if record.get(field):
+                record[field] = record[field].isoformat()
         
         # Convert decimal fields to float
-        for field in ["gross_amount", "discount", "net_amount", "performing_doctor_share", "pharmacy_material_cost", "outsource_share"]:
+        for field in ["gross_amount", "discount", "net_amount", "performing_doctor_share_if_applicable", "cost_of_pharmacy_material_billed_to_patient", "share_of_outsource_service_billed"]:
             if record.get(field):
                 record[field] = float(record[field])
         
@@ -136,7 +135,7 @@ async def update_service_register(
                 update_data[field] = update_data[field].isoformat()
         
         # Convert decimal fields to float
-        for field in ["gross_amount", "discount", "net_amount", "performing_doctor_share", "pharmacy_material_cost", "outsource_share"]:
+        for field in ["gross_amount", "discount", "net_amount", "performing_doctor_share_if_applicable", "cost_of_pharmacy_material_billed_to_patient", "share_of_outsource_service_billed"]:
             if update_data.get(field):
                 update_data[field] = float(update_data[field])
         
@@ -211,7 +210,7 @@ async def create_trial_balance(
         }
         
         # Convert decimal fields to float
-        for field in ["amount", "amount_second"]:
+        for field in ["amount", "amount_2"]:
             if record.get(field):
                 record[field] = float(record[field])
         
@@ -333,11 +332,13 @@ async def create_variable_cost_bill_wise(
         
         # Convert decimal fields to float
         decimal_fields = [
-            "pharmacy_charged_to_patient", "medical_surgical_consumables", "implants_and_prosthetics",
-            "non_medical_consumables", "fee_for_service", "incentives_to_doctors",
-            "patient_food_beverages", "laboratory_test_outsource", "other_outsourced_services_1",
-            "other_outsourced_services_2", "other_outsourced_services_3", "brokerage_commission",
-            "provision_for_bad_debts"
+            "pharmacy_charged_to_patient", "medical_surgical_consumables_charged_to_patient", 
+            "implants_and_prosthetics_charged_to_patient", "non_medical_consumables_charged_to_patient", 
+            "fee_for_service", "incentives_to_consultants_treating_doctors",
+            "patient_food_beverages_outsource_service", "laboratory_test_outsource_service", 
+            "any_other_patient_related_outsourced_services_1", "any_other_patient_related_outsourced_services_2", 
+            "any_other_patient_related_outsourced_services_3", "brokerage_commission",
+            "provision_for_deduction_bad_debts"
         ]
         
         for field in decimal_fields:
@@ -484,7 +485,7 @@ async def create_occupancy_register(
                 record[field] = record[field].isoformat()
         
         # Convert datetime fields to string format
-        for field in ["bed_assign_datetime", "bed_release_datetime"]:
+        for field in ["the_date_time_at_which_patient_was_transferred_to_this_bed", "the_date_time_at_which_patient_left_this_bed"]:
             if record.get(field):
                 record[field] = record[field].isoformat()
         
@@ -509,7 +510,7 @@ async def create_occupancy_register(
 @router.get("/occupancy-register/", response_model=List[OccupancyRegisterResponse])
 async def get_occupancy_register(
     ward_code: Optional[str] = None,
-    uhid: Optional[str] = None,
+    medical_record_number_or_registration_number_uhid: Optional[str] = None,
     current_user: dict = Depends(get_current_user)
 ):
     """Get occupancy register entries with optional filtering"""
@@ -518,10 +519,10 @@ async def get_occupancy_register(
     try:
         query = supabase.table("occupancy_register").select("*").eq("user_id", current_user["id"])
         
-        if ward_code:
-            query = query.eq("ward_code", ward_code)
-        if uhid:
-            query = query.eq("uhid", uhid)
+        if sub_cost_centre_code:
+            query = query.eq("sub_cost_centre_code", sub_cost_centre_code)
+        if medical_record_number_or_registration_number_uhid:
+            query = query.eq("medical_record_number_or_registration_number_uhid", medical_record_number_or_registration_number_uhid)
         
         result = query.order("patient_admission_date", desc=True).execute()
         return [OccupancyRegisterResponse(**record) for record in result.data]
@@ -578,6 +579,7 @@ async def create_ot_register(
 @router.get("/ot-register/", response_model=List[OTRegisterResponse])
 async def get_ot_register(
     performing_doctor_department: Optional[str] = None,
+    performing_doctor_department_speciality_name: Optional[str] = None,
     nature_of_procedure: Optional[str] = None,
     current_user: dict = Depends(get_current_user)
 ):
@@ -587,8 +589,8 @@ async def get_ot_register(
     try:
         query = supabase.table("ot_register").select("*").eq("user_id", current_user["id"])
         
-        if performing_doctor_department:
-            query = query.eq("performing_doctor_department", performing_doctor_department)
+        if performing_doctor_department_speciality_name:
+            query = query.eq("performing_doctor_department_speciality_name", performing_doctor_department_speciality_name)
         if nature_of_procedure:
             query = query.eq("nature_of_procedure", nature_of_procedure)
         
@@ -621,7 +623,7 @@ async def create_consumption_data(
             record["transaction_date"] = record["transaction_date"].isoformat()
         
         # Convert decimal fields to float
-        for field in ["quantity", "rate", "transaction_value"]:
+        for field in ["quantity", "rate", "transaction_value_excluding_tax"]:
             if record.get(field):
                 record[field] = float(record[field])
         
@@ -998,7 +1000,7 @@ async def update_trial_balance(
         update_data = {k: v for k, v in data.dict().items() if v is not None}
         
         # Convert decimal fields to float
-        for field in ["amount", "amount_second"]:
+        for field in ["amount", "amount_2"]:
             if update_data.get(field):
                 update_data[field] = float(update_data[field])
         

@@ -36,18 +36,18 @@ const variableCostColumns: TableColumn[] = [
   { key: 'ipd_number', label: 'IPD Number', width: '120px', sortable: true },
   { key: 'bill_no', label: 'Bill No.', width: '100px', sortable: true },
   { key: 'pharmacy_charged_to_patient', label: 'Pharmacy', width: '120px', type: 'currency', sortable: true },
-  { key: 'medical_surgical_consumables', label: 'Med & Surgical', width: '130px', type: 'currency', sortable: true },
-  { key: 'implants_and_prosthetics', label: 'Implants', width: '120px', type: 'currency', sortable: true },
-  { key: 'non_medical_consumables', label: 'Non-Medical', width: '120px', type: 'currency', sortable: true },
+  { key: 'medical_surgical_consumables_charged_to_patient', label: 'Med & Surgical', width: '130px', type: 'currency', sortable: true },
+  { key: 'implants_and_prosthetics_charged_to_patient', label: 'Implants', width: '120px', type: 'currency', sortable: true },
+  { key: 'non_medical_consumables_charged_to_patient', label: 'Non-Medical', width: '120px', type: 'currency', sortable: true },
   { key: 'fee_for_service', label: 'Fee for Service', width: '120px', type: 'currency', sortable: true },
-  { key: 'incentives_to_doctors', label: 'Doctor Incentives', width: '130px', type: 'currency', sortable: true },
-  { key: 'patient_food_beverages', label: 'Food & Beverages', width: '130px', type: 'currency', sortable: true },
-  { key: 'laboratory_test_outsource', label: 'Lab Outsource', width: '120px', type: 'currency', sortable: true },
-  { key: 'other_outsourced_services_1', label: 'Other Outsource 1', width: '140px', type: 'currency', sortable: true },
-  { key: 'other_outsourced_services_2', label: 'Other Outsource 2', width: '140px', type: 'currency', sortable: true },
-  { key: 'other_outsourced_services_3', label: 'Other Outsource 3', width: '140px', type: 'currency', sortable: true },
+  { key: 'incentives_to_consultants_treating_doctors', label: 'Doctor Incentives', width: '130px', type: 'currency', sortable: true },
+  { key: 'patient_food_beverages_outsource_service', label: 'Food & Beverages', width: '130px', type: 'currency', sortable: true },
+  { key: 'laboratory_test_outsource_service', label: 'Lab Outsource', width: '120px', type: 'currency', sortable: true },
+  { key: 'any_other_patient_related_outsourced_services_1', label: 'Other Outsource 1', width: '140px', type: 'currency', sortable: true },
+  { key: 'any_other_patient_related_outsourced_services_2', label: 'Other Outsource 2', width: '140px', type: 'currency', sortable: true },
+  { key: 'any_other_patient_related_outsourced_services_3', label: 'Other Outsource 3', width: '140px', type: 'currency', sortable: true },
   { key: 'brokerage_commission', label: 'Brokerage', width: '120px', type: 'currency', sortable: true },
-  { key: 'provision_for_bad_debts', label: 'Bad Debts', width: '120px', type: 'currency', sortable: true },
+  { key: 'provision_for_deduction_bad_debts', label: 'Bad Debts', width: '120px', type: 'currency', sortable: true },
   { key: 'doctor_name', label: 'Doctor Name', width: '150px', sortable: true },
   { key: 'service_name', label: 'Service Name', width: '180px', sortable: true },
   { key: 'payor_type', label: 'Payor Type', width: '100px', sortable: true }
@@ -282,7 +282,7 @@ export function ExpenseTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Implants</h3>
               <p className="text-2xl font-bold text-blue-600">
-                ${variableCostData.reduce((sum, item) => sum + (item.implants_and_prosthetics || 0), 0).toLocaleString()}
+                ${variableCostData.reduce((sum, item) => sum + (item.implants_and_prosthetics_charged_to_patient || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">

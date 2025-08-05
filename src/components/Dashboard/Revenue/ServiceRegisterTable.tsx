@@ -13,11 +13,11 @@ const serviceRegisterColumns: TableColumn[] = [
   { key: 'payor_type', label: 'Payor Type', width: '100px', sortable: true },
   { key: 'payor_alias_name', label: 'Payor Name', width: '120px', sortable: true },
   { key: 'admitting_doctor_name', label: 'Admitting Doctor', width: '150px', sortable: true },
-  { key: 'admitting_doctor_department', label: 'Admitting Dept', width: '130px', sortable: true },
+  { key: 'admitting_doctor_department_speciality_name', label: 'Admitting Dept', width: '130px', sortable: true },
   { key: 'performing_doctor_name', label: 'Performing Doctor', width: '150px', sortable: true },
-  { key: 'performing_doctor_department', label: 'Performing Dept', width: '130px', sortable: true },
-  { key: 'referring_doctor_name', label: 'Referring Doctor', width: '150px', sortable: true },
-  { key: 'referring_doctor_department', label: 'Referring Dept', width: '130px', sortable: true },
+  { key: 'performing_doctor_department_speciality_name', label: 'Performing Dept', width: '130px', sortable: true },
+  { key: 'refering_doctor_name', label: 'Referring Doctor', width: '150px', sortable: true },
+  { key: 'refering_doctor_department_speciality_name', label: 'Referring Dept', width: '130px', sortable: true },
   { key: 'service_name', label: 'Service Name', width: '200px', sortable: true },
   { key: 'service_department', label: 'Service Dept', width: '120px', sortable: true },
   { key: 'service_sub_department', label: 'Service Sub Dept', width: '130px', sortable: true },
@@ -29,11 +29,11 @@ const serviceRegisterColumns: TableColumn[] = [
   { key: 'discount', label: 'Discount', width: '100px', type: 'currency', sortable: true },
   { key: 'net_amount', label: 'Net Amount', width: '120px', type: 'currency', sortable: true },
   { key: 'emergency_charges_applied', label: 'Emergency', width: '90px', sortable: true },
-  { key: 'performing_doctor_share', label: 'Doctor Share', width: '120px', type: 'currency', sortable: true },
-  { key: 'pharmacy_material_cost', label: 'Material Cost', width: '120px', type: 'currency', sortable: true },
-  { key: 'outsource_share', label: 'Outsource Share', width: '130px', type: 'currency', sortable: true },
+  { key: 'performing_doctor_share_if_applicable', label: 'Doctor Share', width: '120px', type: 'currency', sortable: true },
+  { key: 'cost_of_pharmacy_material_billed_to_patient', label: 'Material Cost', width: '120px', type: 'currency', sortable: true },
+  { key: 'share_of_outsource_service_billed', label: 'Outsource Share', width: '130px', type: 'currency', sortable: true },
   { key: 'sub_cost_centre_code', label: 'Cost Centre Code', width: '130px', sortable: true },
-  { key: 'sub_cost_centre_name', label: 'Cost Centre Name', width: '130px', sortable: true },
+  { key: 'sub_cost_centre', label: 'Cost Centre Name', width: '130px', sortable: true },
   { key: 'service_tat', label: 'Service TAT', width: '100px', sortable: true },
   { key: 'service_date', label: 'Service Date', width: '120px', type: 'date', sortable: true }
 ];
@@ -78,7 +78,7 @@ export default function ServiceRegisterTable() {
         <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
           <h3 className="text-sm font-medium text-accent-600 mb-2">Total Revenue</h3>
           <p className="text-2xl font-bold text-green-600">
-            ${serviceRegisterData.reduce((sum, service) => sum + (service.net_amount || 0), 0).toLocaleString()}
+            ${serviceRegisterData.reduce((sum, service) => sum + (Number(service.net_amount) || 0), 0).toLocaleString()}
           </p>
         </div>
         <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
@@ -90,7 +90,7 @@ export default function ServiceRegisterTable() {
         <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
           <h3 className="text-sm font-medium text-accent-600 mb-2">Emergency Services</h3>
           <p className="text-2xl font-bold text-red-600">
-            {serviceRegisterData.filter(service => service.emergency_charges_applied === true).length}
+            {serviceRegisterData.filter(service => service.emergency_charges_applied === true || service.emergency_charges_applied === 'true').length}
           </p>
         </div>
       </div>
