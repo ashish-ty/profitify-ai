@@ -5,7 +5,7 @@ export interface User {
   hospitalName: string;
 }
 
-export type DataType = 'revenue' | 'expenses' | 'metadata';
+export type DataType = 'revenue' | 'expenses' | 'metadata' | 'cost-analysis';
 
 export interface ToolCategory {
   id: string;

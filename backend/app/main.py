@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, new_tables
+from app.routers import auth, new_tables, cost_analysis
 from app.core.config import settings
 
 app = FastAPI(
@@ -21,6 +21,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
 app.include_router(new_tables.router, prefix="/api/new-tables", tags=["new-tables"])
+app.include_router(cost_analysis.router, prefix="/api/cost-analysis", tags=["cost-analysis"])
 
 @app.get("/")
 async def root():
