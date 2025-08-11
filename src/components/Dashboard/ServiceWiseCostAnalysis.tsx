@@ -127,30 +127,18 @@ export function ServiceWiseCostAnalysis() {
     }
   ] : [];
 
-  // Create department chart data
+  // Create service chart data
   const serviceChartData: ChartData[] = costAnalysis?.services?.slice(0, 10).map(service => ({
-    month: service.service_name.substring(0, 15) + (service.service_name.length > 15 ? '...' : ''),
+    month: service.service_name,
     value: service.profit_margin_percent
   })) || [];
 
   // Create cost breakdown chart data
-  const costBreakdownData: ChartData[] = costAnalysis?.services?.length > 0 ? [
-    { 
-      month: 'Materials (CM)', 
-      value: costAnalysis.services.reduce((sum, s) => sum + s.cm, 0) 
-    },
-    { 
-      month: 'Expense Wise (EW)', 
-      value: costAnalysis.services.reduce((sum, s) => sum + s.ew, 0) 
-    },
-    { 
-      month: 'HR Cost', 
-      value: costAnalysis.services.reduce((sum, s) => sum + s.hr, 0) 
-    },
-    { 
-      month: 'Utilities (CN)', 
-      value: costAnalysis.services.reduce((sum, s) => sum + s.cn, 0) 
-    }
+  const costBreakdownData: ChartData[] = summaryMetrics?.cost_breakdown ? [
+    { month: 'Pharmacy', value: summaryMetrics.cost_breakdown.pharmacy_percent },
+    { month: 'Materials', value: summaryMetrics.cost_breakdown.materials_percent },
+    { month: 'Labor', value: summaryMetrics.cost_breakdown.labor_percent },
+    { month: 'Overhead', value: summaryMetrics.cost_breakdown.overhead_percent }
   ] : [];
 
   if (isLoading) {
@@ -301,36 +289,39 @@ export function ServiceWiseCostAnalysis() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <ChartTableToggle
-          title="Department Profit Margins (%)"
+          title="Top 10 Services by Profit Margin (%)"
           chartData={serviceChartData}
           tableColumns={[
-            { key: 'department', label: 'Department', type: 'text' },
+            { key: 'service', label: 'Service', type: 'text' },
             { key: 'profit_margin', label: 'Profit Margin', type: 'percentage' },
-            { key: 'total_revenue', label: 'Revenue', type: 'currency' },
-            { key: 'service_count', label: 'Services', type: 'number' }
+            { key: 'total_cost', label: 'Total Cost', type: 'currency' },
+            { key: 'doctor', label: 'Doctor', type: 'text' }
           ]}
-          tableData={departmentBreakdown?.departments?.map(dept => ({
-            department: dept.department,
-            profit_margin: dept.profit_margin,
-            total_revenue: dept.total_revenue,
-            service_count: dept.service_count
+          tableData={costAnalysis?.services?.slice(0, 10).map(service => ({
+            service: service.service_name,
+            profit_margin: service.profit_margin_percent,
+            total_cost: service.total_cost,
+            doctor: service.doctor_name
           })) || []}
           chartColor="bg-primary-600"
         />
         
         <ChartTableToggle
-          title="Cost Breakdown by Type (%)"
+          title="Cost Breakdown by Type"
           chartData={costBreakdownData}
           tableColumns={[
             { key: 'cost_type', label: 'Cost Type', type: 'text' },
-            { key: 'percentage', label: 'Percentage', type: 'percentage' },
-            { key: 'amount', label: 'Amount', type: 'currency' }
+            { key: 'amount', label: 'Amount', type: 'currency' },
+            { key: 'percentage', label: 'Percentage', type: 'percentage' }
           ]}
-          tableData={costBreakdownData.map(item => ({
-            cost_type: item.month,
-            percentage: item.value,
-            amount: summaryMetrics ? (summaryMetrics.total_allocated_costs * item.value / 100) : 0
-          }))}
+          tableData={costBreakdownData.map((item, index) => {
+            const totalCosts = costBreakdownData.reduce((sum, cost) => sum + cost.value, 0);
+            return {
+              cost_type: item.month,
+              amount: item.value,
+              percentage: totalCosts > 0 ? (item.value / totalCosts) * 100 : 0
+            };
+          })}
           chartColor="bg-purple-600"
         />
       </div>
