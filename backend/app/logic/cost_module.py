@@ -617,47 +617,91 @@ class CostAnalysisModule:
             if cost_df.empty:
                 return {}
             
-            # Calculate basic metrics from the output
-            total_services = len(cost_df['service_name'].unique()) if 'service_name' in cost_df.columns else 0
+            # Calculate metrics from actual output columns
+            total_services = len(cost_df) if not cost_df.empty else 0
             
-            # Calculate costs if cost columns exist
-            cost_columns = ['cm', 'ew', 'hr', 'cn']
+            # Calculate allocated costs
             total_allocated_costs = 0
-            for col in cost_columns:
+            for col in ['cm', 'ew', 'hr', 'cn']:
                 if col in cost_df.columns:
                     total_allocated_costs += cost_df[col].fillna(0).sum()
             
-            # Calculate revenue if available
-            total_revenue = 0
-            if 'net_amount' in cost_df.columns:
-                total_revenue = cost_df['net_amount'].fillna(0).sum()
+            # Calculate variable costs
+            variable_cost_columns = [
+                'pharmacy_charged_to_patient',
+                'medical_surgical_consumables_charged_to_patient',
+                'implants_and_prosthetics_charged_to_patient',
+                'non_medical_consumables_charged_to_patient',
+                'fee_for_service',
+                'incentives_to_consultants_treating_doctors',
+                'patient_food_beverages_outsource_service',
+                'laboratory_test_outsource_service',
+                'any_other_patient_related_outsourced_services_1',
+                'any_other_patient_related_outsourced_services_2',
+                'any_other_patient_related_outsourced_services_3',
+                'brokerage_commission',
+                'provision_for_deduction_bad_debts'
+            ]
+            
+            total_variable_costs = 0
+            for col in variable_cost_columns:
+                if col in cost_df.columns:
+                    total_variable_costs += cost_df[col].fillna(0).sum()
+            
+            total_costs = total_allocated_costs + total_variable_costs
+            
+            # Estimate revenue (would need actual revenue data)
+            # For now, assume 20% margin over total costs
+            estimated_revenue = total_costs * 1.2
             
             overall_profit_margin = 0
-            if total_revenue > 0:
-                overall_profit_margin = ((total_revenue - total_allocated_costs) / total_revenue * 100)
+            if estimated_revenue > 0:
+                overall_profit_margin = ((estimated_revenue - total_costs) / estimated_revenue * 100)
+            
+            # Find most and least profitable services
+            most_profitable = {'name': 'N/A', 'margin': 0}
+            least_profitable = {'name': 'N/A', 'margin': 0}
+            
+            if not cost_df.empty and 'service_name' in cost_df.columns:
+                # Calculate profit margin for each service
+                service_margins = []
+                for _, row in cost_df.iterrows():
+                    allocated_cost = (row.get('cm', 0) + row.get('ew', 0) + 
+                                    row.get('hr', 0) + row.get('cn', 0))
+                    variable_cost = sum(row.get(col, 0) for col in variable_cost_columns if col in row.index)
+                    total_service_cost = allocated_cost + variable_cost
+                    
+                    # Estimate service revenue
+                    estimated_service_revenue = total_service_cost * 1.2
+                    margin = ((estimated_service_revenue - total_service_cost) / estimated_service_revenue * 100) if estimated_service_revenue > 0 else 0
+                    
+                    service_margins.append({
+                        'name': row.get('service_name', 'Unknown'),
+                        'margin': margin
+                    })
+                
+                if service_margins:
+                    most_profitable = max(service_margins, key=lambda x: x['margin'])
+                    least_profitable = min(service_margins, key=lambda x: x['margin'])
             
             summary = {
                 'total_services': total_services,
-                'total_revenue': float(total_revenue),
-                'total_allocated_costs': float(total_allocated_costs),
+                'total_revenue': float(estimated_revenue),
+                'total_allocated_costs': float(total_costs),
                 'overall_profit_margin': float(overall_profit_margin),
-                'most_profitable_service': {
-                    'name': 'N/A',
-                    'margin': 0
-                },
-                'least_profitable_service': {
-                    'name': 'N/A', 
-                    'margin': 0
-                },
+                'most_profitable_service': most_profitable,
+                'least_profitable_service': least_profitable,
                 'cost_breakdown': {
-                    'pharmacy_percent': 0,
-                    'materials_percent': 0,
-                    'labor_percent': 0,
-                    'overhead_percent': 0
+                    'allocated_costs': float(total_allocated_costs),
+                    'variable_costs': float(total_variable_costs),
+                    'cm_percent': (cost_df['cm'].fillna(0).sum() / total_costs * 100) if total_costs > 0 and 'cm' in cost_df.columns else 0,
+                    'ew_percent': (cost_df['ew'].fillna(0).sum() / total_costs * 100) if total_costs > 0 and 'ew' in cost_df.columns else 0,
+                    'hr_percent': (cost_df['hr'].fillna(0).sum() / total_costs * 100) if total_costs > 0 and 'hr' in cost_df.columns else 0,
+                    'cn_percent': (cost_df['cn'].fillna(0).sum() / total_costs * 100) if total_costs > 0 and 'cn' in cost_df.columns else 0
                 },
                 'optimization_opportunities': {
-                    'high_potential': 0,
-                    'critical_services': 0
+                    'high_potential': len([s for s in service_margins if s['margin'] > 25]) if 'service_margins' in locals() else 0,
+                    'critical_services': len([s for s in service_margins if s['margin'] < 10]) if 'service_margins' in locals() else 0
                 }
             }
             

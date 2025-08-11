@@ -1,30 +1,38 @@
 import { useState } from 'react';
 
 export interface ServiceCostBreakdown {
-  service_id: string;
-  department: string;
+  ipd_number: string;
+  bill_no: string;
   service_name: string;
-  total_revenue: number;
-  total_quantity: number;
-  revenue_per_unit: number;
-  direct_pharmacy_cost: number;
-  direct_materials_cost: number;
-  direct_labor_cost: number;
-  allocated_overhead_cost: number;
-  allocated_utilities_cost: number;
-  allocated_admin_cost: number;
-  allocated_facilities_cost: number;
+  doctor_name: string;
+  
+  // Allocated costs from cost module
+  cm: number;  // Consumption/Materials cost
+  ew: number;  // Expense wise cost
+  hr: number;  // HR/Labor cost
+  cn: number;  // Connected load/Utilities cost
+  
+  // Variable costs from bill
+  pharmacy_charged_to_patient: number;
+  medical_surgical_consumables_charged_to_patient: number;
+  implants_and_prosthetics_charged_to_patient: number;
+  non_medical_consumables_charged_to_patient: number;
+  fee_for_service: number;
+  incentives_to_consultants_treating_doctors: number;
+  patient_food_beverages_outsource_service: number;
+  laboratory_test_outsource_service: number;
+  any_other_patient_related_outsourced_services_1: number;
+  any_other_patient_related_outsourced_services_2: number;
+  any_other_patient_related_outsourced_services_3: number;
+  brokerage_commission: number;
+  provision_for_deduction_bad_debts: number;
+  
+  // Calculated metrics
   total_allocated_cost: number;
-  cost_per_unit: number;
+  total_variable_cost: number;
+  total_cost: number;
   profit: number;
   profit_margin_percent: number;
-  pharmacy_cost_percent: number;
-  materials_cost_percent: number;
-  labor_cost_percent: number;
-  overhead_cost_percent: number;
-  cost_efficiency_score: number;
-  profitability_rank: number;
-  cost_optimization_potential: string;
 }
 
 export interface CostAnalysisData {

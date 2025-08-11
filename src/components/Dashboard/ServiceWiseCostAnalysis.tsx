@@ -127,10 +127,10 @@ export function ServiceWiseCostAnalysis() {
     }
   ] : [];
 
-  // Create service chart data
-  const serviceChartData: ChartData[] = costAnalysis?.services?.slice(0, 10).map(service => ({
-    month: service.service_name,
-    value: service.profit_margin_percent
+  // Create department chart data
+  const departmentChartData: ChartData[] = departmentBreakdown?.departments?.map(dept => ({
+    month: dept.department,
+    value: dept.profit_margin
   })) || [];
 
   // Create cost breakdown chart data
@@ -289,39 +289,36 @@ export function ServiceWiseCostAnalysis() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <ChartTableToggle
-          title="Top 10 Services by Profit Margin (%)"
-          chartData={serviceChartData}
+          title="Department Profit Margins (%)"
+          chartData={departmentChartData}
           tableColumns={[
-            { key: 'service', label: 'Service', type: 'text' },
+            { key: 'department', label: 'Department', type: 'text' },
             { key: 'profit_margin', label: 'Profit Margin', type: 'percentage' },
-            { key: 'total_cost', label: 'Total Cost', type: 'currency' },
-            { key: 'doctor', label: 'Doctor', type: 'text' }
+            { key: 'total_revenue', label: 'Revenue', type: 'currency' },
+            { key: 'service_count', label: 'Services', type: 'number' }
           ]}
-          tableData={costAnalysis?.services?.slice(0, 10).map(service => ({
-            service: service.service_name,
-            profit_margin: service.profit_margin_percent,
-            total_cost: service.total_cost,
-            doctor: service.doctor_name
+          tableData={departmentBreakdown?.departments?.map(dept => ({
+            department: dept.department,
+            profit_margin: dept.profit_margin,
+            total_revenue: dept.total_revenue,
+            service_count: dept.service_count
           })) || []}
           chartColor="bg-primary-600"
         />
         
         <ChartTableToggle
-          title="Cost Breakdown by Type"
+          title="Cost Breakdown by Type (%)"
           chartData={costBreakdownData}
           tableColumns={[
             { key: 'cost_type', label: 'Cost Type', type: 'text' },
-            { key: 'amount', label: 'Amount', type: 'currency' },
-            { key: 'percentage', label: 'Percentage', type: 'percentage' }
+            { key: 'percentage', label: 'Percentage', type: 'percentage' },
+            { key: 'amount', label: 'Amount', type: 'currency' }
           ]}
-          tableData={costBreakdownData.map((item, index) => {
-            const totalCosts = costBreakdownData.reduce((sum, cost) => sum + cost.value, 0);
-            return {
-              cost_type: item.month,
-              amount: item.value,
-              percentage: totalCosts > 0 ? (item.value / totalCosts) * 100 : 0
-            };
-          })}
+          tableData={costBreakdownData.map(item => ({
+            cost_type: item.month,
+            percentage: item.value,
+            amount: summaryMetrics ? (summaryMetrics.total_allocated_costs * item.value / 100) : 0
+          }))}
           chartColor="bg-purple-600"
         />
       </div>
@@ -401,58 +398,60 @@ export function ServiceWiseCostAnalysis() {
             </div>
             
             <div>
-              <h4 className="font-medium text-primary-900 mb-3">Cost Structure</h4>
+              <h4 className="font-medium text-primary-900 mb-3">Allocated Cost Structure</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-accent-600">Pharmacy Costs:</span>
-                  <span className="font-semibold text-primary-900">{summaryMetrics.cost_breakdown.pharmacy_percent.toFixed(1)}%</span>
+                  <span className="text-accent-600">Materials (CM):</span>
+                  <span className="font-semibold text-primary-900">
+                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.cm, 0).toLocaleString() || '0'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-accent-600">Materials Costs:</span>
-                  <span className="font-semibold text-primary-900">{summaryMetrics.cost_breakdown.materials_percent.toFixed(1)}%</span>
+                  <span className="text-accent-600">Expense Wise (EW):</span>
+                  <span className="font-semibold text-primary-900">
+                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.ew, 0).toLocaleString() || '0'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-accent-600">Labor Costs:</span>
-                  <span className="font-semibold text-primary-900">{summaryMetrics.cost_breakdown.labor_percent.toFixed(1)}%</span>
+                  <span className="text-accent-600">HR Costs:</span>
+                  <span className="font-semibold text-primary-900">
+                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.hr, 0).toLocaleString() || '0'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-accent-600">Overhead Costs:</span>
-                  <span className="font-semibold text-primary-900">{summaryMetrics.cost_breakdown.overhead_percent.toFixed(1)}%</span>
+                  <span className="text-accent-600">Utilities (CN):</span>
+                  <span className="font-semibold text-primary-900">
+                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.cn, 0).toLocaleString() || '0'}
+                  </span>
                 </div>
               </div>
             </div>
             
             <div>
-              <h4 className="font-medium text-primary-900 mb-3">Optimization Status</h4>
+              <h4 className="font-medium text-primary-900 mb-3">Variable Cost Summary</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between items-center">
-                  <span className="text-accent-600">High Potential:</span>
-                  <div className="flex items-center space-x-1">
-                    <span className="font-semibold text-orange-600">{summaryMetrics.optimization_opportunities.high_potential}</span>
-                    <span className="text-orange-600">services</span>
-                  </div>
+                  <span className="text-accent-600">Total Pharmacy:</span>
+                  <span className="font-semibold text-green-600">
+                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.pharmacy_charged_to_patient, 0).toLocaleString() || '0'}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-accent-600">Critical Services:</span>
-                  <div className="flex items-center space-x-1">
-                    <span className="font-semibold text-red-600">{summaryMetrics.optimization_opportunities.critical_services}</span>
-                    <span className="text-red-600">services</span>
-                  </div>
+                  <span className="text-accent-600">Total Implants:</span>
+                  <span className="font-semibold text-blue-600">
+                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.implants_and_prosthetics_charged_to_patient, 0).toLocaleString() || '0'}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-accent-600">Status:</span>
-                  <div className="flex items-center space-x-1">
-                    {summaryMetrics.optimization_opportunities.critical_services === 0 ? (
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <AlertTriangle className="h-4 w-4 text-red-600" />
-                    )}
-                    <span className={`font-semibold ${
-                      summaryMetrics.optimization_opportunities.critical_services === 0 ? 'text-green-600' : 'text-red-600'
-                    }`}>
-                      {summaryMetrics.optimization_opportunities.critical_services === 0 ? 'Healthy' : 'Needs Attention'}
-                    </span>
-                  </div>
+                  <span className="text-accent-600">Total Services:</span>
+                  <span className="font-semibold text-primary-900">{costAnalysis?.services?.length || 0}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-accent-600">Avg Margin:</span>
+                  <span className="font-semibold text-primary-900">
+                    {costAnalysis?.services?.length > 0 ? 
+                      (costAnalysis.services.reduce((sum, s) => sum + s.profit_margin_percent, 0) / costAnalysis.services.length).toFixed(1) : '0'}%
+                  </span>
                 </div>
               </div>
             </div>
