@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { DataTable, TableColumn } from '../Common/DataTable';
-import { ChartTableToggle } from '../Common/ChartTableToggle';
-import { MetricCard } from '../Tools/Charts/MetricCard';
 import { 
   Calculator, 
   DollarSign, 
@@ -10,12 +8,9 @@ import {
   Download,
   Filter,
   RefreshCw,
-  AlertTriangle,
-  CheckCircle,
-  TrendingDown
+  AlertTriangle
 } from 'lucide-react';
-import { useCostAnalysis } from '../../hooks/useCostAnalysis';
-import { ChartData, MetricCard as MetricCardType } from '../../types';
+import { useCostAnalysis, ServiceCostRecord } from '../../hooks/useCostAnalysis';
 
 const costAnalysisColumns: TableColumn[] = [
   { key: 'ipd_number', label: 'IPD Number', width: '120px', sortable: true },
@@ -31,9 +26,13 @@ const costAnalysisColumns: TableColumn[] = [
   { key: 'implants_and_prosthetics_charged_to_patient', label: 'Implants', width: '120px', type: 'currency', sortable: true },
   { key: 'fee_for_service', label: 'Service Fee', width: '120px', type: 'currency', sortable: true },
   { key: 'incentives_to_consultants_treating_doctors', label: 'Doctor Incentives', width: '130px', type: 'currency', sortable: true },
-  { key: 'total_allocated_cost', label: 'Total Cost', width: '120px', type: 'currency', sortable: true },
-  { key: 'profit', label: 'Profit', width: '120px', type: 'currency', sortable: true },
-  { key: 'profit_margin_percent', label: 'Margin %', width: '100px', type: 'percentage', sortable: true }
+  { key: 'patient_food_beverages_outsource_service', label: 'Food & Beverages', width: '130px', type: 'currency', sortable: true },
+  { key: 'laboratory_test_outsource_service', label: 'Lab Outsource', width: '120px', type: 'currency', sortable: true },
+  { key: 'any_other_patient_related_outsourced_services_1', label: 'Other Outsource 1', width: '140px', type: 'currency', sortable: true },
+  { key: 'any_other_patient_related_outsourced_services_2', label: 'Other Outsource 2', width: '140px', type: 'currency', sortable: true },
+  { key: 'any_other_patient_related_outsourced_services_3', label: 'Other Outsource 3', width: '140px', type: 'currency', sortable: true },
+  { key: 'brokerage_commission', label: 'Brokerage', width: '120px', type: 'currency', sortable: true },
+  { key: 'provision_for_deduction_bad_debts', label: 'Bad Debts', width: '120px', type: 'currency', sortable: true }
 ];
 
 export function ServiceWiseCostAnalysis() {
@@ -41,105 +40,91 @@ export function ServiceWiseCostAnalysis() {
     month: '',
     year: new Date().getFullYear(),
     department: '',
-    service_name: ''
+    service_name: '',
+    patient_type: ''
   });
   const [showFilters, setShowFilters] = useState(false);
   
-  const { 
-    costAnalysis, 
-    summaryMetrics, 
-    departmentBreakdown,
-    optimizationRecommendations,
-    isLoading, 
-    error, 
-    fetchCostAnalysis,
-    fetchSummaryMetrics,
-    fetchDepartmentBreakdown,
-    fetchOptimizationRecommendations,
-    exportCostAnalysis
-  } = useCostAnalysis();
-
-  useEffect(() => {
-    const loadData = async () => {
-      await Promise.all([
-        fetchCostAnalysis(filters),
-        fetchSummaryMetrics(filters),
-        fetchDepartmentBreakdown(filters),
-        fetchOptimizationRecommendations()
-      ]);
-    };
-    loadData();
-  }, []);
+  const { costAnalysisData, isLoading, error, fetchCostAnalysis } = useCostAnalysis();
 
   const handleFilterChange = (key: string, value: string | number) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
   const handleApplyFilters = async () => {
-    await Promise.all([
-      fetchCostAnalysis(filters),
-      fetchSummaryMetrics(filters),
-      fetchDepartmentBreakdown(filters)
-    ]);
-  };
-
-  const handleExport = async (format: 'json' | 'csv') => {
-    try {
-      await exportCostAnalysis(format, filters);
-    } catch (error) {
-      console.error('Export failed:', error);
-    }
+    const activeFilters = Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) => value !== '' && value !== 0)
+    );
+    await fetchCostAnalysis(activeFilters);
   };
 
   const handleRefresh = async () => {
-    await handleApplyFilters();
+    await fetchCostAnalysis();
   };
 
-  // Create metrics cards
-  const metricsCards: MetricCardType[] = summaryMetrics ? [
-    {
-      title: 'Total Services',
-      value: summaryMetrics.total_services.toString(),
-      change: '+5',
-      trend: 'up',
-      icon: Calculator
-    },
-    {
-      title: 'Total Revenue',
-      value: `$${(summaryMetrics.total_revenue / 1000).toFixed(0)}K`,
-      change: '+12.5%',
-      trend: 'up',
-      icon: DollarSign
-    },
-    {
-      title: 'Total Costs',
-      value: `$${(summaryMetrics.total_allocated_costs / 1000).toFixed(0)}K`,
-      change: '+8.2%',
-      trend: 'up',
-      icon: TrendingDown
-    },
-    {
-      title: 'Avg Margin',
-      value: `${summaryMetrics.overall_profit_margin.toFixed(1)}%`,
-      change: '+3.1%',
-      trend: 'up',
-      icon: Target
-    }
-  ] : [];
+  const handleRowClick = (row: ServiceCostRecord) => {
+    console.log('Cost analysis row clicked:', row);
+  };
 
-  // Create department chart data
-  const departmentChartData: ChartData[] = departmentBreakdown?.departments?.map(dept => ({
-    month: dept.department,
-    value: dept.profit_margin
-  })) || [];
+  const exportToCSV = () => {
+    if (!costAnalysisData.length) return;
+    
+    const headers = costAnalysisColumns.map(col => col.label).join(',');
+    const rows = costAnalysisData.map(row => 
+      costAnalysisColumns.map(col => row[col.key as keyof ServiceCostRecord]).join(',')
+    ).join('\n');
+    
+    const csv = `${headers}\n${rows}`;
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'service_wise_cost_analysis.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 
-  // Create cost breakdown chart data
-  const costBreakdownData: ChartData[] = summaryMetrics?.cost_breakdown ? [
-    { month: 'Pharmacy', value: summaryMetrics.cost_breakdown.pharmacy_percent },
-    { month: 'Materials', value: summaryMetrics.cost_breakdown.materials_percent },
-    { month: 'Labor', value: summaryMetrics.cost_breakdown.labor_percent },
-    { month: 'Overhead', value: summaryMetrics.cost_breakdown.overhead_percent }
-  ] : [];
+  // Calculate summary metrics
+  const calculateSummaryMetrics = () => {
+    if (!costAnalysisData.length) return null;
+
+    const totalAllocatedCosts = costAnalysisData.reduce((sum, record) => 
+      sum + record.cm + record.ew + record.hr + record.cn, 0
+    );
+
+    const totalVariableCosts = costAnalysisData.reduce((sum, record) => 
+      sum + record.pharmacy_charged_to_patient + 
+      record.medical_surgical_consumables_charged_to_patient +
+      record.implants_and_prosthetics_charged_to_patient +
+      record.non_medical_consumables_charged_to_patient +
+      record.fee_for_service +
+      record.incentives_to_consultants_treating_doctors +
+      record.patient_food_beverages_outsource_service +
+      record.laboratory_test_outsource_service +
+      record.any_other_patient_related_outsourced_services_1 +
+      record.any_other_patient_related_outsourced_services_2 +
+      record.any_other_patient_related_outsourced_services_3 +
+      record.brokerage_commission +
+      record.provision_for_deduction_bad_debts, 0
+    );
+
+    const totalCosts = totalAllocatedCosts + totalVariableCosts;
+    const totalPharmacy = costAnalysisData.reduce((sum, record) => sum + record.pharmacy_charged_to_patient, 0);
+    const totalImplants = costAnalysisData.reduce((sum, record) => sum + record.implants_and_prosthetics_charged_to_patient, 0);
+
+    return {
+      totalServices: costAnalysisData.length,
+      totalAllocatedCosts,
+      totalVariableCosts,
+      totalCosts,
+      totalPharmacy,
+      totalImplants,
+      avgAllocatedCostPerService: totalAllocatedCosts / costAnalysisData.length,
+      avgVariableCostPerService: totalVariableCosts / costAnalysisData.length
+    };
+  };
+
+  const summaryMetrics = calculateSummaryMetrics();
 
   if (isLoading) {
     return (
@@ -198,22 +183,13 @@ export function ServiceWiseCostAnalysis() {
             <span>Refresh</span>
           </button>
           
-          <div className="flex space-x-2">
-            <button
-              onClick={() => handleExport('csv')}
-              className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-              <Download className="h-4 w-4" />
-              <span>CSV</span>
-            </button>
-            <button
-              onClick={() => handleExport('json')}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Download className="h-4 w-4" />
-              <span>JSON</span>
-            </button>
-          </div>
+          <button
+            onClick={exportToCSV}
+            className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <Download className="h-4 w-4" />
+            <span>Export CSV</span>
+          </button>
         </div>
       </div>
 
@@ -221,7 +197,7 @@ export function ServiceWiseCostAnalysis() {
       {showFilters && (
         <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
           <h3 className="text-lg font-semibold text-primary-900 mb-4">Analysis Filters</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
               <label className="block text-sm font-medium text-accent-700 mb-2">Month</label>
               <select
@@ -266,6 +242,19 @@ export function ServiceWiseCostAnalysis() {
                 <option value="Laboratory">Laboratory</option>
               </select>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-accent-700 mb-2">Patient Type</label>
+              <select
+                value={filters.patient_type}
+                onChange={(e) => handleFilterChange('patient_type', e.target.value)}
+                className="w-full px-3 py-2 border border-accent-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              >
+                <option value="">All Types</option>
+                <option value="IPD">IPD</option>
+                <option value="OPD">OPD</option>
+              </select>
+            </div>
             
             <div className="flex items-end">
               <button
@@ -279,149 +268,77 @@ export function ServiceWiseCostAnalysis() {
         </div>
       )}
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {metricsCards.map((metric, index) => (
-          <MetricCard key={index} metric={metric} />
-        ))}
-      </div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <ChartTableToggle
-          title="Department Profit Margins (%)"
-          chartData={departmentChartData}
-          tableColumns={[
-            { key: 'department', label: 'Department', type: 'text' },
-            { key: 'profit_margin', label: 'Profit Margin', type: 'percentage' },
-            { key: 'total_revenue', label: 'Revenue', type: 'currency' },
-            { key: 'service_count', label: 'Services', type: 'number' }
-          ]}
-          tableData={departmentBreakdown?.departments?.map(dept => ({
-            department: dept.department,
-            profit_margin: dept.profit_margin,
-            total_revenue: dept.total_revenue,
-            service_count: dept.service_count
-          })) || []}
-          chartColor="bg-primary-600"
-        />
-        
-        <ChartTableToggle
-          title="Cost Breakdown by Type (%)"
-          chartData={costBreakdownData}
-          tableColumns={[
-            { key: 'cost_type', label: 'Cost Type', type: 'text' },
-            { key: 'percentage', label: 'Percentage', type: 'percentage' },
-            { key: 'amount', label: 'Amount', type: 'currency' }
-          ]}
-          tableData={costBreakdownData.map(item => ({
-            cost_type: item.month,
-            percentage: item.value,
-            amount: summaryMetrics ? (summaryMetrics.total_allocated_costs * item.value / 100) : 0
-          }))}
-          chartColor="bg-purple-600"
-        />
-      </div>
-
       {/* Main Cost Analysis Table */}
       <DataTable
         columns={costAnalysisColumns}
-        data={costAnalysis?.services || []}
+        data={costAnalysisData}
         title="Service-wise Cost Analysis"
         isLoading={isLoading}
+        onRowClick={handleRowClick}
         searchable={true}
         filterable={false}
         exportable={true}
         pageSize={15}
       />
 
-      {/* Optimization Recommendations */}
-      {optimizationRecommendations && optimizationRecommendations.recommendations.length > 0 && (
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-primary-900 mb-4">AI-Powered Cost Optimization Recommendations</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {optimizationRecommendations.recommendations.slice(0, 4).map((rec, index) => (
-              <div key={index} className="bg-white rounded-lg p-4 border border-primary-200">
-                <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-medium text-primary-900 flex items-center">
-                    {rec.type === 'cost_reduction' ? (
-                      <TrendingDown className="h-4 w-4 mr-2 text-red-600" />
-                    ) : (
-                      <TrendingUp className="h-4 w-4 mr-2 text-green-600" />
-                    )}
-                    {rec.service}
-                  </h4>
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    rec.priority === 'high' ? 'bg-red-100 text-red-700' :
-                    rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-green-100 text-green-700'
-                  }`}>
-                    {rec.priority.toUpperCase()}
-                  </span>
-                </div>
-                <p className="text-sm text-accent-600 mb-2">{rec.recommendation}</p>
-                <div className="text-xs text-primary-600 font-medium">{rec.potential_impact}</div>
-                <div className="mt-2">
-                  <div className="text-xs text-accent-500">Current Margin: {rec.current_margin.toFixed(1)}%</div>
-                </div>
-              </div>
-            ))}
+      {/* Summary Cards */}
+      {summaryMetrics && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
+            <h3 className="text-sm font-medium text-accent-600 mb-2">Total Services</h3>
+            <p className="text-2xl font-bold text-primary-900">{summaryMetrics.totalServices}</p>
+          </div>
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
+            <h3 className="text-sm font-medium text-accent-600 mb-2">Total Allocated Costs</h3>
+            <p className="text-2xl font-bold text-blue-600">
+              ${summaryMetrics.totalAllocatedCosts.toLocaleString()}
+            </p>
+          </div>
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
+            <h3 className="text-sm font-medium text-accent-600 mb-2">Total Variable Costs</h3>
+            <p className="text-2xl font-bold text-orange-600">
+              ${summaryMetrics.totalVariableCosts.toLocaleString()}
+            </p>
+          </div>
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
+            <h3 className="text-sm font-medium text-accent-600 mb-2">Total Costs</h3>
+            <p className="text-2xl font-bold text-red-600">
+              ${summaryMetrics.totalCosts.toLocaleString()}
+            </p>
           </div>
         </div>
       )}
 
-      {/* Summary Statistics */}
+      {/* Cost Breakdown Summary */}
       {summaryMetrics && (
         <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
           <h3 className="text-lg font-semibold text-primary-900 mb-4">Cost Analysis Summary</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <h4 className="font-medium text-primary-900 mb-3">Performance Overview</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-accent-600">Most Profitable:</span>
-                  <span className="font-semibold text-green-600">
-                    {summaryMetrics.most_profitable_service.name} ({summaryMetrics.most_profitable_service.margin.toFixed(1)}%)
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-accent-600">Least Profitable:</span>
-                  <span className="font-semibold text-red-600">
-                    {summaryMetrics.least_profitable_service.name} ({summaryMetrics.least_profitable_service.margin.toFixed(1)}%)
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-accent-600">Overall Margin:</span>
-                  <span className="font-semibold text-primary-900">{summaryMetrics.overall_profit_margin.toFixed(1)}%</span>
-                </div>
-              </div>
-            </div>
-            
             <div>
               <h4 className="font-medium text-primary-900 mb-3">Allocated Cost Structure</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-accent-600">Materials (CM):</span>
                   <span className="font-semibold text-primary-900">
-                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.cm, 0).toLocaleString() || '0'}
+                    ${costAnalysisData.reduce((sum, s) => sum + s.cm, 0).toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-accent-600">Expense Wise (EW):</span>
                   <span className="font-semibold text-primary-900">
-                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.ew, 0).toLocaleString() || '0'}
+                    ${costAnalysisData.reduce((sum, s) => sum + s.ew, 0).toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-accent-600">HR Costs:</span>
                   <span className="font-semibold text-primary-900">
-                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.hr, 0).toLocaleString() || '0'}
+                    ${costAnalysisData.reduce((sum, s) => sum + s.hr, 0).toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-accent-600">Utilities (CN):</span>
                   <span className="font-semibold text-primary-900">
-                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.cn, 0).toLocaleString() || '0'}
+                    ${costAnalysisData.reduce((sum, s) => sum + s.cn, 0).toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -433,24 +350,55 @@ export function ServiceWiseCostAnalysis() {
                 <div className="flex justify-between items-center">
                   <span className="text-accent-600">Total Pharmacy:</span>
                   <span className="font-semibold text-green-600">
-                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.pharmacy_charged_to_patient, 0).toLocaleString() || '0'}
+                    ${summaryMetrics.totalPharmacy.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-accent-600">Total Implants:</span>
                   <span className="font-semibold text-blue-600">
-                    ${costAnalysis?.services?.reduce((sum, s) => sum + s.implants_and_prosthetics_charged_to_patient, 0).toLocaleString() || '0'}
+                    ${summaryMetrics.totalImplants.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-accent-600">Total Services:</span>
-                  <span className="font-semibold text-primary-900">{costAnalysis?.services?.length || 0}</span>
+                  <span className="text-accent-600">Avg Variable Cost/Service:</span>
+                  <span className="font-semibold text-primary-900">
+                    ${summaryMetrics.avgVariableCostPerService.toFixed(0)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-accent-600">Avg Margin:</span>
+                  <span className="text-accent-600">Avg Allocated Cost/Service:</span>
                   <span className="font-semibold text-primary-900">
-                    {costAnalysis?.services?.length > 0 ? 
-                      (costAnalysis.services.reduce((sum, s) => sum + s.profit_margin_percent, 0) / costAnalysis.services.length).toFixed(1) : '0'}%
+                    ${summaryMetrics.avgAllocatedCostPerService.toFixed(0)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-medium text-primary-900 mb-3">Analysis Overview</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-accent-600">Unique Services:</span>
+                  <span className="font-semibold text-primary-900">
+                    {new Set(costAnalysisData.map(s => s.service_name)).size}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-accent-600">Unique Doctors:</span>
+                  <span className="font-semibold text-primary-900">
+                    {new Set(costAnalysisData.map(s => s.doctor_name)).size}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-accent-600">IPD Services:</span>
+                  <span className="font-semibold text-blue-600">
+                    {costAnalysisData.filter(s => s.ipd_number && s.ipd_number !== '').length}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-accent-600">OPD Services:</span>
+                  <span className="font-semibold text-green-600">
+                    {costAnalysisData.filter(s => !s.ipd_number || s.ipd_number === '').length}
                   </span>
                 </div>
               </div>
@@ -458,6 +406,37 @@ export function ServiceWiseCostAnalysis() {
           </div>
         </div>
       )}
+
+      {/* Cost Analysis Insights */}
+      <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-primary-900 mb-4">Cost Analysis Insights</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white rounded-lg p-4">
+            <h4 className="font-medium text-primary-900 mb-2 flex items-center">
+              <Calculator className="h-4 w-4 mr-2 text-blue-600" />
+              Activity-Based Costing
+            </h4>
+            <p className="text-sm text-accent-600 mb-2">
+              This analysis shows the true cost of each service by allocating overhead costs based on actual resource consumption.
+            </p>
+            <div className="text-xs text-blue-600 font-medium">
+              Allocated costs include: Materials (CM), Expenses (EW), HR, and Utilities (CN)
+            </div>
+          </div>
+          <div className="bg-white rounded-lg p-4">
+            <h4 className="font-medium text-primary-900 mb-2 flex items-center">
+              <Target className="h-4 w-4 mr-2 text-green-600" />
+              Cost Optimization
+            </h4>
+            <p className="text-sm text-accent-600 mb-2">
+              Use this data to identify high-cost services and optimize resource allocation for better profitability.
+            </p>
+            <div className="text-xs text-green-600 font-medium">
+              Focus on services with high allocated costs relative to their revenue potential
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
