@@ -143,7 +143,7 @@ export function ExpenseForm({ month, onMonthChange }: ExpenseFormProps) {
               htmlFor={`expense-${key}`}
               className="block text-sm font-medium text-accent-700 mb-2"
             >
-              {label} ($)
+              {label} (₹)
             </label>
             <input
               id={`expense-${key}`}
@@ -263,7 +263,7 @@ export function ExpenseForm({ month, onMonthChange }: ExpenseFormProps) {
             <div key={key} className="flex justify-between items-center text-sm">
               <span className="text-accent-600">{label.split(' ')[0]}:</span>
               <span className="font-semibold text-red-900">
-                ${(formData[key] || 0).toLocaleString()}
+                ₹{(formData[key] || 0).toLocaleString()}
               </span>
             </div>
           ))}
@@ -272,7 +272,7 @@ export function ExpenseForm({ month, onMonthChange }: ExpenseFormProps) {
           <div className="flex justify-between items-center">
             <span className="font-semibold text-red-900">Total Expenses:</span>
             <span className="text-xl font-bold text-red-900">
-              ${totalExpenses.toLocaleString()}
+              ₹{totalExpenses.toLocaleString()}
             </span>
           </div>
         </div>

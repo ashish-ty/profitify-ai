@@ -471,6 +471,7 @@ export function MetadataTablesNew() {
               <p className="text-2xl font-bold text-green-600">
                 {activeTable === 'connected-load' ? connectedLoadData.reduce((sum, item) => sum + (item.total_load_kg || 0), 0).toLocaleString() :
                  activeTable === 'fixed-asset' ? `$${fixedAssetData.reduce((sum, item) => sum + (item.bio_medical_equipments || 0) + (item.engineering_equipments || 0) + (item.furniture_fixture || 0) + (item.others || 0), 0).toLocaleString()}` :
+                 activeTable === 'fixed-asset' ? `₹${fixedAssetData.reduce((sum, item) => sum + (item.bio_medical_equipments || 0) + (item.engineering_equipments || 0) + (item.furniture_fixture || 0) + (item.others || 0), 0).toLocaleString()}` :
                  activeTable === 'tat' ? 'Variable' :
                  costCenterData.filter(item => item.cc_type === 'Revenue').length}
               </p>
@@ -484,7 +485,7 @@ export function MetadataTablesNew() {
               </h3>
               <p className="text-2xl font-bold text-purple-600">
                 {activeTable === 'connected-load' ? `${connectedLoadData.length > 0 ? Math.round(connectedLoadData.reduce((sum, item) => sum + (item.connected_load || 0), 0) / connectedLoadData.length) : 0} kW` :
-                 activeTable === 'fixed-asset' ? `$${fixedAssetData.reduce((sum, item) => sum + (item.bio_medical_equipments || 0), 0).toLocaleString()}` :
+                 activeTable === 'fixed-asset' ? `₹${fixedAssetData.reduce((sum, item) => sum + (item.bio_medical_equipments || 0), 0).toLocaleString()}` :
                  activeTable === 'tat' ? tatData.length :
                  costCenterData.filter(item => item.cc_type === 'Support').length}
               </p>

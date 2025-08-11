@@ -76,7 +76,7 @@ export function RevenueAnalysis() {
   const metricsCards: MetricCardType[] = [
     {
       title: 'Total Revenue',
-      value: `$${(metrics.total_revenue / 1000).toFixed(0)}K`,
+      value: `₹${(metrics.total_revenue / 1000).toFixed(0)}K`,
       change: `${metrics.monthly_growth_rate > 0 ? '+' : ''}${metrics.monthly_growth_rate.toFixed(1)}%`,
       trend: metrics.monthly_growth_rate >= 0 ? 'up' : 'down',
       icon: DollarSign
@@ -90,14 +90,14 @@ export function RevenueAnalysis() {
     },
     {
       title: 'Avg Revenue/Patient',
-      value: `$${metrics.avg_revenue_per_patient.toFixed(0)}`,
+      value: `₹${metrics.avg_revenue_per_patient.toFixed(0)}`,
       change: '+3.2%',
       trend: 'up',
       icon: Users
     },
     {
       title: 'Daily Revenue',
-      value: `$${(metrics.daily_avg_revenue / 1000).toFixed(1)}K`,
+      value: `₹${(metrics.daily_avg_revenue / 1000).toFixed(1)}K`,
       change: '+5.4%',
       trend: 'up',
       icon: Calendar

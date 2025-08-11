@@ -33,7 +33,7 @@ export function Overview() {
   const stats = [
     {
       title: 'Total Revenue',
-      value: `$${dashboardMetrics?.total_revenue?.toLocaleString() || '0'}`,
+      value: `₹${dashboardMetrics?.total_revenue?.toLocaleString() || '0'}`,
       change: '+12.5%',
       trend: 'up',
       icon: DollarSign,
@@ -42,7 +42,7 @@ export function Overview() {
     },
     {
       title: 'Total Expenses',
-      value: `$${dashboardMetrics?.total_expenses?.toLocaleString() || '0'}`,
+      value: `₹${dashboardMetrics?.total_expenses?.toLocaleString() || '0'}`,
       change: '-3.2%',
       trend: 'down',
       icon: TrendingUp,
@@ -51,7 +51,7 @@ export function Overview() {
     },
     {
       title: 'Net Profit',
-      value: `$${dashboardMetrics?.net_profit?.toLocaleString() || '0'}`,
+      value: `₹${dashboardMetrics?.net_profit?.toLocaleString() || '0'}`,
       change: '+18.7%',
       trend: 'up',
       icon: Activity,

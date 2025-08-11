@@ -85,7 +85,7 @@ export function DataTable({
     
     switch (type) {
       case 'currency':
-        return `$${Number(value).toLocaleString()}`;
+        return `₹${Number(value).toLocaleString()}`;
       case 'number':
         return Number(value).toLocaleString();
       case 'date':

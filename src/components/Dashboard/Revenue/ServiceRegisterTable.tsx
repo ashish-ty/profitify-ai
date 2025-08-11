@@ -78,7 +78,7 @@ export default function ServiceRegisterTable() {
         <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
           <h3 className="text-sm font-medium text-accent-600 mb-2">Total Revenue</h3>
           <p className="text-2xl font-bold text-green-600">
-            ${serviceRegisterData.reduce((sum, service) => sum + (Number(service.net_amount) || 0), 0).toLocaleString()}
+            ₹{serviceRegisterData.reduce((sum, service) => sum + (Number(service.net_amount) || 0), 0).toLocaleString()}
           </p>
         </div>
         <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">

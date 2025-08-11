@@ -40,7 +40,7 @@ export function ChartTableToggle({
     
     switch (type) {
       case 'currency':
-        return `$${Number(value).toLocaleString()}`;
+        return `₹${Number(value).toLocaleString()}`;
       case 'number':
         return Number(value).toLocaleString();
       case 'percentage':

@@ -666,19 +666,19 @@ export function ExpenseTable() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Debits</h3>
               <p className="text-2xl font-bold text-green-600">
-                ${trialBalanceData.reduce((sum, item) => sum + item.Debit, 0).toLocaleString()}
+                ₹{trialBalanceData.reduce((sum, item) => sum + item.Debit, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Credits</h3>
               <p className="text-2xl font-bold text-red-600">
-                ${trialBalanceData.reduce((sum, item) => sum + item.Credit, 0).toLocaleString()}
+                ₹{trialBalanceData.reduce((sum, item) => sum + item.Credit, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Net Balance</h3>
               <p className="text-2xl font-bold text-primary-900">
-                ${trialBalanceData.reduce((sum, item) => sum + item.NetBal, 0).toLocaleString()}
+                ₹{trialBalanceData.reduce((sum, item) => sum + item.NetBal, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
@@ -693,19 +693,19 @@ export function ExpenseTable() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Service Fees</h3>
               <p className="text-2xl font-bold text-green-600">
-                ${doctorShareData.reduce((sum, item) => sum + item.ServiceFee, 0).toLocaleString()}
+                ₹{doctorShareData.reduce((sum, item) => sum + item.ServiceFee, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Retainer</h3>
               <p className="text-2xl font-bold text-blue-600">
-                ${doctorShareData.reduce((sum, item) => sum + item.RetainerFee, 0).toLocaleString()}
+                ₹{doctorShareData.reduce((sum, item) => sum + item.RetainerFee, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Incentives</h3>
               <p className="text-2xl font-bold text-purple-600">
-                ${doctorShareData.reduce((sum, item) => sum + item.Incentives, 0).toLocaleString()}
+                ₹{doctorShareData.reduce((sum, item) => sum + item.Incentives, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
@@ -720,19 +720,19 @@ export function ExpenseTable() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Pharmacy</h3>
               <p className="text-2xl font-bold text-green-600">
-                ${variableCostData.reduce((sum, item) => sum + item.Pharmacy, 0).toLocaleString()}
+                ₹{variableCostData.reduce((sum, item) => sum + item.Pharmacy, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Implants</h3>
               <p className="text-2xl font-bold text-blue-600">
-                ${variableCostData.reduce((sum, item) => sum + item.ImplantsProsthetics, 0).toLocaleString()}
+                ₹{variableCostData.reduce((sum, item) => sum + item.ImplantsProsthetics, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Doctor Fees</h3>
               <p className="text-2xl font-bold text-purple-600">
-                ${variableCostData.reduce((sum, item) => sum + item.DoctorTreating + item.DoctorConsultant, 0).toLocaleString()}
+                ₹{variableCostData.reduce((sum, item) => sum + item.DoctorTreating + item.DoctorConsultant, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
@@ -747,19 +747,19 @@ export function ExpenseTable() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Gross Pay</h3>
               <p className="text-2xl font-bold text-green-600">
-                ${hrSalaryData.reduce((sum, item) => sum + item.GrossPay, 0).toLocaleString()}
+                ₹{hrSalaryData.reduce((sum, item) => sum + item.GrossPay, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Net Pay</h3>
               <p className="text-2xl font-bold text-blue-600">
-                ${hrSalaryData.reduce((sum, item) => sum + item.NetPay, 0).toLocaleString()}
+                ₹{hrSalaryData.reduce((sum, item) => sum + item.NetPay, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Deductions</h3>
               <p className="text-2xl font-bold text-red-600">
-                ${hrSalaryData.reduce((sum, item) => sum + item.Deductions, 0).toLocaleString()}
+                ₹{hrSalaryData.reduce((sum, item) => sum + item.Deductions, 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">

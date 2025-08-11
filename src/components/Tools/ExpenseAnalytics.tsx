@@ -27,7 +27,7 @@ const monthlyExpenses: ChartData[] = [
 const metrics: MetricCardType[] = [
   {
     title: 'Total Expenses',
-    value: '$2.77M',
+    value: '₹2.77M',
     change: '+8.2%',
     trend: 'up',
     icon: TrendingDown
@@ -48,7 +48,7 @@ const metrics: MetricCardType[] = [
   },
   {
     title: 'Avg. Daily Expense',
-    value: '$15,389',
+    value: '₹15,389',
     change: '+2.8%',
     trend: 'up',
     icon: Calculator

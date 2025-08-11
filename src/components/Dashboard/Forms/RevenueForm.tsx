@@ -398,7 +398,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
             </div>
             <div className="flex justify-between">
               <span className="text-accent-600">Net Revenue:</span>
-              <span className="font-semibold text-primary-900">${totals.netRevenue.toLocaleString()}</span>
+              <span className="font-semibold text-primary-900">₹{totals.netRevenue.toLocaleString()}</span>
             </div>
           </div>
         </div>
@@ -444,7 +444,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
                   {/* Show indicator if category has data */}
                   {calculateCategoryTotals(currentData, specialty).netRevenue > 0 && (
                     <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      ${Math.round(calculateCategoryTotals(currentData, specialty).netRevenue / 1000)}K
+                      ₹{Math.round(calculateCategoryTotals(currentData, specialty).netRevenue / 1000)}K
                     </span>
                   )}
                 </button>
@@ -462,7 +462,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
               </h4>
               {categoryTotals.netRevenue > 0 && (
                 <div className="text-sm text-accent-600">
-                  Category Revenue: <span className="font-semibold text-primary-900">${categoryTotals.netRevenue.toLocaleString()}</span>
+                  Category Revenue: <span className="font-semibold text-primary-900">₹{categoryTotals.netRevenue.toLocaleString()}</span>
                 </div>
               )}
             </div>
@@ -559,7 +559,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
 
                   <div>
                     <label className="block text-sm font-medium text-green-800 mb-1">
-                      Gross Amount ($)
+                      Gross Amount (₹)
                     </label>
                     <input
                       type="number"
@@ -574,7 +574,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
 
                   <div>
                     <label className="block text-sm font-medium text-green-800 mb-1">
-                      Discount ($)
+                      Discount (₹)
                     </label>
                     <input
                       type="number"
@@ -592,7 +592,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
                   <div className="flex justify-between items-center text-sm">
                     <span className="font-medium text-green-800">Net Revenue:</span>
                     <span className="font-semibold text-green-900">
-                      ${((currentData[activeCategory]?.cash.grossAmount || 0) - (currentData[activeCategory]?.cash.discount || 0)).toLocaleString()}
+                      ₹{((currentData[activeCategory]?.cash.grossAmount || 0) - (currentData[activeCategory]?.cash.discount || 0)).toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -688,7 +688,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
 
                   <div>
                     <label className="block text-sm font-medium text-blue-800 mb-1">
-                      Gross Amount ($)
+                      Gross Amount (₹)
                     </label>
                     <input
                       type="number"
@@ -703,7 +703,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
 
                   <div>
                     <label className="block text-sm font-medium text-blue-800 mb-1">
-                      Discount ($)
+                      Discount (₹)
                     </label>
                     <input
                       type="number"
@@ -721,7 +721,7 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
                   <div className="flex justify-between items-center text-sm">
                     <span className="font-medium text-blue-800">Net Revenue:</span>
                     <span className="font-semibold text-blue-900">
-                      ${((currentData[activeCategory]?.credit.grossAmount || 0) - (currentData[activeCategory]?.credit.discount || 0)).toLocaleString()}
+                      ₹{((currentData[activeCategory]?.credit.grossAmount || 0) - (currentData[activeCategory]?.credit.discount || 0)).toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -740,15 +740,15 @@ export function RevenueForm({ month, onMonthChange }: RevenueFormProps) {
                 </div>
                 <div>
                   <span className="text-accent-600">Gross Amount:</span>
-                  <div className="font-semibold text-green-600">${categoryTotals.grossAmount.toLocaleString()}</div>
+                  <div className="font-semibold text-green-600">₹{categoryTotals.grossAmount.toLocaleString()}</div>
                 </div>
                 <div>
                   <span className="text-accent-600">Total Discount:</span>
-                  <div className="font-semibold text-red-600">${categoryTotals.discount.toLocaleString()}</div>
+                  <div className="font-semibold text-red-600">₹{categoryTotals.discount.toLocaleString()}</div>
                 </div>
                 <div>
                   <span className="text-accent-600">Net Revenue:</span>
-                  <div className="font-bold text-primary-900">${categoryTotals.netRevenue.toLocaleString()}</div>
+                  <div className="font-bold text-primary-900">₹{categoryTotals.netRevenue.toLocaleString()}</div>
                 </div>
               </div>
             </div>

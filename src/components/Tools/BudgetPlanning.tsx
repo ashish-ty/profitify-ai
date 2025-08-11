@@ -162,19 +162,19 @@ export function BudgetPlanning() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-accent-600">Revenue per Patient</span>
-                <span className="font-semibold text-primary-900">${currentData.revenuePerPatient}</span>
+                <span className="font-semibold text-primary-900">₹{currentData.revenuePerPatient}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-accent-600">Total Revenue</span>
-                <span className="font-semibold text-green-600">${currentData.totalRevenue.toLocaleString()}</span>
+                <span className="font-semibold text-green-600">₹{currentData.totalRevenue.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-accent-600">Total Costs</span>
-                <span className="font-semibold text-red-600">${currentData.totalCosts.toLocaleString()}</span>
+                <span className="font-semibold text-red-600">₹{currentData.totalCosts.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center border-t border-primary-200 pt-2">
                 <span className="font-medium text-primary-900">Net Profit</span>
-                <span className="font-bold text-primary-900">${currentData.netProfit.toLocaleString()}</span>
+                <span className="font-bold text-primary-900">₹{currentData.netProfit.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-medium text-primary-900">Profit Margin</span>
@@ -202,7 +202,7 @@ export function BudgetPlanning() {
               <div className="flex justify-between items-center">
                 <span className="text-accent-600">Revenue per Patient</span>
                 <div className="flex items-center space-x-2">
-                  <span className="font-semibold text-primary-900">${userProjections.revenuePerPatient}</span>
+                  <span className="font-semibold text-primary-900">₹{userProjections.revenuePerPatient}</span>
                   <span className={`text-xs px-2 py-1 rounded ${
                     userProjections.revenuePerPatient > currentData.revenuePerPatient ? 'bg-green-100 text-green-700' : 
                     userProjections.revenuePerPatient < currentData.revenuePerPatient ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'
@@ -214,16 +214,16 @@ export function BudgetPlanning() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-accent-600">Total Revenue</span>
-                <span className="font-semibold text-green-600">${userProjections.totalRevenue.toLocaleString()}</span>
+                <span className="font-semibold text-green-600">₹{userProjections.totalRevenue.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-accent-600">Total Costs</span>
-                <span className="font-semibold text-red-600">${userProjections.totalCosts.toLocaleString()}</span>
+                <span className="font-semibold text-red-600">₹{userProjections.totalCosts.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center border-t border-primary-200 pt-2">
                 <span className="font-medium text-primary-900">Net Profit</span>
                 <div className="flex items-center space-x-2">
-                  <span className="font-bold text-primary-900">${userProjections.netProfit.toLocaleString()}</span>
+                  <span className="font-bold text-primary-900">₹{userProjections.netProfit.toLocaleString()}</span>
                   <span className={`text-xs px-2 py-1 rounded ${
                     userProjections.netProfit > currentData.netProfit ? 'bg-green-100 text-green-700' : 
                     userProjections.netProfit < currentData.netProfit ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'
@@ -278,15 +278,15 @@ export function BudgetPlanning() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-accent-600">Total Revenue:</span>
-                    <span className="font-semibold text-green-600">${industryProjections.totalRevenue.toLocaleString()}</span>
+                    <span className="font-semibold text-green-600">₹{industryProjections.totalRevenue.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-accent-600">Total Costs:</span>
-                    <span className="font-semibold text-red-600">${industryProjections.totalCosts.toLocaleString()}</span>
+                    <span className="font-semibold text-red-600">₹{industryProjections.totalCosts.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-accent-600">Net Profit:</span>
-                    <span className="font-semibold text-primary-900">${industryProjections.netProfit.toLocaleString()}</span>
+                    <span className="font-semibold text-primary-900">₹{industryProjections.netProfit.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-accent-600">Profit Margin:</span>
@@ -304,7 +304,7 @@ export function BudgetPlanning() {
                       userProjections.totalRevenue > industryProjections.totalRevenue ? 'text-green-600' : 'text-red-600'
                     }`}>
                       {userProjections.totalRevenue > industryProjections.totalRevenue ? '+' : ''}
-                      ${(userProjections.totalRevenue - industryProjections.totalRevenue).toLocaleString()}
+                      ₹{(userProjections.totalRevenue - industryProjections.totalRevenue).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -313,7 +313,7 @@ export function BudgetPlanning() {
                       userProjections.netProfit > industryProjections.netProfit ? 'text-green-600' : 'text-red-600'
                     }`}>
                       {userProjections.netProfit > industryProjections.netProfit ? '+' : ''}
-                      ${(userProjections.netProfit - industryProjections.netProfit).toLocaleString()}
+                      ₹{(userProjections.netProfit - industryProjections.netProfit).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between">

@@ -291,19 +291,19 @@ export function ServiceWiseCostAnalysis() {
           <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
             <h3 className="text-sm font-medium text-accent-600 mb-2">Total Allocated Costs</h3>
             <p className="text-2xl font-bold text-blue-600">
-              ${summaryMetrics.totalAllocatedCosts.toLocaleString()}
+              ₹{summaryMetrics.totalAllocatedCosts.toLocaleString()}
             </p>
           </div>
           <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
             <h3 className="text-sm font-medium text-accent-600 mb-2">Total Variable Costs</h3>
             <p className="text-2xl font-bold text-orange-600">
-              ${summaryMetrics.totalVariableCosts.toLocaleString()}
+              ₹{summaryMetrics.totalVariableCosts.toLocaleString()}
             </p>
           </div>
           <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
             <h3 className="text-sm font-medium text-accent-600 mb-2">Total Costs</h3>
             <p className="text-2xl font-bold text-red-600">
-              ${summaryMetrics.totalCosts.toLocaleString()}
+              ₹{summaryMetrics.totalCosts.toLocaleString()}
             </p>
           </div>
         </div>
@@ -320,25 +320,25 @@ export function ServiceWiseCostAnalysis() {
                 <div className="flex justify-between">
                   <span className="text-accent-600">Materials (CM):</span>
                   <span className="font-semibold text-primary-900">
-                    ${costAnalysisData.reduce((sum, s) => sum + s.cm, 0).toLocaleString()}
+                    ₹{costAnalysisData.reduce((sum, s) => sum + s.cm, 0).toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-accent-600">Expense Wise (EW):</span>
                   <span className="font-semibold text-primary-900">
-                    ${costAnalysisData.reduce((sum, s) => sum + s.ew, 0).toLocaleString()}
+                    ₹{costAnalysisData.reduce((sum, s) => sum + s.ew, 0).toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-accent-600">HR Costs:</span>
                   <span className="font-semibold text-primary-900">
-                    ${costAnalysisData.reduce((sum, s) => sum + s.hr, 0).toLocaleString()}
+                    ₹{costAnalysisData.reduce((sum, s) => sum + s.hr, 0).toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-accent-600">Utilities (CN):</span>
                   <span className="font-semibold text-primary-900">
-                    ${costAnalysisData.reduce((sum, s) => sum + s.cn, 0).toLocaleString()}
+                    ₹{costAnalysisData.reduce((sum, s) => sum + s.cn, 0).toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -350,25 +350,25 @@ export function ServiceWiseCostAnalysis() {
                 <div className="flex justify-between items-center">
                   <span className="text-accent-600">Total Pharmacy:</span>
                   <span className="font-semibold text-green-600">
-                    ${summaryMetrics.totalPharmacy.toLocaleString()}
+                    ₹{summaryMetrics.totalPharmacy.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-accent-600">Total Implants:</span>
                   <span className="font-semibold text-blue-600">
-                    ${summaryMetrics.totalImplants.toLocaleString()}
+                    ₹{summaryMetrics.totalImplants.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-accent-600">Avg Variable Cost/Service:</span>
                   <span className="font-semibold text-primary-900">
-                    ${summaryMetrics.avgVariableCostPerService.toFixed(0)}
+                    ₹{summaryMetrics.avgVariableCostPerService.toFixed(0)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-accent-600">Avg Allocated Cost/Service:</span>
                   <span className="font-semibold text-primary-900">
-                    ${summaryMetrics.avgAllocatedCostPerService.toFixed(0)}
+                    ₹{summaryMetrics.avgAllocatedCostPerService.toFixed(0)}
                   </span>
                 </div>
               </div>

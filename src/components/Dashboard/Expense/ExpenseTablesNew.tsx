@@ -216,7 +216,7 @@ export function ExpenseTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Amount</h3>
               <p className="text-2xl font-bold text-primary-900">
-                ${trialBalanceData.reduce((sum, item) => sum + (item.amount || 0), 0).toLocaleString()}
+                ₹{trialBalanceData.reduce((sum, item) => sum + (item.amount || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
@@ -232,7 +232,7 @@ export function ExpenseTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Avg Amount</h3>
               <p className="text-2xl font-bold text-purple-600">
-                ${trialBalanceData.length > 0 ? Math.round(trialBalanceData.reduce((sum, item) => sum + (item.amount || 0), 0) / trialBalanceData.length).toLocaleString() : 0}
+                ₹{trialBalanceData.length > 0 ? Math.round(trialBalanceData.reduce((sum, item) => sum + (item.amount || 0), 0) / trialBalanceData.length).toLocaleString() : 0}
               </p>
             </div>
           </>
@@ -243,19 +243,19 @@ export function ExpenseTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Expenses</h3>
               <p className="text-2xl font-bold text-red-600">
-                ${expenseWiseData.reduce((sum, item) => sum + (item.amount || 0), 0).toLocaleString()}
+                ₹{expenseWiseData.reduce((sum, item) => sum + (item.amount || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Direct Costs</h3>
               <p className="text-2xl font-bold text-green-600">
-                ${expenseWiseData.filter(item => item.nature_of_data === 'Direct Cost').reduce((sum, item) => sum + (item.amount || 0), 0).toLocaleString()}
+                ₹{expenseWiseData.filter(item => item.nature_of_data === 'Direct Cost').reduce((sum, item) => sum + (item.amount || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Indirect Costs</h3>
               <p className="text-2xl font-bold text-blue-600">
-                ${expenseWiseData.filter(item => item.nature_of_data === 'Indirect Cost').reduce((sum, item) => sum + (item.amount || 0), 0).toLocaleString()}
+                ₹{expenseWiseData.filter(item => item.nature_of_data === 'Indirect Cost').reduce((sum, item) => sum + (item.amount || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
@@ -276,13 +276,13 @@ export function ExpenseTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Pharmacy</h3>
               <p className="text-2xl font-bold text-green-600">
-                ${variableCostData.reduce((sum, item) => sum + (item.pharmacy_charged_to_patient || 0), 0).toLocaleString()}
+                ₹{variableCostData.reduce((sum, item) => sum + (item.pharmacy_charged_to_patient || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Implants</h3>
               <p className="text-2xl font-bold text-blue-600">
-                ${variableCostData.reduce((sum, item) => sum + (item.implants_and_prosthetics_charged_to_patient || 0), 0).toLocaleString()}
+                ₹{variableCostData.reduce((sum, item) => sum + (item.implants_and_prosthetics_charged_to_patient || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
@@ -303,13 +303,13 @@ export function ExpenseTablesNew() {
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Gross Pay</h3>
               <p className="text-2xl font-bold text-green-600">
-                ${hrData.reduce((sum, item) => sum + (item.gross_total || 0), 0).toLocaleString()}
+                ₹{hrData.reduce((sum, item) => sum + (item.gross_total || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
               <h3 className="text-sm font-medium text-accent-600 mb-2">Total Net Pay</h3>
               <p className="text-2xl font-bold text-blue-600">
-                ${hrData.reduce((sum, item) => sum + (item.net_salary || 0), 0).toLocaleString()}
+                ₹{hrData.reduce((sum, item) => sum + (item.net_salary || 0), 0).toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-sm border border-primary-100">
