@@ -18,24 +18,22 @@ import { useCostAnalysis } from '../../hooks/useCostAnalysis';
 import { ChartData, MetricCard as MetricCardType } from '../../types';
 
 const costAnalysisColumns: TableColumn[] = [
+  { key: 'ipd_number', label: 'IPD Number', width: '120px', sortable: true },
+  { key: 'bill_no', label: 'Bill No', width: '100px', sortable: true },
   { key: 'service_name', label: 'Service Name', width: '200px', sortable: true },
-  { key: 'department', label: 'Department', width: '120px', sortable: true },
-  { key: 'total_revenue', label: 'Revenue', width: '120px', type: 'currency', sortable: true },
-  { key: 'total_quantity', label: 'Quantity', width: '80px', type: 'number', sortable: true },
-  { key: 'revenue_per_unit', label: 'Revenue/Unit', width: '120px', type: 'currency', sortable: true },
-  { key: 'direct_pharmacy_cost', label: 'Pharmacy Cost', width: '120px', type: 'currency', sortable: true },
-  { key: 'direct_materials_cost', label: 'Materials Cost', width: '120px', type: 'currency', sortable: true },
-  { key: 'direct_labor_cost', label: 'Labor Cost', width: '120px', type: 'currency', sortable: true },
-  { key: 'allocated_overhead_cost', label: 'Overhead Cost', width: '120px', type: 'currency', sortable: true },
-  { key: 'allocated_utilities_cost', label: 'Utilities Cost', width: '120px', type: 'currency', sortable: true },
-  { key: 'allocated_admin_cost', label: 'Admin Cost', width: '120px', type: 'currency', sortable: true },
+  { key: 'doctor_name', label: 'Doctor', width: '150px', sortable: true },
+  { key: 'cm', label: 'Materials (CM)', width: '120px', type: 'currency', sortable: true },
+  { key: 'ew', label: 'Expense Wise (EW)', width: '130px', type: 'currency', sortable: true },
+  { key: 'hr', label: 'HR Cost', width: '100px', type: 'currency', sortable: true },
+  { key: 'cn', label: 'Utilities (CN)', width: '120px', type: 'currency', sortable: true },
+  { key: 'pharmacy_charged_to_patient', label: 'Pharmacy', width: '120px', type: 'currency', sortable: true },
+  { key: 'medical_surgical_consumables_charged_to_patient', label: 'Med Consumables', width: '130px', type: 'currency', sortable: true },
+  { key: 'implants_and_prosthetics_charged_to_patient', label: 'Implants', width: '120px', type: 'currency', sortable: true },
+  { key: 'fee_for_service', label: 'Service Fee', width: '120px', type: 'currency', sortable: true },
+  { key: 'incentives_to_consultants_treating_doctors', label: 'Doctor Incentives', width: '130px', type: 'currency', sortable: true },
   { key: 'total_allocated_cost', label: 'Total Cost', width: '120px', type: 'currency', sortable: true },
-  { key: 'cost_per_unit', label: 'Cost/Unit', width: '120px', type: 'currency', sortable: true },
   { key: 'profit', label: 'Profit', width: '120px', type: 'currency', sortable: true },
-  { key: 'profit_margin_percent', label: 'Margin %', width: '100px', type: 'percentage', sortable: true },
-  { key: 'cost_efficiency_score', label: 'Efficiency Score', width: '120px', type: 'number', sortable: true },
-  { key: 'profitability_rank', label: 'Rank', width: '80px', type: 'number', sortable: true },
-  { key: 'cost_optimization_potential', label: 'Optimization', width: '120px', sortable: true }
+  { key: 'profit_margin_percent', label: 'Margin %', width: '100px', type: 'percentage', sortable: true }
 ];
 
 export function ServiceWiseCostAnalysis() {
@@ -130,17 +128,29 @@ export function ServiceWiseCostAnalysis() {
   ] : [];
 
   // Create department chart data
-  const departmentChartData: ChartData[] = departmentBreakdown?.departments?.map(dept => ({
-    month: dept.department,
-    value: dept.profit_margin
+  const serviceChartData: ChartData[] = costAnalysis?.services?.slice(0, 10).map(service => ({
+    month: service.service_name.substring(0, 15) + (service.service_name.length > 15 ? '...' : ''),
+    value: service.profit_margin_percent
   })) || [];
 
   // Create cost breakdown chart data
-  const costBreakdownData: ChartData[] = summaryMetrics?.cost_breakdown ? [
-    { month: 'Pharmacy', value: summaryMetrics.cost_breakdown.pharmacy_percent },
-    { month: 'Materials', value: summaryMetrics.cost_breakdown.materials_percent },
-    { month: 'Labor', value: summaryMetrics.cost_breakdown.labor_percent },
-    { month: 'Overhead', value: summaryMetrics.cost_breakdown.overhead_percent }
+  const costBreakdownData: ChartData[] = costAnalysis?.services?.length > 0 ? [
+    { 
+      month: 'Materials (CM)', 
+      value: costAnalysis.services.reduce((sum, s) => sum + s.cm, 0) 
+    },
+    { 
+      month: 'Expense Wise (EW)', 
+      value: costAnalysis.services.reduce((sum, s) => sum + s.ew, 0) 
+    },
+    { 
+      month: 'HR Cost', 
+      value: costAnalysis.services.reduce((sum, s) => sum + s.hr, 0) 
+    },
+    { 
+      month: 'Utilities (CN)', 
+      value: costAnalysis.services.reduce((sum, s) => sum + s.cn, 0) 
+    }
   ] : [];
 
   if (isLoading) {
@@ -292,7 +302,7 @@ export function ServiceWiseCostAnalysis() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <ChartTableToggle
           title="Department Profit Margins (%)"
-          chartData={departmentChartData}
+          chartData={serviceChartData}
           tableColumns={[
             { key: 'department', label: 'Department', type: 'text' },
             { key: 'profit_margin', label: 'Profit Margin', type: 'percentage' },

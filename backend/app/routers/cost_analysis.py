@@ -54,31 +54,61 @@ async def get_service_wise_cost_analysis(
         # Convert DataFrame to list of ServiceCostBreakdown
         services = []
         for _, row in cost_df.iterrows():
+            # Calculate derived metrics
+            total_allocated_cost = (row.get('cm', 0) + row.get('ew', 0) + 
+                                  row.get('hr', 0) + row.get('cn', 0))
+            
+            total_variable_cost = (
+                row.get('pharmacy_charged_to_patient', 0) +
+                row.get('medical_surgical_consumables_charged_to_patient', 0) +
+                row.get('implants_and_prosthetics_charged_to_patient', 0) +
+                row.get('non_medical_consumables_charged_to_patient', 0) +
+                row.get('fee_for_service', 0) +
+                row.get('incentives_to_consultants_treating_doctors', 0) +
+                row.get('patient_food_beverages_outsource_service', 0) +
+                row.get('laboratory_test_outsource_service', 0) +
+                row.get('any_other_patient_related_outsourced_services_1', 0) +
+                row.get('any_other_patient_related_outsourced_services_2', 0) +
+                row.get('any_other_patient_related_outsourced_services_3', 0) +
+                row.get('brokerage_commission', 0) +
+                row.get('provision_for_deduction_bad_debts', 0)
+            )
+            
+            total_cost = total_allocated_cost + total_variable_cost
+            
+            # Calculate revenue from service register data (would need to be added)
+            # For now, using a placeholder calculation
+            estimated_revenue = total_cost * 1.2  # Assuming 20% margin
+            profit = estimated_revenue - total_cost
+            profit_margin = (profit / estimated_revenue * 100) if estimated_revenue > 0 else 0
+            
             service = ServiceCostBreakdown(
-                service_id=str(row['service_id']),
-                department=str(row['department']),
-                service_name=str(row['service_name']),
-                total_revenue=float(row['total_revenue']),
-                total_quantity=int(row['total_quantity']),
-                revenue_per_unit=float(row['revenue_per_unit']),
-                direct_pharmacy_cost=float(row['direct_pharmacy_cost']),
-                direct_materials_cost=float(row['direct_materials_cost']),
-                direct_labor_cost=float(row['direct_labor_cost']),
-                allocated_overhead_cost=float(row['allocated_overhead_cost']),
-                allocated_utilities_cost=float(row['allocated_utilities_cost']),
-                allocated_admin_cost=float(row['allocated_admin_cost']),
-                allocated_facilities_cost=float(row['allocated_facilities_cost']),
-                total_allocated_cost=float(row['total_allocated_cost']),
-                cost_per_unit=float(row['cost_per_unit']),
-                profit=float(row['profit']),
-                profit_margin_percent=float(row['profit_margin_percent']),
-                pharmacy_cost_percent=float(row['pharmacy_cost_percent']),
-                materials_cost_percent=float(row['materials_cost_percent']),
-                labor_cost_percent=float(row['labor_cost_percent']),
-                overhead_cost_percent=float(row['overhead_cost_percent']),
-                cost_efficiency_score=float(row['cost_efficiency_score']),
-                profitability_rank=int(row['profitability_rank']),
-                cost_optimization_potential=str(row['cost_optimization_potential'])
+                ipd_number=str(row.get('ipd_number', '')),
+                bill_no=str(row.get('bill_no', '')),
+                service_name=str(row.get('service_name', '')),
+                doctor_name=str(row.get('doctor_name', '')),
+                cm=float(row.get('cm', 0)),
+                ew=float(row.get('ew', 0)),
+                hr=float(row.get('hr', 0)),
+                cn=float(row.get('cn', 0)),
+                pharmacy_charged_to_patient=float(row.get('pharmacy_charged_to_patient', 0)),
+                medical_surgical_consumables_charged_to_patient=float(row.get('medical_surgical_consumables_charged_to_patient', 0)),
+                implants_and_prosthetics_charged_to_patient=float(row.get('implants_and_prosthetics_charged_to_patient', 0)),
+                non_medical_consumables_charged_to_patient=float(row.get('non_medical_consumables_charged_to_patient', 0)),
+                fee_for_service=float(row.get('fee_for_service', 0)),
+                incentives_to_consultants_treating_doctors=float(row.get('incentives_to_consultants_treating_doctors', 0)),
+                patient_food_beverages_outsource_service=float(row.get('patient_food_beverages_outsource_service', 0)),
+                laboratory_test_outsource_service=float(row.get('laboratory_test_outsource_service', 0)),
+                any_other_patient_related_outsourced_services_1=float(row.get('any_other_patient_related_outsourced_services_1', 0)),
+                any_other_patient_related_outsourced_services_2=float(row.get('any_other_patient_related_outsourced_services_2', 0)),
+                any_other_patient_related_outsourced_services_3=float(row.get('any_other_patient_related_outsourced_services_3', 0)),
+                brokerage_commission=float(row.get('brokerage_commission', 0)),
+                provision_for_deduction_bad_debts=float(row.get('provision_for_deduction_bad_debts', 0)),
+                total_allocated_cost=float(total_allocated_cost),
+                total_variable_cost=float(total_variable_cost),
+                total_cost=float(total_cost),
+                profit=float(profit),
+                profit_margin_percent=float(profit_margin)
             )
             services.append(service)
         

@@ -13,40 +13,38 @@ class CostAnalysisFilters(BaseModel):
     patient_type: Optional[str] = None
 
 class ServiceCostBreakdown(BaseModel):
-    service_id: str
-    department: str
+    ipd_number: str
+    bill_no: str
     service_name: str
-    total_revenue: float
-    total_quantity: int
-    revenue_per_unit: float
+    doctor_name: str
     
-    # Direct costs
-    direct_pharmacy_cost: float
-    direct_materials_cost: float
-    direct_labor_cost: float
+    # Allocated costs from cost module
+    cm: float  # Consumption/Materials cost
+    ew: float  # Expense wise cost
+    hr: float  # HR/Labor cost
+    cn: float  # Connected load/Utilities cost
     
-    # Allocated costs
-    allocated_overhead_cost: float
-    allocated_utilities_cost: float
-    allocated_admin_cost: float
-    allocated_facilities_cost: float
+    # Variable costs from bill
+    pharmacy_charged_to_patient: float
+    medical_surgical_consumables_charged_to_patient: float
+    implants_and_prosthetics_charged_to_patient: float
+    non_medical_consumables_charged_to_patient: float
+    fee_for_service: float
+    incentives_to_consultants_treating_doctors: float
+    patient_food_beverages_outsource_service: float
+    laboratory_test_outsource_service: float
+    any_other_patient_related_outsourced_services_1: float
+    any_other_patient_related_outsourced_services_2: float
+    any_other_patient_related_outsourced_services_3: float
+    brokerage_commission: float
+    provision_for_deduction_bad_debts: float
     
-    # Totals and metrics
+    # Calculated metrics
     total_allocated_cost: float
-    cost_per_unit: float
+    total_variable_cost: float
+    total_cost: float
     profit: float
     profit_margin_percent: float
-    
-    # Cost breakdown percentages
-    pharmacy_cost_percent: float
-    materials_cost_percent: float
-    labor_cost_percent: float
-    overhead_cost_percent: float
-    
-    # Performance indicators
-    cost_efficiency_score: float
-    profitability_rank: int
-    cost_optimization_potential: str
 
 class CostAnalysisResponse(BaseModel):
     services: List[ServiceCostBreakdown]

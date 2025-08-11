@@ -579,15 +579,28 @@ class CostAnalysisModule:
             else:
                 final_cost_df = final_sr_list
             
-            # Create output columns list (exact Jupyter logic)
-            lt = []
-            if 'variable_cost_bill_wise' in self.input_data and not self.input_data['variable_cost_bill_wise'].empty:
-                lt = [col for col in self.input_data['variable_cost_bill_wise'].iloc[:, 5:-3].columns]
+            # Define the exact output columns as per the actual function output
+            output_columns = [
+                'ipd_number', 'service_name', 'cm', 'ew', 'hr', 'cn', 'bill_no',
+                'pharmacy_charged_to_patient', 'medical_surgical_consumables_charged_to_patient',
+                'implants_and_prosthetics_charged_to_patient',
+                'non_medical_consumables_charged_to_patient', 'fee_for_service',
+                'incentives_to_consultants_treating_doctors',
+                'patient_food_beverages_outsource_service',
+                'laboratory_test_outsource_service',
+                'any_other_patient_related_outsourced_services_1',
+                'any_other_patient_related_outsourced_services_2',
+                'any_other_patient_related_outsourced_services_3',
+                'brokerage_commission', 'provision_for_deduction_bad_debts',
+                'doctor_name'
+            ]
             
-            lt = ['ipd_number', 'service_name', 'cm', 'ew', 'hr', 'cn'] + lt
+            # Add doctor_name from service register if not present
+            if 'doctor_name' not in final_cost_df.columns:
+                final_cost_df['doctor_name'] = final_cost_df['performing_doctor_name']
             
             # Filter columns that exist in the dataframe
-            existing_cols = [col for col in lt if col in final_cost_df.columns]
+            existing_cols = [col for col in output_columns if col in final_cost_df.columns]
             output_df = final_cost_df[existing_cols]
             
             return output_df
