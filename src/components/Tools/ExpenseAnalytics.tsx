@@ -147,7 +147,7 @@ export function ExpenseAnalytics() {
                   <span className="text-red-600 font-semibold">High Priority</span>
                 </div>
                 <p className="text-sm text-red-700 mb-2">15% above industry average. Consider energy-efficient equipment.</p>
-                <div className="text-xs text-red-600">Potential savings: $8,000/month</div>
+                <div className="text-xs text-red-600">Potential savings: ₹8,000/month</div>
               </div>
               <div className="bg-yellow-50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
@@ -155,7 +155,7 @@ export function ExpenseAnalytics() {
                   <span className="text-yellow-600 font-semibold">Medium Priority</span>
                 </div>
                 <p className="text-sm text-yellow-700 mb-2">Potential for process automation and digitization.</p>
-                <div className="text-xs text-yellow-600">Potential savings: $5,000/month</div>
+                <div className="text-xs text-yellow-600">Potential savings: ₹5,000/month</div>
               </div>
               <div className="bg-green-50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
@@ -232,7 +232,7 @@ export function ExpenseAnalytics() {
               <p className="text-sm text-accent-600 mb-2">
                 Optimize shift patterns and cross-train staff to reduce overtime costs by 15%.
               </p>
-              <div className="text-xs text-green-600 font-medium">Savings: $12,000/month</div>
+              <div className="text-xs text-green-600 font-medium">Savings: ₹12,000/month</div>
             </div>
             <div className="bg-white rounded-lg p-4">
               <h4 className="font-medium text-primary-900 mb-2 flex items-center">
@@ -242,7 +242,7 @@ export function ExpenseAnalytics() {
               <p className="text-sm text-accent-600 mb-2">
                 Negotiate bulk purchasing agreements to reduce medical supply costs by 8-12%.
               </p>
-              <div className="text-xs text-green-600 font-medium">Savings: $18,000/month</div>
+              <div className="text-xs text-green-600 font-medium">Savings: ₹18,000/month</div>
             </div>
             <div className="bg-white rounded-lg p-4">
               <h4 className="font-medium text-primary-900 mb-2 flex items-center">
@@ -252,7 +252,7 @@ export function ExpenseAnalytics() {
               <p className="text-sm text-accent-600 mb-2">
                 Implement digital workflows to reduce administrative overhead by 25%.
               </p>
-              <div className="text-xs text-green-600 font-medium">Savings: $8,500/month</div>
+              <div className="text-xs text-green-600 font-medium">Savings: ₹8,500/month</div>
             </div>
           </div>
         </div>

@@ -258,7 +258,7 @@ export function MetadataAnalytics() {
               <p className="text-sm text-accent-600 mb-2">
                 ICU occupancy is at 85%. Consider adding 2-3 more ICU beds to meet demand.
               </p>
-              <div className="text-xs text-green-600 font-medium">Potential revenue increase: $180K/year</div>
+              <div className="text-xs text-green-600 font-medium">Potential revenue increase: ₹180K/year</div>
             </div>
             <div className="bg-white rounded-lg p-4">
               <h4 className="font-medium text-primary-900 mb-2 flex items-center">
@@ -268,7 +268,7 @@ export function MetadataAnalytics() {
               <p className="text-sm text-accent-600 mb-2">
                 Implement flexible scheduling to improve staff utilization by 8-10%.
               </p>
-              <div className="text-xs text-green-600 font-medium">Cost savings: $25,000/month</div>
+              <div className="text-xs text-green-600 font-medium">Cost savings: ₹25,000/month</div>
             </div>
             <div className="bg-white rounded-lg p-4">
               <h4 className="font-medium text-primary-900 mb-2 flex items-center">
