@@ -149,7 +149,7 @@ export function CostAnalysis() {
               </div>
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-primary-900 mb-1">${totalRevenue.toLocaleString()}</h3>
+              <h3 className="text-2xl font-bold text-primary-900 mb-1">₹{totalRevenue.toLocaleString()}</h3>
               <p className="text-accent-600 text-sm">Total Revenue</p>
             </div>
           </div>
@@ -161,7 +161,7 @@ export function CostAnalysis() {
               </div>
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-primary-900 mb-1">${totalCosts.toLocaleString()}</h3>
+              <h3 className="text-2xl font-bold text-primary-900 mb-1">₹{totalCosts.toLocaleString()}</h3>
               <p className="text-accent-600 text-sm">Total Costs</p>
             </div>
           </div>
@@ -230,9 +230,9 @@ export function CostAnalysis() {
                     <tr key={specialty.specialty} className="border-b border-primary-100">
                       <td className="py-3 px-4 font-medium text-primary-900">{specialty.specialty}</td>
                       <td className="py-3 px-4 text-right text-accent-700">{specialty.patients}</td>
-                      <td className="py-3 px-4 text-right text-green-600 font-medium">${specialty.revenue.toLocaleString()}</td>
-                      <td className="py-3 px-4 text-right text-red-600 font-medium">${specialty.totalCosts.toLocaleString()}</td>
-                      <td className="py-3 px-4 text-right text-primary-900 font-medium">${specialty.profit.toLocaleString()}</td>
+                      <td className="py-3 px-4 text-right text-green-600 font-medium">₹{specialty.revenue.toLocaleString()}</td>
+                      <td className="py-3 px-4 text-right text-red-600 font-medium">₹{specialty.totalCosts.toLocaleString()}</td>
+                      <td className="py-3 px-4 text-right text-primary-900 font-medium">₹{specialty.profit.toLocaleString()}</td>
                       <td className="py-3 px-4 text-right">
                         <span className={`font-medium ${
                           specialty.profitMargin > 20 ? 'text-green-600' : 
@@ -241,8 +241,8 @@ export function CostAnalysis() {
                           {specialty.profitMargin.toFixed(1)}%
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right text-accent-700">${specialty.costPerPatient.toFixed(0)}</td>
-                      <td className="py-3 px-4 text-right text-accent-700">${specialty.revenuePerPatient.toFixed(0)}</td>
+                      <td className="py-3 px-4 text-right text-accent-700">₹{specialty.costPerPatient.toFixed(0)}</td>
+                      <td className="py-3 px-4 text-right text-accent-700">₹{specialty.revenuePerPatient.toFixed(0)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -259,11 +259,11 @@ export function CostAnalysis() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-green-50 rounded-lg p-4">
-                        <div className="text-2xl font-bold text-green-900 mb-1">${metrics.revenue.toLocaleString()}</div>
+                        <div className="text-2xl font-bold text-green-900 mb-1">₹{metrics.revenue.toLocaleString()}</div>
                         <div className="text-green-700 text-sm">Total Revenue</div>
                       </div>
                       <div className="bg-red-50 rounded-lg p-4">
-                        <div className="text-2xl font-bold text-red-900 mb-1">${metrics.totalCosts.toLocaleString()}</div>
+                        <div className="text-2xl font-bold text-red-900 mb-1">₹{metrics.totalCosts.toLocaleString()}</div>
                         <div className="text-red-700 text-sm">Total Costs</div>
                       </div>
                     </div>
@@ -278,7 +278,7 @@ export function CostAnalysis() {
                       </div>
                     </div>
                     <div className="bg-primary-50 rounded-lg p-4">
-                      <div className="text-3xl font-bold text-primary-900 mb-1">${metrics.profit.toLocaleString()}</div>
+                      <div className="text-3xl font-bold text-primary-900 mb-1">₹{metrics.profit.toLocaleString()}</div>
                       <div className="text-primary-700">Net Profit</div>
                     </div>
                   </div>
@@ -297,7 +297,7 @@ export function CostAnalysis() {
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-accent-600 capitalize">{category.replace('_', ' ')}</span>
                           <div className="flex items-center space-x-2">
-                            <span className="font-semibold text-primary-900">${cost.toLocaleString()}</span>
+                            <span className="font-semibold text-primary-900">₹{cost.toLocaleString()}</span>
                             <span className="text-xs text-accent-500">
                               ({((cost / metrics.totalCosts) * 100).toFixed(1)}%)
                             </span>
@@ -314,11 +314,11 @@ export function CostAnalysis() {
                     <div className="border-t border-primary-200 pt-4">
                       <div className="flex justify-between items-center">
                         <span className="font-medium text-primary-900">Cost per Patient</span>
-                        <span className="text-xl font-bold text-primary-900">${metrics.costPerPatient.toFixed(0)}</span>
+                        <span className="text-xl font-bold text-primary-900">₹{metrics.costPerPatient.toFixed(0)}</span>
                       </div>
                       <div className="flex justify-between items-center mt-2">
                         <span className="font-medium text-primary-900">Revenue per Patient</span>
-                        <span className="text-xl font-bold text-green-600">${metrics.revenuePerPatient.toFixed(0)}</span>
+                        <span className="text-xl font-bold text-green-600">₹{metrics.revenuePerPatient.toFixed(0)}</span>
                       </div>
                     </div>
                   </div>

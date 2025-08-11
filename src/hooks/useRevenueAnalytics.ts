@@ -140,7 +140,7 @@ const DUMMY_REVENUE_ANALYSIS: RevenueAnalysisData = {
     {
       type: 'revenue_optimization',
       title: 'Discount Optimization',
-      description: 'Current discount rate is 4.8%. Reducing by 20% could increase revenue by $33,000.',
+      description: 'Current discount rate is 4.8%. Reducing by 20% could increase revenue by ₹33,000.',
       impact: 'high',
       category: 'pricing'
     }

@@ -143,9 +143,9 @@ const getLevelData = (level: string) => {
           { category: 'Net Profit', amount: 515000, percentage: 15.7, change: 18.7 }
         ],
         metrics: [
-          { title: 'Total Revenue', value: '$3.29M', change: '+12.5%', trend: 'up' as const, icon: DollarSign },
-          { title: 'Total Expenses', value: '$2.77M', change: '+8.2%', trend: 'up' as const, icon: TrendingUp },
-          { title: 'Net Profit', value: '$515K', change: '+18.7%', trend: 'up' as const, icon: Target },
+          { title: 'Total Revenue', value: '₹3.29M', change: '+12.5%', trend: 'up' as const, icon: DollarSign },
+          { title: 'Total Expenses', value: '₹2.77M', change: '+8.2%', trend: 'up' as const, icon: TrendingUp },
+          { title: 'Net Profit', value: '₹515K', change: '+18.7%', trend: 'up' as const, icon: Target },
           { title: 'Profit Margin', value: '15.7%', change: '+2.3%', trend: 'up' as const, icon: PieChart }
         ]
       };
@@ -172,7 +172,7 @@ const getLevelData = (level: string) => {
           { specialty: 'Gynaecology', revenue: 580000, costs: 406000, profit: 174000, margin: 30.0, patients: 2900 }
         ],
         metrics: [
-          { title: 'Top Specialty', value: 'Cardiology', change: '$850K', trend: 'up' as const, icon: Stethoscope },
+          { title: 'Top Specialty', value: 'Cardiology', change: '₹850K', trend: 'up' as const, icon: Stethoscope },
           { title: 'Avg Margin', value: '23.8%', change: '+3.1%', trend: 'up' as const, icon: PieChart },
           { title: 'Best Performer', value: 'Gynaecology', change: '30%', trend: 'up' as const, icon: Target },
           { title: 'Total Specialties', value: '4', change: 'Active', trend: 'up' as const, icon: Activity }
@@ -201,8 +201,8 @@ const getLevelData = (level: string) => {
           { doctor: 'Dr. Wilson', specialty: 'Gynaecology', revenue: 195000, patients: 725, revenuePerPatient: 269, satisfaction: '4.9/5' }
         ],
         metrics: [
-          { title: 'Top Performer', value: 'Dr. Smith', change: '$285K', trend: 'up' as const, icon: Users },
-          { title: 'Avg Revenue/Doctor', value: '$236K', change: '+8.5%', trend: 'up' as const, icon: DollarSign },
+          { title: 'Top Performer', value: 'Dr. Smith', change: '₹285K', trend: 'up' as const, icon: Users },
+          { title: 'Avg Revenue/Doctor', value: '₹236K', change: '+8.5%', trend: 'up' as const, icon: DollarSign },
           { title: 'Patient Satisfaction', value: '4.7/5', change: '+0.2', trend: 'up' as const, icon: Target },
           { title: 'Active Doctors', value: '12', change: '+2', trend: 'up' as const, icon: Activity }
         ]
@@ -229,7 +229,7 @@ const getLevelData = (level: string) => {
           { service: 'Emergency', revenue: 150000, volume: 300, avgPrice: 500, margin: 15.0 }
         ],
         metrics: [
-          { title: 'Top Service', value: 'Surgery', change: '$450K', trend: 'up' as const, icon: Activity },
+          { title: 'Top Service', value: 'Surgery', change: '₹450K', trend: 'up' as const, icon: Activity },
           { title: 'Highest Margin', value: 'Consultation', change: '60%', trend: 'up' as const, icon: PieChart },
           { title: 'Total Services', value: '25', change: 'Active', trend: 'up' as const, icon: Target },
           { title: 'Avg Margin', value: '38.8%', change: '+5%', trend: 'up' as const, icon: TrendingUp }
@@ -258,7 +258,7 @@ const getLevelData = (level: string) => {
         ],
         metrics: [
           { title: 'Avg Occupancy', value: '80%', change: '+5%', trend: 'up' as const, icon: Bed },
-          { title: 'Revenue/Bed', value: '$4,986', change: '+12%', trend: 'up' as const, icon: DollarSign },
+          { title: 'Revenue/Bed', value: '₹4,986', change: '+12%', trend: 'up' as const, icon: DollarSign },
           { title: 'Total Beds', value: '255', change: '+10', trend: 'up' as const, icon: Building2 },
           { title: 'Utilization', value: '78.5%', change: '+3%', trend: 'up' as const, icon: Target }
         ]
@@ -287,7 +287,7 @@ const getLevelData = (level: string) => {
         metrics: [
           { title: 'Avg Utilization', value: '83.8%', change: '+8%', trend: 'up' as const, icon: Scissors },
           { title: 'Total Procedures', value: '561', change: '+45', trend: 'up' as const, icon: Activity },
-          { title: 'Revenue/Procedure', value: '$5,347', change: '+12%', trend: 'up' as const, icon: DollarSign },
+          { title: 'Revenue/Procedure', value: '₹5,347', change: '+12%', trend: 'up' as const, icon: DollarSign },
           { title: 'Efficiency Score', value: '87%', change: '+5%', trend: 'up' as const, icon: Target }
         ]
       };
@@ -313,7 +313,7 @@ const getLevelData = (level: string) => {
         metrics: [
           { title: 'Avg Utilization', value: '84.3%', change: '+6%', trend: 'up' as const, icon: Building2 },
           { title: 'Total Procedures', value: '228', change: '+28', trend: 'up' as const, icon: Activity },
-          { title: 'Revenue/Procedure', value: '$10,088', change: '+15%', trend: 'up' as const, icon: DollarSign },
+          { title: 'Revenue/Procedure', value: '₹10,088', change: '+15%', trend: 'up' as const, icon: DollarSign },
           { title: 'Success Rate', value: '98.5%', change: '+1%', trend: 'up' as const, icon: Target }
         ]
       };
