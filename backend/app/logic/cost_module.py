@@ -62,7 +62,9 @@ class CostAnalysisModule:
         edge_list = []
         for _, row in df.iterrows():
             if row['sub_cost_centre'] not in self.node_dict:
-                self.node_dict[row['sub_cost_centre']] = CostCenter(row['sub_cost_centre'])
+                print(row['sub_cost_centre'], "not present in node dict!!")
+                continue
+                # self.node_dict[row['sub_cost_centre']] = CostCenter(row['sub_cost_centre'])
             edge_list.append(Edge(target_node=self.node_dict[row['sub_cost_centre']], driver=row[driver] / total))
         return edge_list
     
@@ -138,15 +140,161 @@ class CostAnalysisModule:
         # This would normally come from the Unique_Column_Mapping.xlsx file
         # For now, creating a basic mapping based on common patterns
         self.rename_dict = {
-            'Number of Patient (OP+IP)': 'no_of_patient_op_ip',
-            'Number of IP Patients': 'no_of_ip_patients', 
-            'Number of Doctors': 'no_of_doctors',
-            'Number of Nursing Staff': 'no_of_nursing_staff',
+            'Month': 'month',
+            'Bill no.': 'bill_no',
+            'Patient Type': 'patient_type',
+            'Reg. No.': 'reg_no',
+            'IPD Number': 'ipd_number',
+            'Payor Type': 'payor_type',
+            'Payor Alias Name': 'payor_alias_name',
+            'Admitting Doctor Name': 'admitting_doctor_name',
+            'Admitting Doctor Department / Speciality Name': 'admitting_doctor_department_speciality_name',
+            'Performing Doctor Name': 'performing_doctor_name',
+            'performing Doctor Department / Speciality Name': 'performing_doctor_department_speciality_name',
+            'Refering Doctor Name': 'refering_doctor_name',
+            'Refering Doctor Department / Speciality Name': 'refering_doctor_department_speciality_name',
+            'Service Name': 'service_name',
+            'Service Department': 'service_department',
+            'service Sub department': 'service_sub_department',
+            'Service Status i.e. Active or Cancelled.': 'service_status_i_e_active_or_cancelled',
+            'under Package or Not.': 'under_package_or_not',
+            'Outsourced or Inhouse.': 'outsourced_or_inhouse',
+            'No. of service': 'quantity',
+            'Gross Amount': 'gross_amount',
+            'Discount Amount': 'discount',
+            'Net Amount': 'net_amount',
+            'Emergency charges for Service or Not.': 'emergency_charges_for_service_or_not',
+            'performing Doctor Share if applicable': 'performing_doctor_share_if_applicable',
+            'Cost Of Pharmacy & Material Billed to Patient.': 'cost_of_pharmacy_material_billed_to_patient',
+            'share of  Outsource Service billed': 'share_of_outsource_service_billed',
+            'Sub Cost Centre Code': 'sub_cost_centre_code',
+            'Sub Cost Centre Name': 'sub_cost_centre_name',
+            'Service TAT': 'service_tat',
+            'Service Date.': 'service_date',
+            'Category Code': 'category_code',
+            'Category': 'category',
+            'Grouping Code': 'grouping_code',
+            'Grouping': 'grouping',
+            'Ledger Code': 'ledger_code',
+            'Ledger Name': 'ledger_name',
+            'Alias Code': 'alias_code',
+            'Alias Name': 'alias_name',
+            'Amount': 'amount',
+            'Remarks': 'remarks',
+            'Primary Cost Driver': 'primary_cost_driver',
+            'Nature of Data': 'nature_of_data',
+            'CC_Type': 'cc_type',
+            'Cost Centre Code': 'cost_centre_code',
+            'Cost centre category': 'cost_centre_category',
+            'Cost Centre': 'cost_centre',
+            'Cost Centre Name': 'cost_centre_name',
+            'Cost Driver': 'cost_driver',
+            'Source of Driver': 'source_of_driver',
+            'Bill No.': 'bill_no',
+            'Pharmacy Charged to patient': 'pharmacy_charged_to_patient',
+            'Medical & Surgical Consumables Charged to patient': 'medical_surgical_consumables_charged_to_patient',
+            'Implants and Prosthetics - Charged to patient': 'implants_and_prosthetics_charged_to_patient',
+            'Non Medical Consumables Charged To Patient': 'non_medical_consumables_charged_to_patient',
+            'Fee For Service': 'fee_for_service',
+            'Incentives To Consultants/ Treating Doctors': 'incentives_to_consultants_treating_doctors',
+            'Patient Food & Beverages - Outsource service': 'patient_food_beverages_outsource_service',
+            'Laboratory Test Outsource service': 'laboratory_test_outsource_service',
+            'Any Other patient related Outsourced Services_1': 'any_other_patient_related_outsourced_services_1',
+            'Any Other patient related Outsourced Services_2': 'any_other_patient_related_outsourced_services_2',
+            'Any Other patient related Outsourced Services_3': 'any_other_patient_related_outsourced_services_3',
+            'Brokerage & Commission': 'brokerage_commission',
+            'Provision for Deduction & Bad Debts': 'provision_for_deduction_bad_debts',
+            'Doctor Name': 'doctor_name',
+            'Group Code': 'group_code',
+            'Group Name': 'group_name',
+            'Sub - Group Code': 'sub_group_code',
+            'Sub - Group Name': 'sub_group_name',
+            'Associate Code': 'associate_code',
+            'Associate Name': 'associate_name',
+            'Period': 'period',
+            'Date of Joining': 'date_of_joining',
+            'Date of Resignation': 'date_of_resignation',
+            'Working Period': 'working_period',
+            'Department': 'department',
+            'Sub Department': 'sub_department',
+            'Designation': 'designation',
+            'Efforts Category': 'efforts_category',
+            'Master for Multiple': 'master_for_multiple',
+            'Nature Of Allocation': 'nature_of_allocation',
+            'Efforts Allocation': 'efforts_allocation',
+            'Efforts Sub - Allocation': 'efforts_sub_allocation',
+            'Utilization': 'utilization',
+            'Available Hours': 'available_hours',
+            'Actual Hours': 'actual_hours',
+            'Basic Pay': 'basic_pay',
+            'Allowances': 'allowances',
+            'Other Benefits': 'other_benefits',
+            'Overtime': 'overtime',
+            'Bonus': 'bonus',
+            'EPF': 'epf',
+            'ESIC': 'esic',
+            'Any Other Contribution': 'any_other_contribution',
+            'Gross Total': 'gross_total',
+            'Deduction': 'deduction',
+            'Net Salary': 'net_salary',
+            'No. of Headcount': 'no_of_headcount',
+            'Medical Record Number or Registration Number (UHID)': 'medical_record_number_or_registration_number_uhid',
+            'Patient Admission Date': 'patient_admission_date',
+            'Patient Discharge Date': 'patient_discharge_date',
+            'Sub Cost Centre': 'sub_cost_centre',
+            'Bed Number': 'bed_number',
+            'Length Of Stay In Hours': 'length_of_stay_in_hours',
+            'The Date & Time at which Patient was transferred to this Bed.': 'the_date_time_at_which_patient_was_transferred_to_this_bed',
+            'The Date & Time at which Patient left this Bed.': 'the_date_time_at_which_patient_left_this_bed',
+            'Ward Category Code': 'ward_category_code',
+            'Bed Category Name': 'bed_category_name',
+            'S.No.': 's_no',
+            'Anaesthesist Name': 'anaesthesist_name',
+            'Anesthesia Type': 'anesthesia_type',
+            'Type Of Procedure': 'type_of_procedure',
+            'Nature of Procedure': 'nature_of_procedure',
+            'On Table Time': 'on_table_time',
+            'Incision time': 'incision_time',
+            'Finish time': 'finish_time',
+            'Procedure Time': 'procedure_time',
+            'Change Over Time': 'change_over_time',
+            'Total Time': 'total_time',
+            'Transaction Date': 'transaction_date',
+            'From - Store': 'from_store',
+            'To - Store': 'to_store',
+            'SKU Name': 'sku_name',
+            'Unit of Measurement': 'unit_of_measurement',
+            'Quantity': 'quantity',
+            'Rate': 'rate',
+            'Transaction Value (Excluding Tax)': 'transaction_value_excluding_tax',
+            'Connected Load': 'connected_load',
+            'Running Load': 'running_load',
+            'Standby Load': 'standby_load',
+            'Days': 'days',
+            'Hours': 'hours',
+            'Total Load (Kg)': 'total_load_kg',
+            'TAT': 'tat',
+            'Bio Medical Equipments': 'bio_medical_equipments',
+            'Engineering Equipments': 'engineering_equipments',
+            'Furniture & Fixture': 'furniture_fixture',
+            'Others': 'others',
+            'Nursing Hostel Occupancy': 'nursing_hostel_occupancy',
+            'Doctors hostel Occupancy': 'doctors_hostel_occupancy',
+            'Staff accomodation Occupancy': 'staff_accomodation_occupancy',
+            'Frequency of Audit': 'frequency_of_audit',
+            'No. of IT Users': 'no_of_it_users',
+            'No. of Transaction in Finance & Billing Cost Centre': 'no_of_transaction_in_finance_billing_cost_centre',
+            'List of Equipment for which loan was taken': 'list_of_equipment_for_which_loan_was_taken',
+            'No. of  Trips (Km)': 'no_of_trips_km',
+            'No. of Laboratory Test': 'no_of_laboratory_test',
+            'No. of Sample collected & Report dispatch': 'no_of_sample_collected_report_dispatch',
+            'No. of Home sample collection': 'no_of_home_sample_collection',
+            'No. of Radiology Test': 'no_of_radiology_test',
+            'No. of Neuro Test': 'no_of_neuro_test',
+            'No. of Cardiac Test': 'no_of_cardiac_test',
+            'No. of Nuclear Medicine Test': 'no_of_nuclear_medicine_test',
+            'No. of IVF Consultation': 'no_of_ivf_consultation',
             'OT Time (Hours)': 'ot_time_hours',
-            'Area in Sq. Meter': 'area_in_sq_meter',
-            'Number of Laboratory Test': 'no_of_laboratory_test',
-            'Number of Radiology Test': 'no_of_radiology_test',
-            'Number of Cardiac Test': 'no_of_cardiac_test',
             'CCU Occupancy': 'ccu_occupancy',
             'MICU Occupancy': 'micu_occupancy',
             'PICU Occupancy': 'picu_occupancy',
@@ -157,28 +305,26 @@ class CostAnalysisModule:
             'PW-SR Occupancy': 'pw_sr_occupancy',
             'SW-TS Occupancy': 'sw_ts_occupancy',
             'DW Occupancy': 'dw_occupancy',
-            'Nursing Hostel Occupancy': 'nursing_hostel_occupancy',
-            'Doctors Hostel Occupancy': 'doctors_hostel_occupancy',
-            'Staff Accomodation Occupancy': 'staff_accomodation_occupancy',
-            'Frequency of Audit': 'frequency_of_audit',
-            'No of IT Users': 'no_of_it_users',
-            'No of Transaction in Finance & Billing Cost Centre': 'no_of_transaction_in_finance_billing_cost_centre',
-            'No of Trips / Km': 'no_of_trips_km',
-            'No of Sample Collected / Report Dispatch': 'no_of_sample_collected_report_dispatch',
-            'No of Home Sample Collection': 'no_of_home_sample_collection',
-            'No of Neuro Test': 'no_of_neuro_test',
-            'No of Nuclear Medicine Test': 'no_of_nuclear_medicine_test',
-            'No of IVF Consultation': 'no_of_ivf_consultation',
-            'No of Corporate Patient (OP+IP)': 'no_of_corporate_patient_op_ip',
-            'No of Institutional Patient (OP+IP)': 'no_of_institutional_patient_op_ip',
-            'No of International Patient (OP+IP)': 'no_of_international_patient_op_ip',
-            'No of Credit IP Patients': 'no_of_credit_ip_patients',
+            'Head office': 'head_office',
+            'Other Unit 1 Allocation Ratio': 'other_unit_1_allocation_ratio',
+            'Other Unit 2 Allocation Ratio': 'other_unit_2_allocation_ratio',
+            'Other Unit 3 Allocation Ratio': 'other_unit_3_allocation_ratio',
+            'Other Unit 4 Allocation Ratio': 'other_unit_4_allocation_ratio',
+            'Other Unit 5 Allocation Ratio': 'other_unit_5_allocation_ratio',
+            'No. of Patient (OP+IP)': 'no_of_patient_op_ip',
+            'No. of Corporate Patient (OP+IP)': 'no_of_corporate_patient_op_ip',
+            'No. of Institutional Patient (OP+IP)': 'no_of_institutional_patient_op_ip',
+            'No. of International Patient (OP+IP)': 'no_of_international_patient_op_ip',
+            'No. of IP Patients': 'no_of_ip_patients',
+            'No. of Credit IP Patients': 'no_of_credit_ip_patients',
             'Surgical Store Issue Ratio': 'surgical_store_issue_ratio',
             'Central Store Issue Ratio': 'central_store_issue_ratio',
             'Non Surgical Store Issue Ratio': 'non_surgical_store_issue_ratio',
-            'Stationery & Housekeeping Issue Ratio': 'stationery_housekeeping_issue_ratio',
+            'Stationery/Housekeeping Issue Ratio': 'stationery_housekeeping_issue_ratio',
+            'No. of Doctors': 'no_of_doctors',
             'Doctor Fee for Service Ratio': 'doctor_fee_for_service_ratio',
-            'Consultant Retainer Fee / MG / Bonus Ratio': 'consultant_retainer_fee_mg_bonus_ratio',
+            'Consultant retainer fee/MG/Bonus Ratio': 'consultant_retainer_fee_mg_bonus_ratio',
+            'No. of Nursing Staff': 'no_of_nursing_staff',
             'Nursing Station 1 for Care Units': 'nursing_station_1_for_care_units',
             'Nursing Station 2 for Care Units': 'nursing_station_2_for_care_units',
             'Nursing Station 3 for Care Units': 'nursing_station_3_for_care_units',
@@ -188,24 +334,31 @@ class CostAnalysisModule:
             'Service under OP Billing 2': 'service_under_op_billing_2',
             'Service under OP Billing 3': 'service_under_op_billing_3',
             'Service under OP Billing 4': 'service_under_op_billing_4',
-            'Brokerage Commission': 'brokerage_commission',
-            'No of CSSD Set Issued': 'no_of_cssd_set_issued',
-            'No of Diet Served': 'no_of_diet_served',
-            'No of Ward Boy': 'no_of_ward_boy',
-            'No of Housekeeping Staff': 'no_of_housekeeping_staff',
-            'No of Fumigation Cycle Performed / Standard Resource Allocation Ratio': 'no_of_fumigation_cycle_performed_standard_resource_allocation_ratio',
+            'No. of CSSD Set Issued': 'no_of_cssd_set_issued',
+            'No. of Diet Served': 'no_of_diet_served',
+            'No. of Ward Boy': 'no_of_ward_boy',
+            'No. of Housekeeping Staff': 'no_of_housekeeping_staff',
+            'No. of Fumigation Cycle Performed/ Standard Resource Allocation Ratio': 'no_of_fumigation_cycle_performed_standard_resource_allocation_ratio',
             'Volume of Cloth Load': 'volume_of_cloth_load',
             'Efforts of Supply Chain Department': 'efforts_of_supply_chain_department',
-            'No of Security Staff Deployed / No of Exits': 'no_of_security_staff_deployed_no_of_exits',
-            'Actual Water Utilization / Standard Utilization Ratio': 'actual_water_utilization_standard_utilization_ratio',
-            'Actual Gas Utilization / Standard Utilization Ratio': 'actual_gas_utilization_standard_utilization_ratio',
-            'Actual Vaccume Utilization / Standard Utilization Ratio': 'actual_vaccume_utilization_standard_utilization_ratio',
-            'Head Office': 'head_office',
-            'Other Unit 1 Allocation Ratio': 'other_unit_1_allocation_ratio',
-            'Other Unit 2 Allocation Ratio': 'other_unit_2_allocation_ratio',
-            'Other Unit 3 Allocation Ratio': 'other_unit_3_allocation_ratio',
-            'Other Unit 4 Allocation Ratio': 'other_unit_4_allocation_ratio',
-            'Other Unit 5 Allocation Ratio': 'other_unit_5_allocation_ratio'
+            'Area in sq. meter': 'area_in_sq_meter',
+            'No. of Security Staff Deployed/ No. of Exits.': 'no_of_security_staff_deployed_no_of_exits',
+            'Actual Water Utilization/ Standard Utilization Ratio.': 'actual_water_utilization_standard_utilization_ratio',
+            'Actual Gas Utilization/ Standard Utilization Ratio.': 'actual_gas_utilization_standard_utilization_ratio',
+            'Actual Vaccume Utilization/ Standard Utilization Ratio.': 'actual_vaccume_utilization_standard_utilization_ratio',
+            'Civil': 'civil',
+            'Date of final bill - DD/MM/YY': 'date_of_final_bill',
+            'Service Sub department': 'service_sub_department',
+            'Service Status i.e. Active or Cancelled': 'service_status',
+            'under Package or Not': 'is_packaged',
+            'Outsourced or Inhouse': 'is_outsourced',
+            'Emergency charges for Service or Not': 'emergency_charges_applied',
+            'Service Date': 'service_date',
+            'Sub - Cost Centre Code': 'sub_cost_centre_code',
+            'Sub - Cost Centre Name': 'sub_cost_centre',
+            'Bill No': 'bill_no',
+            'The date at which service was provided to patient.': 'service_date',
+            'The Name of Services Billed': 'service_name'
         }
     
     def _build_nodes(self):
@@ -225,14 +378,14 @@ class CostAnalysisModule:
         # cc - scv edges (exact Jupyter logic)
         for scc, df in cc_scv_tat.groupby('sub_cost_centre'):
             try:
-                total_tat = df['service_tat'].sum()
+                total_tat = int(df['service_tat'].astype('int').sum())
 
                 for service, df_2 in df.groupby('service_name'):
                     if service not in self.node_dict:
-                        self.node_dict[service] = Service(service, df_2['service_tat'].sum())
+                        self.node_dict[service] = Service(service, int(df_2['service_tat'].astype('int').sum()))
 
                     if total_tat > 0:
-                        self.node_dict[scc].children_svc.append(Edge(self.node_dict[service], df_2['service_tat'].sum() / total_tat))
+                        self.node_dict[scc].children_svc.append(Edge(self.node_dict[service], int(df_2['service_tat'].astype('int').sum()) / total_tat))
             except Exception as e:
                 print(e)
     
@@ -256,13 +409,13 @@ class CostAnalysisModule:
         cc_drivers = self.input_data['secondary_cost_driver']
         
         # cc to cc relationships (exact Jupyter logic)
-        for driver in cc_drivers.columns[3:]:
+        for driver in cc_drivers.columns[5:]:
             try:
                 if driver not in self.secondary_drivers:
                     continue
                     
                 parent_scc_list = self.secondary_drivers[driver]
-                mini_df = cc_drivers[~cc_drivers[driver].isna()][['sub_cost_centre', driver]]
+                mini_df = cc_drivers[cc_drivers[driver] > 0][['sub_cost_centre', driver]]
                 edge_list = self.build_edges(mini_df, driver)
                 
                 for parent in parent_scc_list:
@@ -278,7 +431,7 @@ class CostAnalysisModule:
             for scc, df in self.input_data['consumption_data'].groupby("sub_cost_centre"):
                 try:
                     if scc in self.node_dict:
-                        self.node_dict[scc].cost['cm'] = df['transaction_value_excluding_tax'].sum()
+                        self.node_dict[scc].cost['cm'] = int(df['transaction_value_excluding_tax'].sum())
                 except Exception as e:
                     print(scc, e)
         
@@ -286,13 +439,13 @@ class CostAnalysisModule:
         if 'expense_wise' in self.input_data and not self.input_data['expense_wise'].empty:
             for scc, df in self.input_data['expense_wise'].groupby("sub_cost_centre"):
                 if scc in self.node_dict:
-                    self.node_dict[scc].cost['ew'] = df['amount'].sum()
+                    self.node_dict[scc].cost['ew'] = int(df['amount'].sum())
         
         # HR expense direct on scc (exact Jupyter logic)
         if 'hr' in self.input_data and not self.input_data['hr'].empty:
             for scc, df in self.input_data['hr'].groupby("sub_cost_centre"):
                 if scc in self.node_dict:
-                    self.node_dict[scc].cost['hr'] = df['net_salary'].sum()
+                    self.node_dict[scc].cost['hr'] = int(df['net_salary'].sum())
         
         # CN (Connected Load) calculation (exact Jupyter logic)
         if ('trial_balance' in self.input_data and not self.input_data['trial_balance'].empty and
@@ -302,12 +455,12 @@ class CostAnalysisModule:
                     self.input_data['trial_balance']['primary_cost_driver'] == 'CN'
                 ]['amount'].sum()
                 
-                total_load = self.input_data['connected_load']['total_load_kg'].sum()
+                total_load = int(self.input_data['connected_load']['total_load_kg'].sum())
                 
                 for scc, df in self.input_data['connected_load'].groupby('sub_cost_centre'):
                     try:
                         if scc in self.node_dict and total_load > 0:
-                            self.node_dict[scc].cost['cn'] = (df['total_load_kg'].sum() / total_load) * int(power_consumption)
+                            self.node_dict[scc].cost['cn'] = (int(df['total_load_kg'].sum()) / total_load) * int(power_consumption)
                     except Exception as e:
                         print(repr(e))
             except Exception as e:
@@ -394,9 +547,10 @@ class CostAnalysisModule:
             service_df_list = []
             for service, df in self.input_data['service_register'].groupby('service_name'):
                 try:
+                    
                     df = df.copy()
-                    df['total_tat'] = df['service_tat'] * df['quantity']
-                    total = df['total_tat'].sum()
+                    df['total_tat'] = df['service_tat'].astype('int') * df['quantity']
+                    total = int(df['total_tat'].sum())
                     if total > 0:
                         df['total_tat'] /= total
 
@@ -404,6 +558,8 @@ class CostAnalysisModule:
                             for cost_name, cost in self.node_dict[service].cost.items():
                                 df[cost_name] = cost * df['total_tat']
                         service_df_list.append(df)
+                    elif total < 0:
+                        print(service, 'total tat is -ve!!')
                 except Exception as e:
                     print(service, e)
             
@@ -426,7 +582,7 @@ class CostAnalysisModule:
             # Create output columns list (exact Jupyter logic)
             lt = []
             if 'variable_cost_bill_wise' in self.input_data and not self.input_data['variable_cost_bill_wise'].empty:
-                lt = [col for col in self.input_data['variable_cost_bill_wise'].iloc[:, 3:-3].columns]
+                lt = [col for col in self.input_data['variable_cost_bill_wise'].iloc[:, 5:-3].columns]
             
             lt = ['ipd_number', 'service_name', 'cm', 'ew', 'hr', 'cn'] + lt
             
